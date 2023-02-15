@@ -3,22 +3,28 @@ package com.cookandroid.myapplication
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.cookandroid.myapplication.databinding.ActivityRegisterBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 
 class RegisterActivity : AppCompatActivity() {
 
     private lateinit var binding:ActivityRegisterBinding
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+//Auth part
+        auth = FirebaseAuth.getInstance()
 
-        ///stream part
 
+
+ //stream part
         val idStream = RxTextView.textChanges(binding.registerID)
             .skipInitialValue()
             .map{id->
@@ -55,7 +61,10 @@ class RegisterActivity : AppCompatActivity() {
 ///Button binding
 
         binding.registerSubmitBtn.setOnClickListener{
-            startActivity(Intent(this, LoginActivity::class.java))
+            val id = binding.registerID.text.toString().trim()
+            val pw = binding.registerPW.text.toString().trim()
+            //startActivity(Intent(this, LoginActivity::class.java))
+            registerUser(id, pw)
         }
         ///버튼 초기 상태 = 이용불가, 회색
         binding.registerSubmitBtn.isEnabled = false
@@ -95,6 +104,18 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun showPasswordConfirmAlert(isNotValid: Boolean){
         binding.confirmPW.error = if(isNotValid) "비밀번호가 일치하지 않습니다" else null
+    }
+
+    private fun registerUser(id: String, pw: String){
+        auth.createUserWithEmailAndPassword(id, pw)
+            .addOnCompleteListener(this){
+                if(it.isSuccessful){
+                    startActivity(Intent(this,LoginActivity::class.java))
+                    Toast.makeText(this, "계정이 생성되었습니다", Toast.LENGTH_SHORT).show()
+                } else{
+                    Toast.makeText(this, it.exception?.message, Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 
 }

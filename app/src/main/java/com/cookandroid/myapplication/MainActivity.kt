@@ -13,12 +13,14 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
+import com.google.firebase.auth.FirebaseAuth
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var musicAdapter: Adapter
+    private lateinit var auth: FirebaseAuth
 
     companion object{
         lateinit var MusicListMA: ArrayList<Music>
@@ -43,6 +45,19 @@ class MainActivity : AppCompatActivity() {
         ///넥스트 버튼 -> PlayNext
         binding.playNextBtn.setOnClickListener{
             startActivity((Intent(this@MainActivity,PlayNext::class.java)))
+        }
+
+//로그인 part
+        auth = FirebaseAuth.getInstance()
+
+        //로그아웃 버튼 동작
+        binding.logoutBtn.setOnClickListener{
+            auth.signOut()
+            Intent(this, LoginActivity::class.java).also{
+                it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(it)
+                Toast.makeText(this, "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

@@ -4,20 +4,24 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.cookandroid.myapplication.PlayMusicActivity.Companion.binding
 import com.cookandroid.myapplication.databinding.ActivityLoginBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.jakewharton.rxbinding2.widget.RxTextView
 
 @SuppressLint("CheckResult")
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+//Auth part
+        auth = FirebaseAuth.getInstance()
 
 //stream part
 
@@ -45,6 +49,9 @@ class LoginActivity : AppCompatActivity() {
 
         //로그인 버튼 -> MainActivity
         binding.loginBtn.setOnClickListener{
+            val id = binding.userID.text.toString().trim()
+            val pw = binding.userPW.text.toString().trim()
+            loginUser(id, pw)
             startActivity(Intent(this, MainActivity::class.java))
         }
         //버튼 초기 상태 사용 불가, 회색
@@ -56,8 +63,7 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
 
-//로그인 버튼 사용 제어
-
+//로그인 버튼 제어
         val invalidFieldsStream = io.reactivex.Observable.combineLatest(
             idStream,
             pwStream,
@@ -74,13 +80,25 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-
-
     //Alert part
     private fun showTextExistAlert(isNotValid: Boolean, text: String){
         if(text=="ID")
             binding.userID.error = if(isNotValid) "아이디를 입력하세요" else null
         else if(text=="Password")
             binding.userPW.error = if(isNotValid) "비밀번호를 입력하세요" else null
+    }
+
+    private fun loginUser(id: String, pw: String) {
+        auth.signInWithEmailAndPassword(id, pw)
+            .addOnCompleteListener(this) { login ->
+                if (login.isSuccessful) {
+                    Intent(this, MainActivity::class.java).also {
+                        it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(it)
+                    }
+                } else {
+                    Toast.makeText(this, login.exception?.message, Toast.LENGTH_SHORT).show()
+                }
+            }
     }
 }
