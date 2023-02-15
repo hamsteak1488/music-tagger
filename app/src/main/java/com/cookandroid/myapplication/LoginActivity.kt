@@ -26,13 +26,13 @@ class LoginActivity : AppCompatActivity() {
 //stream part
 
         //ID란 공백 시 공백 알림 호출
-        val idStream = RxTextView.textChanges(binding.userID)
+        val emailStream = RxTextView.textChanges(binding.userEmail)
             .skipInitialValue()
-            .map{id->
-                id.isEmpty()
+            .map{email->
+                email.isEmpty()
             }
-        idStream.subscribe{
-            showTextExistAlert(it, "ID")
+        emailStream.subscribe{
+            showTextExistAlert(it, "Email")
         }
 
         ///PW란 공백 시 공백 알림 호출
@@ -49,10 +49,10 @@ class LoginActivity : AppCompatActivity() {
 
         //로그인 버튼 -> MainActivity
         binding.loginBtn.setOnClickListener{
-            val id = binding.userID.text.toString().trim()
+            val email = binding.userEmail.text.toString().trim()
             val pw = binding.userPW.text.toString().trim()
-            loginUser(id, pw)
-            startActivity(Intent(this, MainActivity::class.java))
+            loginUser(email, pw)
+            //startActivity(Intent(this, MainActivity::class.java))
         }
         //버튼 초기 상태 사용 불가, 회색
         binding.loginBtn.isEnabled = false
@@ -65,10 +65,10 @@ class LoginActivity : AppCompatActivity() {
 
 //로그인 버튼 제어
         val invalidFieldsStream = io.reactivex.Observable.combineLatest(
-            idStream,
+            emailStream,
             pwStream,
-            {idInvalid: Boolean, pwInvalid: Boolean->
-                !idInvalid && !pwInvalid
+            {emailInvalid: Boolean, pwInvalid: Boolean->
+                !emailInvalid && !pwInvalid
             })
         ///inValid = true면 버튼 사용 가능, 파란색
         invalidFieldsStream.subscribe { isValid ->
@@ -82,14 +82,14 @@ class LoginActivity : AppCompatActivity() {
 
     //Alert part
     private fun showTextExistAlert(isNotValid: Boolean, text: String){
-        if(text=="ID")
-            binding.userID.error = if(isNotValid) "아이디를 입력하세요" else null
+        if(text=="Email")
+            binding.userEmail.error = if(isNotValid) "이메일을 입력하세요" else null
         else if(text=="Password")
             binding.userPW.error = if(isNotValid) "비밀번호를 입력하세요" else null
     }
 
-    private fun loginUser(id: String, pw: String) {
-        auth.signInWithEmailAndPassword(id, pw)
+    private fun loginUser(email: String, pw: String) {
+        auth.signInWithEmailAndPassword(email, pw)
             .addOnCompleteListener(this) { login ->
                 if (login.isSuccessful) {
                     Intent(this, MainActivity::class.java).also {
@@ -97,6 +97,7 @@ class LoginActivity : AppCompatActivity() {
                         startActivity(it)
                     }
                 } else {
+
                     Toast.makeText(this, login.exception?.message, Toast.LENGTH_SHORT).show()
                 }
             }
