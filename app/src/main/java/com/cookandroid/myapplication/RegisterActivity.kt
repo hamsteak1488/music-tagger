@@ -52,7 +52,17 @@ class RegisterActivity : AppCompatActivity() {
             showPasswordConfirmAlert(it)
         }
 
-///Button Enable part
+///Button binding
+
+        binding.registerSubmitBtn.setOnClickListener{
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
+        ///버튼 초기 상태 = 이용불가, 회색
+        binding.registerSubmitBtn.isEnabled = false
+        binding.registerSubmitBtn.backgroundTintList =
+            ContextCompat.getColorStateList(this, R.color.gray)
+
+///레지스터 버튼 제어
 
         val invalidFieldsStream = io.reactivex.Observable.combineLatest(
             idStream,
@@ -62,25 +72,16 @@ class RegisterActivity : AppCompatActivity() {
                 !idInvalid && !pwInvalid && !pwConfirmInvalid
             })
 
-
-
+        //inValid = true면 버튼 사용 가능, 파란색
         invalidFieldsStream.subscribe { isValid ->
             if (isValid) {
                 binding.registerSubmitBtn.isEnabled = true
                 binding.registerSubmitBtn.backgroundTintList =
-                    ContextCompat.getColorStateList(this, R.color.green)
-            } else {
-                binding.registerSubmitBtn.isEnabled = false
-                binding.registerSubmitBtn.backgroundTintList =
-                    ContextCompat.getColorStateList(this, R.color.gray)
+                    ContextCompat.getColorStateList(this, R.color.deepBlue)
             }
         }
 
-///Button binding
 
-        binding.registerSubmitBtn.setOnClickListener{
-            startActivity(Intent(this, LoginActivity::class.java))
-        }
     }
 
 ///Alert part

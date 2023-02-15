@@ -47,33 +47,30 @@ class LoginActivity : AppCompatActivity() {
         binding.loginBtn.setOnClickListener{
             startActivity(Intent(this, MainActivity::class.java))
         }
+        //버튼 초기 상태 사용 불가, 회색
+        binding.loginBtn.isEnabled = false
+        binding.loginBtn.backgroundTintList =
+            ContextCompat.getColorStateList(this, R.color.gray)
         //레지스터 버튼 -> RegisterActivity
         binding.registerBtn.setOnClickListener{
             startActivity(Intent(this, RegisterActivity::class.java))
         }
 
-//Button 사용 제어
+//로그인 버튼 사용 제어
 
         val invalidFieldsStream = io.reactivex.Observable.combineLatest(
             idStream,
             pwStream,
             {idInvalid: Boolean, pwInvalid: Boolean->
-                !idInvalid || !pwInvalid
+                !idInvalid && !pwInvalid
             })
-
+        ///inValid = true면 버튼 사용 가능, 파란색
         invalidFieldsStream.subscribe { isValid ->
             if (isValid) {
                 binding.loginBtn.isEnabled = true
                 binding.loginBtn.backgroundTintList =
-                    ContextCompat.getColorStateList(this, R.color.green)
-            } else {
-                binding.loginBtn.isEnabled = false
-                binding.loginBtn.backgroundTintList =
-                    ContextCompat.getColorStateList(this, R.color.gray)
+                    ContextCompat.getColorStateList(this, R.color.deepBlue)
             }
-        }
-        binding.loginBtn.setOnClickListener{
-            startActivity(Intent(this, MainActivity::class.java))
         }
     }
 
