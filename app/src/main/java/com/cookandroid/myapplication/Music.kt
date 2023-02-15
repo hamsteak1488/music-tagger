@@ -40,6 +40,7 @@ fun getImgArt(path: String): ByteArray?{
 }
 
 
+/*
 fun setSongPosition(increment: Boolean){
     if(!PlayMusicActivity.repeat){
         if(increment)
@@ -54,6 +55,7 @@ fun setSongPosition(increment: Boolean){
         }
     }
 }
+*/
 
 ///Dialog 버튼 컬러
 fun setDialogBtnBackground(context: Context, dialog: AlertDialog){

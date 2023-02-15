@@ -5,7 +5,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import com.cookandroid.myapplication.PlayMusicActivity.Companion.binding
 import com.cookandroid.myapplication.databinding.ActivityLoginBinding
 import com.jakewharton.rxbinding2.widget.RxTextView
 
