@@ -14,6 +14,7 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
               private val selectionActivity: Boolean = false)
     : RecyclerView.Adapter<Adapter.MyHolder>() {
 
+    ///뮤직 뷰 binding
     class MyHolder(binding: MusicViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.songNameMV
         val album = binding.songAlbumMV
@@ -25,7 +26,7 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
         return MyHolder(MusicViewBinding.inflate(LayoutInflater.from(context), parent, false))
     }
-
+    ///뷰 홀더
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         holder.title.text = musicList[position].title
         holder.album.text = musicList[position].album

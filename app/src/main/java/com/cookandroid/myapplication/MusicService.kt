@@ -11,7 +11,7 @@ class MusicService: Service() {
     private var myBinder = MyBinder()
     var mediaPlayer:MediaPlayer? = null
     private lateinit var runnable: Runnable
-    lateinit var  audioManager:AudioManager
+    lateinit var  audioManager: AudioManager
 
     override fun onBind(intent: Intent?): IBinder? {
          return myBinder
@@ -21,5 +21,4 @@ class MusicService: Service() {
             return this@MusicService
         }
     }
-
 }

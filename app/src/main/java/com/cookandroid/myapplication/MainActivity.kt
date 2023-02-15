@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
@@ -19,7 +18,6 @@ import java.io.File
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var musicAdapter: Adapter
 
     companion object{
@@ -31,20 +29,24 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+///Button bindings
 
+        ///셔플 버튼 -> PlayMusicActivity
         binding.shuffleBtn.setOnClickListener{
             val intent = Intent(this@MainActivity,PlayMusicActivity::class.java)
             startActivity(intent)
         }
-
+        ///플레이리스트 버튼 -> PlaylistActivity
         binding.playlistBtn.setOnClickListener{
             startActivity(Intent(this@MainActivity, PlaylistActivity::class.java))
         }
-
+        ///넥스트 버튼 -> PlayNext
         binding.playNextBtn.setOnClickListener{
             startActivity((Intent(this@MainActivity,PlayNext::class.java)))
         }
     }
+
+    ///런타임 권한요청(내부 저장소 접근)
     private fun requestRuntimePermission(){
         if(ActivityCompat.checkSelfPermission(this,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED)

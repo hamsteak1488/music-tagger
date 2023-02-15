@@ -49,6 +49,7 @@ class PlaylistViewAdapter(private val context: Context, private var playlistList
     override fun getItemCount(): Int {
         return playlistList.size
     }
+    ///플레이리스트 목록 갱신
     fun refreshPlaylist(){
         playlistList = ArrayList()
         playlistList.addAll(PlaylistActivity.musicPlaylist.ref)

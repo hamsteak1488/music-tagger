@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.cookandroid.myapplication.databinding.ActivityPlayNextBinding
 class PlayNext : AppCompatActivity() {
 
-
     companion object{
         var playNextList: ArrayList<Music> = ArrayList()
     }

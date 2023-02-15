@@ -23,16 +23,11 @@ class PlayMusicActivity : AppCompatActivity(), ServiceConnection {
         var musicService:MusicService? = null
         lateinit var binding: ActivityPlayMusicBinding
         var repeat: Boolean = false
-        var nowPlayingId:String =""
+        var nowPlayingId: String =""
         var fIndex: Int = -1
     }
 
     private lateinit var binding:ActivityPlayMusicBinding
-
-    lateinit var playButton: ImageButton
-    lateinit var seek_bar: SeekBar
-    lateinit var runnable:Runnable
-    private var handler = Handler()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +46,7 @@ class PlayMusicActivity : AppCompatActivity(), ServiceConnection {
         }
         binding.previousBtnPA.setOnClickListener{prevNextSong(increment = false)}
         binding.nextBtnPA.setOnClickListener{prevNextSong(increment = true)}
+
     }
     private fun setLayout(){
         Glide.with(this)

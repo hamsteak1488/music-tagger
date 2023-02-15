@@ -40,11 +40,12 @@
         <ImageButton
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@color/white"
             android:layout_marginStart="20dp"
             android:layout_marginTop="40dp"
+            android:background="@color/white"
+            android:padding="10dp"
             app:tint="@color/black"
-            android:padding="10dp" />
+            tools:ignore="SpeakableTextPresentCheck" />
 
     </LinearLayout>
 
@@ -194,6 +195,5 @@
             android:background="?attr/selectableItemBackground"
             android:layout_weight="1"
             app:tint="@color/black" />
-
     </LinearLayout>
-</LinearLayout>
+ </LinearLayout>
