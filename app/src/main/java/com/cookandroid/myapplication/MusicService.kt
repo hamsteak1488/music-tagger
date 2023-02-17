@@ -10,9 +10,13 @@ import androidx.core.app.NotificationCompat
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.ui.DefaultTimeBar
+import com.google.android.exoplayer2.ui.PlayerControlView
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
+import com.google.android.exoplayer2.ui.StyledPlayerView
+import com.google.android.exoplayer2.ui.TimeBar
 import java.util.*
 
 class MusicService: Service() {
@@ -98,14 +102,43 @@ class MusicService: Service() {
     // 재생 지점 이동
     public fun seekTo(progress:Int) {
         // progress는 0~100 사이의 값, 음악 길이를 100으로 나눠서 progress만큼 곱해준다
-        val pos:Long = exoPlayer!!.duration / 100 * progress
-        exoPlayer!!.seekTo(pos)
+        exoPlayer!!.seekTo(exoPlayer!!.duration / 100 * progress)
+    }
+
+    // 재생 지점 반환 (0 ~ 100)
+    public fun getProgress(): Int {
+        val p = (exoPlayer!!.currentPosition / exoPlayer!!.duration * 100).toInt()
+        return p
     }
 
     // 플레이리스트를 exoPlayer에 지정
     public fun setPlayList(list: ArrayList<MediaItem>) {
         playList = list
         exoPlayer!!.setMediaItems(playList!!)
+    }
+
+    public fun setPlayerView(view:PlayerControlView) {
+
+        view.player = exoPlayer
+    }
+
+    public fun setTimeBarEvent(seekBar : DefaultTimeBar) {
+        var a = StyledPlayerView(this)
+
+        seekBar.addListener(object: TimeBar.OnScrubListener {
+            override fun onScrubStart(timeBar: TimeBar, position: Long) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onScrubMove(timeBar: TimeBar, position: Long) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
+                exoPlayer!!.seekTo(position)
+            }
+
+        })
     }
 
 

@@ -29,7 +29,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-///Button bindings
+
+
+        ///Button bindings
 
         ///셔플 버튼 -> PlayMusicActivity
         binding.shuffleBtn.setOnClickListener{

@@ -87,6 +87,7 @@
             android:text="@string/start_tv"
             android:gravity="center"/>
 
+        <!--
         <SeekBar
             android:id="@+id/seek_bar"
             android:layout_width="0dp"
@@ -94,6 +95,20 @@
             android:progress="50"
             android:layout_weight="1"
             tools:ignore="NestedWeights"/>
+        -->
+
+        <com.google.android.exoplayer2.ui.PlayerControlView
+            android:id="@+id/exoControlView"
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            app:controller_layout_id="@layout/controller_layout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/singerText"
+            app:show_timeout="0"
+            app:use_controller="true" />
 
         <TextView
             android:id="@+id/tvSeekBarEnd"
