@@ -9,11 +9,14 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.widget.ImageButton
+import com.cookandroid.myapplication.databinding.ActivityPlayMusicBinding
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.ui.StyledPlayerView
 
 class PlayMusicActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityPlayMusicBinding
+
     var exoPlayer: ExoPlayer? = null
     var isBound = false //서비스 바운드 여부
     var baseUriString = "http://10.0.2.2:8080/media"
@@ -27,6 +30,10 @@ class PlayMusicActivity : AppCompatActivity() {
         initService() // 서비스 초기화 및 연결
         val button_play = findViewById<ImageButton>(R.id.playBtn)
         //val editText_mediaFileName = findViewById<EditText>(R.id.editText_mediaFileName)
+
+        //뒤로 가기 버튼
+        binding.backBtnPA.setOnClickListener { finish() }
+
         button_play.setOnClickListener {
             val mediaUri: Uri
             /*
@@ -43,9 +50,11 @@ class PlayMusicActivity : AppCompatActivity() {
             exoPlayer!!.setMediaItem(mediaItem)
             exoPlayer!!.prepare()
             exoPlayer!!.play()
+
         }
         //val button_finish = findViewById<Button>(R.id.button_finish)
         //button_finish.setOnClickListener { finish() }
+
     }
 
     // 서비스 연결과 해제시 호출될 이벤트를 미리 정의
@@ -80,6 +89,8 @@ class PlayMusicActivity : AppCompatActivity() {
         }
         Log.d("myTag", "MainActivity onDestroy")
     }
+
+
 }
 
 /*

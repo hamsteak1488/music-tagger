@@ -30,19 +30,11 @@
             android:layout_width="306dp"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:layout_marginRight="50dp"
             android:text="Playlist"
             android:textColor="@color/white"
             android:textSize="25dp"
             android:textStyle="bold" />
-
-        <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="40dp"
-            android:padding="10dp"
-            android:backgroundTint="@android:color/transparent"
-            app:tint="@color/white" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -63,7 +55,7 @@
         android:layout_height="wrap_content"
         app:icon="@drawable/ic_baseline_add_24"
         app:iconSize="35dp"
-        app:iconTint="#3D58CD"
+        app:iconTint="@color/customBlue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.9"
@@ -71,7 +63,7 @@
         app:layout_constraintTop_toTopOf="parent"
         constraintVertical_bias="0.9"
         app:strokeWidth="2dp"
-        app:strokeColor="#3D58CD"/>
+        app:strokeColor="@color/customBlue"/>
 
     <TextView
         android:id="@+id/instructionPA"

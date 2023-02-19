@@ -31,20 +31,12 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
+            android:layout_marginEnd="70dp"
             android:text="Title"
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
             tools:ignore="NestedWeights" />
-
-        <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@color/white"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="40dp"
-            app:tint="@color/black"
-            android:padding="10dp" />
 
     </LinearLayout>
 
@@ -71,6 +63,7 @@
         app:strokeColor="@color/customBlue"
         app:strokeWidth="5dp" />
 
+    <!--노래 제목-->
     <TextView
         android:id="@+id/songNamePA"
         android:layout_width="match_parent"
@@ -82,6 +75,7 @@
         android:gravity="center"
         android:layout_weight="1"
         android:textIsSelectable="true" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -149,64 +143,4 @@
 
     </LinearLayout>
 
-    <!--    Last Row for Various Player Options-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:orientation="horizontal"
-        android:layout_weight="1">
-
-        <!--        Repeat Button-->
-        <ImageButton
-            android:id="@+id/repeatBtnPA"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/repeat_icon"
-            android:background="?attr/selectableItemBackground"
-            android:layout_weight="1"
-            tools:ignore="NestedWeights"
-            app:tint="@color/black" />
-
-        <!--        Equalizer Button-->
-        <ImageButton
-            android:id="@+id/equalizerBtnPA"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/equalizer_icon"
-            android:background="?attr/selectableItemBackground"
-            android:layout_weight="1"
-            app:tint="@color/black" />
-
-        <!--        Timer Button-->
-        <ImageButton
-            android:id="@+id/timerBtnPA"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/timer_icon"
-            android:background="?attr/selectableItemBackground"
-            android:layout_weight="1"
-            app:tint="@color/black" />
-
-        <!--        Share Button-->
-        <ImageButton
-            android:id="@+id/shareBtnPA"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/share_icon"
-            android:background="?attr/selectableItemBackground"
-            android:layout_weight="1"
-            app:tint="@color/black" />
-
-
-        <!--       Volume Button-->
-        <ImageButton
-            android:id="@+id/boosterBtnPA"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:src="@drawable/volume_icon"
-            android:background="?attr/selectableItemBackground"
-            android:layout_weight="1"
-            app:tint="@color/black" />
-
-    </LinearLayout>
 </LinearLayout>

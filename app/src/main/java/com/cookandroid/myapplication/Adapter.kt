@@ -11,7 +11,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.databinding.MusicViewBinding
 
 class Adapter(private val context: Context, private var musicList: ArrayList<Music>, private val playlistDetails: Boolean = false,
-              private val selectionActivity: Boolean = false)
+              private val searchActivity: Boolean = false)
     : RecyclerView.Adapter<Adapter.MyHolder>() {
 
     ///뮤직 뷰 binding
@@ -45,5 +45,18 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
 
     override fun getItemCount(): Int {
         return musicList.size
+    }
+
+    fun updateMusicList(searchList: ArrayList<Music>){
+        musicList = ArrayList()
+        musicList.addAll(searchList)
+        notifyDataSetChanged()
+    }
+
+    private fun sendIntent(ref: String){
+        val intent = Intent(context, PlayMusicActivity::class.java)
+        intent.putExtra("index", pos)
+        intent.putExtra("class", ref)
+        ContextCompat.startActivity(context, intent, null)
     }
 }
