@@ -6,7 +6,6 @@ import android.content.ServiceConnection
 import android.net.Uri
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.provider.MediaStore.Audio.Media
 import android.widget.ImageButton
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -38,6 +37,10 @@ class PlayMusicActivity : AppCompatActivity() {
             playList.add(MediaItem.fromUri(musicUri))
             playList.add(MediaItem.fromUri(bunnyUri))
             musicService!!.setPlayList(playList)
+
+
+            // control 연결 시점 추후 수정할 것
+            musicService!!.setPlayerView(binding.exoControlView)
         }
 
         override fun onServiceDisconnected(p0: ComponentName?) {
@@ -56,54 +59,9 @@ class PlayMusicActivity : AppCompatActivity() {
         startService(intent)
         bindService(intent, serviceConnection, BIND_AUTO_CREATE)
 
-        //initializeLayout()
-
-        // 재생/정지 버튼 이벤트
-        binding.playBtn.setOnClickListener{
-            if(musicService!!.isPlaying()) {
-                musicService!!.pauseMusic()
-            }
-            else {
-                musicService!!.setPlayerView(binding.exoControlView)
-                musicService!!.playMusic()
-            }
-        }
-        binding.previousBtnPA.setOnClickListener{prevNextSong(increment = false)}
-        binding.nextBtnPA.setOnClickListener{prevNextSong(increment = true)}
     }
-
 
     private fun setLayout(){
-        /*Glide.with(this)
-            .load(musicListPA[songPosition].artUri)
-            .apply(RequestOptions().placeholder(R.drawable.ic_baseline_play_arrow_24).centerCrop())
-            .into(binding.songImg)
-        */
-
         binding.songNamePA.text = musicService!!.getTitle()
-    }
-
-    /*
-    private fun initializeLayout(){
-        songPosition = intent.getIntExtra("index", 0)
-        when(intent.getStringExtra("class")){
-            "MusicAdapter" ->{
-                musicListPA = ArrayList()
-                musicListPA.addAll(MainActivity.MusicListMA)
-                setLayout()
-            }
-        }
-    }
-    */
-
-    private fun prevNextSong(increment:Boolean){
-        if(increment){
-            //setSongPosition(increment = true)
-            setLayout()
-        }
-        else{
-            //setSongPosition(increment = false)
-            setLayout()
-        }
     }
 }

@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
@@ -53,11 +54,37 @@ class MusicService: Service() {
         exoPlayer?.release()
     }
 
+    inner class PlayerStateListener : Player.Listener {
+        override fun onIsPlayingChanged(isPlaying: Boolean) {
+            super.onIsPlayingChanged(isPlaying)
+
+            if (isPlaying) {
+                Log.d("myTag", "isPlaying changed to true")
+            }
+            else {
+                Log.d("myTag", "isPlaying changed to false")
+            }
+        }
+    }
+
     // exoPlayer, 알림창 초기화
     private fun initPlayer() {
         //exoPlayer 초기화
         exoPlayer = ExoPlayer.Builder(applicationContext).build()
         //exoPlayer에 플레이리스트 지정
+
+        exoPlayer!!.addListener(object:Player.Listener {
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                super.onIsPlayingChanged(isPlaying)
+
+                if (isPlaying) {
+                    Log.d("myTag", "isPlaying changed to true")
+                }
+                else {
+                    Log.d("myTag", "isPlaying changed to false")
+                }
+            }
+        })
 
         createNotificationChannel()
 
@@ -74,6 +101,7 @@ class MusicService: Service() {
         playerNotificationManager!!.setPriority(NotificationCompat.PRIORITY_MAX)
         playerNotificationManager!!.setUseStopAction(true)
     }
+
 
 
     // 음악 재생
@@ -93,6 +121,7 @@ class MusicService: Service() {
     public fun isPlaying() : Boolean {
         return exoPlayer!!.isPlaying
     }
+
     // 음악 제목 얻기
     public fun getTitle() : CharSequence {
         //return exoPlayer!!.mediaMetadata!!.title!!
@@ -120,25 +149,6 @@ class MusicService: Service() {
     public fun setPlayerView(view:PlayerControlView) {
 
         view.player = exoPlayer
-    }
-
-    public fun setTimeBarEvent(seekBar : DefaultTimeBar) {
-        var a = StyledPlayerView(this)
-
-        seekBar.addListener(object: TimeBar.OnScrubListener {
-            override fun onScrubStart(timeBar: TimeBar, position: Long) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onScrubMove(timeBar: TimeBar, position: Long) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onScrubStop(timeBar: TimeBar, position: Long, canceled: Boolean) {
-                exoPlayer!!.seekTo(position)
-            }
-
-        })
     }
 
 

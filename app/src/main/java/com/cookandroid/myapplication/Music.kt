@@ -19,7 +19,7 @@ class Playlist{
     lateinit var createdOn: String
 }
 
-class MusicPlaylist{
+class EntirePlaylist{
     var ref: ArrayList<Playlist> = ArrayList()
 }
 
@@ -39,23 +39,6 @@ fun getImgArt(path: String): ByteArray?{
     return retriever.embeddedPicture
 }
 
-
-/*
-fun setSongPosition(increment: Boolean){
-    if(!PlayMusicActivity.repeat){
-        if(increment)
-        {
-            if(PlayMusicActivity.musicListPA.size -1 == PlayMusicActivity.songPosition)
-                PlayMusicActivity.songPosition = 0
-            else ++PlayMusicActivity.songPosition
-        }else{
-            if(0 == PlayMusicActivity.songPosition)
-                PlayMusicActivity.songPosition = PlayMusicActivity.musicListPA.size-1
-            else --PlayMusicActivity.songPosition
-        }
-    }
-}
-*/
 
 ///Dialog 버튼 컬러
 fun setDialogBtnBackground(context: Context, dialog: AlertDialog){

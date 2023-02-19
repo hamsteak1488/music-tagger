@@ -18,7 +18,7 @@ class PlaylistActivity : AppCompatActivity() {
     private lateinit var adapter: PlaylistViewAdapter
 
     companion object{
-        var musicPlaylist: MusicPlaylist = MusicPlaylist()
+        var musicPlaylist: EntirePlaylist = EntirePlaylist()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +56,7 @@ class PlaylistActivity : AppCompatActivity() {
                 dialog.dismiss()
             }.create()
         dialog.show()
-        setDialogBtnBackground(this, dialog)
+        //setDialogBtnBackground(this, dialog)
 
 
     }
