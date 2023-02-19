@@ -11,13 +11,10 @@ import androidx.core.app.NotificationCompat
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.ui.DefaultTimeBar
 import com.google.android.exoplayer2.ui.PlayerControlView
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
-import com.google.android.exoplayer2.ui.StyledPlayerView
-import com.google.android.exoplayer2.ui.TimeBar
 import java.util.*
 
 class MusicService: Service() {
@@ -27,6 +24,10 @@ class MusicService: Service() {
     private var playerNotificationManager : PlayerNotificationManager? = null
 
     private var playList:List<MediaItem>? = null;
+
+    private var musicStartTime:Long = -1
+
+    private lateinit var musicPlayHistory:MusicPlayHistory
 
     inner class MyBinder: Binder(){
         fun currentService():MusicService{
@@ -60,9 +61,18 @@ class MusicService: Service() {
 
             if (isPlaying) {
                 Log.d("myTag", "isPlaying changed to true")
+
+                musicStartTime = System.currentTimeMillis()
             }
             else {
                 Log.d("myTag", "isPlaying changed to false")
+
+                if (musicStartTime != (-1).toLong()) {
+                    val playedTime = System.currentTimeMillis() - musicStartTime
+                    // musicListenHistory.addPoint(exoPlayer!!.mediaMetadata.title!!, playedTime)
+                    musicPlayHistory.addPlaytime("star walkin", playedTime)
+                    musicStartTime = -1
+                }
             }
         }
     }
@@ -71,20 +81,10 @@ class MusicService: Service() {
     private fun initPlayer() {
         //exoPlayer 초기화
         exoPlayer = ExoPlayer.Builder(applicationContext).build()
-        //exoPlayer에 플레이리스트 지정
+        //exoPlayer에 플레이리스트 지정할 것
+        musicPlayHistory = MusicPlayHistory()
+        exoPlayer!!.addListener(PlayerStateListener())
 
-        exoPlayer!!.addListener(object:Player.Listener {
-            override fun onIsPlayingChanged(isPlaying: Boolean) {
-                super.onIsPlayingChanged(isPlaying)
-
-                if (isPlaying) {
-                    Log.d("myTag", "isPlaying changed to true")
-                }
-                else {
-                    Log.d("myTag", "isPlaying changed to false")
-                }
-            }
-        })
 
         createNotificationChannel()
 
