@@ -12,6 +12,6 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
 
-    <string name="CHANNEL_ID">1</string>
+    <string name="CHANNEL_ID">MUSIC TAGGER</string>
     <string name="NOTIFICATION_ID">1</string>
 </resources>

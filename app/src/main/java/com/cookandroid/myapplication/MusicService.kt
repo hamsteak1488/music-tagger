@@ -6,18 +6,28 @@ import android.graphics.Bitmap
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.android.exoplayer2.ExoPlayer
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.ui.PlayerControlView
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
+import java.util.*
 
 class MusicService: Service() {
     private var myBinder = MyBinder()
 
-    var exoPlayer : ExoPlayer? = null
+    private var exoPlayer : ExoPlayer? = null
     private var playerNotificationManager : PlayerNotificationManager? = null
+
+    private var playList:List<MediaItem>? = null;
+
+    private var musicStartTime:Long = -1
+
+    private lateinit var musicPlayHistory:MusicPlayHistory
 
     inner class MyBinder: Binder(){
         fun currentService():MusicService{
@@ -45,9 +55,36 @@ class MusicService: Service() {
         exoPlayer?.release()
     }
 
+    inner class PlayerStateListener : Player.Listener {
+        override fun onIsPlayingChanged(isPlaying: Boolean) {
+            super.onIsPlayingChanged(isPlaying)
+
+            if (isPlaying) {
+                Log.d("myTag", "isPlaying changed to true")
+
+                musicStartTime = System.currentTimeMillis()
+            }
+            else {
+                Log.d("myTag", "isPlaying changed to false")
+
+                if (musicStartTime != (-1).toLong()) {
+                    val playedTime = System.currentTimeMillis() - musicStartTime
+                    // musicListenHistory.addPoint(exoPlayer!!.mediaMetadata.title!!, playedTime)
+                    musicPlayHistory.addPlaytime("star walkin", playedTime)
+                    musicStartTime = -1
+                }
+            }
+        }
+    }
+
     // exoPlayer, 알림창 초기화
     private fun initPlayer() {
+        //exoPlayer 초기화
         exoPlayer = ExoPlayer.Builder(applicationContext).build()
+        //exoPlayer에 플레이리스트 지정할 것
+        musicPlayHistory = MusicPlayHistory()
+        exoPlayer!!.addListener(PlayerStateListener())
+
 
         createNotificationChannel()
 
@@ -64,6 +101,56 @@ class MusicService: Service() {
         playerNotificationManager!!.setPriority(NotificationCompat.PRIORITY_MAX)
         playerNotificationManager!!.setUseStopAction(true)
     }
+
+
+
+    // 음악 재생
+    public fun playMusic() {
+        exoPlayer!!.prepare()
+        exoPlayer!!.play()
+    }
+
+    // 음악 정지
+    public fun pauseMusic() {
+        if (exoPlayer!!.isPlaying) {
+            exoPlayer!!.stop()
+        }
+    }
+
+    // 음악 재생 여부
+    public fun isPlaying() : Boolean {
+        return exoPlayer!!.isPlaying
+    }
+
+    // 음악 제목 얻기
+    public fun getTitle() : CharSequence {
+        //return exoPlayer!!.mediaMetadata!!.title!!
+        return "getTitle"
+    }
+
+    // 재생 지점 이동
+    public fun seekTo(progress:Int) {
+        // progress는 0~100 사이의 값, 음악 길이를 100으로 나눠서 progress만큼 곱해준다
+        exoPlayer!!.seekTo(exoPlayer!!.duration / 100 * progress)
+    }
+
+    // 재생 지점 반환 (0 ~ 100)
+    public fun getProgress(): Int {
+        val p = (exoPlayer!!.currentPosition / exoPlayer!!.duration * 100).toInt()
+        return p
+    }
+
+    // 플레이리스트를 exoPlayer에 지정
+    public fun setPlayList(list: ArrayList<MediaItem>) {
+        playList = list
+        exoPlayer!!.setMediaItems(playList!!)
+    }
+
+    public fun setPlayerView(view:PlayerControlView) {
+
+        view.player = exoPlayer
+    }
+
 
     // 알림창을 띄우기 위해 채널 생성
     private fun createNotificationChannel() {
