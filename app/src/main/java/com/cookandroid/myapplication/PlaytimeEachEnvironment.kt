@@ -2,13 +2,13 @@ package com.cookandroid.myapplication
 
 class PlaytimeEachEnvironment {
 
-    var totalPlayTime:Long = 0
+    var totalPlaytime:Long = 0
 
     private var timeOfDay = HashMap<CharSequence, Long>()
     private var weather = HashMap<CharSequence, Long>()
     private var temperature = HashMap<CharSequence, Long>()
-
-
+    
+    // 현재가 하루 중 어느 때인지 반환
     private fun getTimeOfDay() : CharSequence {
         return "morning"
     }
@@ -21,7 +21,7 @@ class PlaytimeEachEnvironment {
 
     fun addPlaytime(playtime:Long) {
 
-        totalPlayTime += playtime
+        totalPlaytime += playtime
 
         val timeNow = getTimeOfDay()
         val weatherNow = getWeather()
