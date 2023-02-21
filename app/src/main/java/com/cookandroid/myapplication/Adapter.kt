@@ -55,7 +55,7 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
 
     private fun sendIntent(ref: String){
         val intent = Intent(context, PlayMusicActivity::class.java)
-        intent.putExtra("index", pos)
+        //intent.putExtra("index", pos)
         intent.putExtra("class", ref)
         ContextCompat.startActivity(context, intent, null)
     }

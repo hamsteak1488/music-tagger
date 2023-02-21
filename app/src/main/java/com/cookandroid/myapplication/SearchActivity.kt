@@ -16,14 +16,14 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.searchRV.setItemViewCacheSize(30)
-        binding.searchRV.setHasFixedSize(true)
+        binding.searchRV.setItemViewCacheSize(30) //30만큼 항목 유지
+        binding.searchRV.setHasFixedSize(true)//리사이클러뷰 크기 고정 명시
         binding.searchRV.layoutManager = LinearLayoutManager(this)
         adapter = Adapter(this, MainActivity.MusicListMA, searchActivity = true)
         binding.searchRV.adapter = adapter
-        binding.backBtnSA.setOnClickListener {finish() }
+        binding.backBtnSA.setOnClickListener {finish()}
 
-        //for search view
+        //Search View 반영
         binding.searchViewSA.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean = true
             override fun onQueryTextChange(newText: String?): Boolean {

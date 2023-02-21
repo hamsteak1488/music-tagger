@@ -35,7 +35,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-///Button bindings
+
+
+        ///Button bindings
 
         ///셔플 버튼 -> PlayMusicActivity
         binding.shuffleBtn.setOnClickListener{
@@ -46,9 +48,9 @@ class MainActivity : AppCompatActivity() {
         binding.playlistBtn.setOnClickListener{
             startActivity(Intent(this@MainActivity, PlaylistActivity::class.java))
         }
-        ///넥스트 버튼 -> PlayNext
-        binding.playNextBtn.setOnClickListener{
-            startActivity((Intent(this@MainActivity,PlayNext::class.java)))
+        ///검색 버튼 -> PlayNext
+        binding.searchSongBtn.setOnClickListener{
+            startActivity((Intent(this@MainActivity,SearchActivity::class.java)))
         }
 
 //로그인 part

@@ -40,12 +40,12 @@
                 android:textAllCaps="false"/>
             <!--다음 곡 재생 버튼-->
             <Button
-                android:id="@+id/playNextBtn"
+                android:id="@+id/searchSongBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:drawableTop="@drawable/ic_baseline_next_plan_24"
-                android:text="Next"
+                android:drawableTop="@drawable/baseline_search_24"
+                android:text="Search"
                 android:textColor="@color/black"
                 android:textAllCaps="false"/>
         </LinearLayout>
@@ -64,6 +64,7 @@
             android:layout_height="wrap_content"
             android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
             android:scrollbars="vertical"/>
+
         <!--로그아웃-->
         <Button
             android:id="@+id/logoutBtn"
@@ -75,13 +76,6 @@
             android:textSize="20dp"/>
 
     </LinearLayout>
-
-
-    <com.google.android.material.navigation.NavigationView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"/>
 
 
 </LinearLayout>
