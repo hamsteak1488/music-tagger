@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
 
 ///데이터 클래스(Music, Playlist, MusicPlaylist)
-data class Music(val id:String, val title:String, val album:String, val artist:String,
+data class Music(val title:String, val album:String, val artist:String,
                  val duration:Long=0, val path: String, val artUri:String)
 
 class Playlist{
