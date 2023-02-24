@@ -42,13 +42,6 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".PlayNext"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".PlaylistActivity"
             android:exported="false">
             <meta-data

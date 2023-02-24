@@ -19,7 +19,7 @@ class PlaylistActivity : AppCompatActivity() {
     private lateinit var adapter: PlaylistViewAdapter
 
     companion object{
-        var musicPlaylist: MusicPlaylist = MusicPlaylist()
+        var musicPlaylist = AllPlaylist()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

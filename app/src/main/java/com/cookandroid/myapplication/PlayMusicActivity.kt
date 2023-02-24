@@ -60,7 +60,7 @@ class PlayMusicActivity : AppCompatActivity() {
         bindService(intent, serviceConnection, BIND_AUTO_CREATE)
 
 
-        binding.shareBtnPA.setOnClickListener {
+        binding.songNamePA.setOnClickListener {
             musicService!!.getMusicMetadata("star walkin") {
                 binding.songNamePA.text = it?.title
             }
