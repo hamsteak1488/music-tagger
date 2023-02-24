@@ -15,6 +15,10 @@ import com.google.android.exoplayer2.ui.PlayerControlView
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
+import retrofit2.*
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
 import java.util.*
 
 class MusicService: Service() {
@@ -149,6 +153,32 @@ class MusicService: Service() {
     public fun setPlayerView(view:PlayerControlView) {
 
         view.player = exoPlayer
+    }
+
+    interface RetrofitAPI {
+        @GET("/metadata")
+        fun getMetadata(@Query("title") title:String) : Call<Music>
+    }
+
+    fun getMusicMetadata(title:String, operation:(Music?)->Unit) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("http://121.181.181.105:8080")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(RetrofitAPI::class.java)
+        val callGetMetadata = api.getMetadata(title)
+        callGetMetadata.enqueue(object:Callback<Music> {
+            override fun onResponse(call: Call<Music>, response: Response<Music>) {
+                Log.d("myTag", "success : ${response.raw()}")
+                val result = response.body()
+                Log.d("myTag", result.toString())
+                operation(response.body())
+            }
+
+            override fun onFailure(call: Call<Music>, t: Throwable) {
+                Log.d("myTag", "failure : $t")
+            }
+        })
     }
 
 
