@@ -8,11 +8,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.cookandroid.myapplication.Adapter.MyHolder
 import com.cookandroid.myapplication.databinding.MusicViewBinding
 
 class Adapter(private val context: Context, private var musicList: ArrayList<Music>, private val playlistDetails: Boolean = false,
-              private val selectionActivity: Boolean = false)
-    : RecyclerView.Adapter<Adapter.MyHolder>() {
+              private val searchActivity: Boolean = false)
+    : RecyclerView.Adapter<MyHolder>() {
 
     ///뮤직 뷰 binding
     class MyHolder(binding: MusicViewBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -45,5 +46,33 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
 
     override fun getItemCount(): Int {
         return musicList.size
+    }
+
+    fun updateMusicList(searchList: ArrayList<Music>){
+        musicList = ArrayList()
+        musicList.addAll(searchList)
+        notifyDataSetChanged()
+    }
+
+    private fun sendIntent(ref: String, pos: Int){
+        val intent = Intent(context, PlayMusicActivity::class.java)
+        intent.putExtra("index", pos)
+        intent.putExtra("class", ref)
+        ContextCompat.startActivity(context, intent, null)
+    }
+    private fun addSong(song: Music): Boolean{
+        PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.forEachIndexed { index, music ->
+            if(song.id == music.id){
+                PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.removeAt(index)
+                return false
+            }
+        }
+        PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.add(song)
+        return true
+    }
+    fun refreshPlaylist(){
+        musicList = ArrayList()
+        musicList = PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist
+        notifyDataSetChanged() //리스트의 크기와 아이템이 둘 다 변경되는 경우 사용
     }
 }

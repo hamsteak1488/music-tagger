@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.databinding.ActivityPlaylistBinding
 import com.cookandroid.myapplication.databinding.AddPlaylistBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -18,7 +19,7 @@ class PlaylistActivity : AppCompatActivity() {
     private lateinit var adapter: PlaylistViewAdapter
 
     companion object{
-        var musicPlaylist: EntirePlaylist = EntirePlaylist()
+        var musicPlaylist: MusicPlaylist = MusicPlaylist()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,12 +29,13 @@ class PlaylistActivity : AppCompatActivity() {
 
         binding.playlistRV.setHasFixedSize(true)
         binding.playlistRV.setItemViewCacheSize(13)
-        binding.playlistRV.layoutManager = GridLayoutManager(this@PlaylistActivity, 2)
+        binding.playlistRV.layoutManager = LinearLayoutManager(this@PlaylistActivity)
         adapter = PlaylistViewAdapter(this, playlistList = musicPlaylist.ref)
         binding.playlistRV.adapter = adapter
         binding.backBtnPLA.setOnClickListener { finish() }
         binding.addPlaylistBtn.setOnClickListener { customAlertDialog() }
 
+        //생성된 플레이리스트가 존재하면 (플레이리스트 생성 문구) 노출 x
         if(musicPlaylist.ref.isNotEmpty()) binding.instructionPA.visibility = View.GONE
     }
 
@@ -56,7 +58,7 @@ class PlaylistActivity : AppCompatActivity() {
                 dialog.dismiss()
             }.create()
         dialog.show()
-        //setDialogBtnBackground(this, dialog)
+        setDialogBtnBackground(this, dialog)
 
 
     }

@@ -9,67 +9,81 @@
     tools:openDrawer="start"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <!--셔플 버튼-->
-            <Button
-                android:id="@+id/shuffleBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_baseline_shuffle_24"
-                android:text="Random"
-                android:textColor="@color/black"
-                android:textAllCaps="false"/>
-            <!--플레이리스트 버튼-->
-            <Button
-                android:id="@+id/playlistBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_baseline_view_playlist_24"
-                android:text="Playlist"
-                android:textColor="@color/black"
-                android:textAllCaps="false"/>
-            <!--다음 곡 재생 버튼-->
-            <Button
-                android:id="@+id/playNextBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableTop="@drawable/ic_baseline_next_plan_24"
-                android:text="Next"
-                android:textColor="@color/black"
-                android:textAllCaps="false"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <!--셔플 버튼-->
+                <Button
+                    android:id="@+id/shuffleBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_baseline_shuffle_24"
+                    android:text="Random"
+                    android:textColor="@color/black"
+                    android:textAllCaps="false"/>
+                <!--플레이리스트 버튼-->
+                <Button
+                    android:id="@+id/playlistBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/ic_baseline_view_playlist_24"
+                    android:text="Playlist"
+                    android:textColor="@color/black"
+                    android:textAllCaps="false"/>
+
+                <Button
+                    android:id="@+id/searchSongBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/baseline_search_24"
+                    android:text="Search"
+                    android:textColor="@color/black"
+                    android:textAllCaps="false"/>
+                <!--로그아웃-->
+                <Button
+                    android:id="@+id/logoutBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableTop="@drawable/baseline_logout_24"
+                    android:text="Logout"
+                    android:textColor="@color/black"
+                    android:textAllCaps="false"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/totalSongs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Total Songs"
+                android:textColor="?colorOnPrimary"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/musicRV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
+                android:scrollbars="vertical"/>
+
 
         </LinearLayout>
-        <TextView
-            android:id="@+id/totalSongs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="Total Songs"
-            android:textColor="?colorOnPrimary"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/musicRV"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
-            android:scrollbars="vertical"/>
-    </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <com.google.android.material.navigation.NavigationView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"/>
 
 </LinearLayout>

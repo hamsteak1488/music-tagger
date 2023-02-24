@@ -51,6 +51,9 @@ class PlayMusicActivity : AppCompatActivity() {
         binding = ActivityPlayMusicBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //뒤로 가기 버튼
+        binding.backBtnPA.setOnClickListener { finish() }
+
         // Service 연결
         val intent = Intent(this, MusicService::class.java)
         startService(intent)

@@ -8,22 +8,32 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.Menu
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
+import com.google.firebase.auth.FirebaseAuth
 import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var musicAdapter: Adapter
+    private lateinit var auth: FirebaseAuth
 
     companion object{
         lateinit var MusicListMA: ArrayList<Music>
+        lateinit var musicListSearch: ArrayList<Music>
+        var search: Boolean = false
+        var sortOrder: Int = 0
+        val sortingList = arrayOf(MediaStore.Audio.Media.DATE_ADDED + " DESC", MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.SIZE + " DESC")
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -31,37 +41,49 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        ///Button bindings
-
-        ///셔플 버튼 -> PlayMusicActivity
+        ///랜덤, 플레이리스트, 검색 버튼
         binding.shuffleBtn.setOnClickListener{
             val intent = Intent(this@MainActivity,PlayMusicActivity::class.java)
-            startActivity(intent)
-        }
-        ///플레이리스트 버튼 -> PlaylistActivity
+            startActivity(intent) }
         binding.playlistBtn.setOnClickListener{
-            startActivity(Intent(this@MainActivity, PlaylistActivity::class.java))
+            startActivity(Intent(this@MainActivity, PlaylistActivity::class.java)) }
+        binding.searchSongBtn.setOnClickListener{
+            startActivity((Intent(this@MainActivity,SearchActivity::class.java))) }
+
+        //로그아웃 버튼
+        auth = FirebaseAuth.getInstance()
+        binding.logoutBtn.setOnClickListener{
+            auth.signOut()
+            Intent(this, LoginActivity::class.java).also{
+                it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(it)
+                Toast.makeText(this, "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
+            }
         }
-        ///넥스트 버튼 -> PlayNext
-        binding.playNextBtn.setOnClickListener{
-            startActivity((Intent(this@MainActivity,PlayNext::class.java)))
+        if(requestRuntimePermission()){
+            initializeLayout()
+            PlaylistActivity.musicPlaylist = MusicPlaylist()
         }
     }
 
-    ///런타임 권한요청(내부 저장소 접근)
-    private fun requestRuntimePermission(){
+    //런타임 권한요청(내부 저장소 접근)
+    private fun requestRuntimePermission(): Boolean{
         if(ActivityCompat.checkSelfPermission(this,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED)
-        {
+            != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),13)
+            return false
         }
+        return true
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode == 13){
-            if(grantResults.isNotEmpty()&&grantResults[0]== PackageManager.PERMISSION_GRANTED)
-                Toast.makeText(this,"Permission Granted", Toast.LENGTH_SHORT).show()
+            if(grantResults.isNotEmpty() && grantResults[0]== PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
+                initializeLayout()
+            }
             else
                 ActivityCompat.requestPermissions(this,arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),13)
         }
@@ -70,18 +92,25 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("SetTextI18n")
     private fun initializeLayout(){
-        requestRuntimePermission()
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        search = false
+        val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
+        sortOrder = sortEditor.getInt("sortOrder", 0)
 
-        binding.musicRV.setHasFixedSize(true)
-        val musicList = ArrayList<String>()
         MusicListMA = getAllAudio()
-        binding.musicRV.setItemViewCacheSize(13)
-        binding.musicRV.layoutManager= LinearLayoutManager(this@MainActivity)
+        binding.musicRV.setHasFixedSize(true) //o
+        binding.musicRV.setItemViewCacheSize(13)//o
+        binding.musicRV.layoutManager= LinearLayoutManager(this@MainActivity)//o
         musicAdapter = Adapter(this@MainActivity, MusicListMA)
         binding.musicRV.adapter = musicAdapter
         binding.totalSongs.text = "Total Songs : "+musicAdapter.itemCount
+
+        //refreshLayout = 새로고침
+        binding.refreshLayout.setOnRefreshListener{
+            MusicListMA = getAllAudio()
+            musicAdapter.updateMusicList(MusicListMA)
+
+            binding.refreshLayout.isRefreshing = false
+        }
     }
     @SuppressLint("Recycle", "Range")
     @RequiresApi(Build.VERSION_CODES.R)
@@ -92,9 +121,8 @@ class MainActivity : AppCompatActivity() {
             MediaStore.Audio.Media._ID, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ALBUM,
             MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.DATE_ADDED,
             MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM_ID)
-        val cursor = this.contentResolver.query(
-            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection,selection,null,
-            MediaStore.Audio.Media.DATE_ADDED+"DESC", null)
+        val cursor = this.contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection,selection,null,
+            sortingList[sortOrder], null)
         if(cursor != null){
             if(cursor.moveToFirst())
                 do {
@@ -114,5 +142,26 @@ class MainActivity : AppCompatActivity() {
             cursor.close()
         }
         return tempList
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_view_menu, menu)
+        val searchView = menu?.findItem(R.id.sesarchView)?.actionView as SearchView
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean = true
+            override fun onQueryTextChange(newText: String?): Boolean {
+                musicListSearch = ArrayList()
+                if(newText != null){
+                    val userInput = newText.lowercase()
+                    for (song in MusicListMA)
+                        if(song.title.lowercase().contains(userInput))
+                            musicListSearch.add(song)
+                    search = true
+                    musicAdapter.updateMusicList(searchList = musicListSearch)
+                }
+                return true
+            }
+        })
+        return super.onCreateOptionsMenu(menu)
     }
 }
