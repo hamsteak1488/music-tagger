@@ -28,8 +28,12 @@ class MainActivity : AppCompatActivity() {
         lateinit var MusicListMA: ArrayList<Music>
         lateinit var musicListSearch: ArrayList<Music>
         var search: Boolean = false
+        var sortOrder: Int = 0
+        val sortingList = arrayOf(MediaStore.Audio.Media.DATE_ADDED + " DESC", MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.SIZE + " DESC")
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -37,26 +41,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        ///Button bindings
-
-        ///셔플 버튼 -> PlayMusicActivity
+        ///랜덤, 플레이리스트, 검색 버튼
         binding.shuffleBtn.setOnClickListener{
             val intent = Intent(this@MainActivity,PlayMusicActivity::class.java)
-            startActivity(intent)
-        }
-        ///플레이리스트 버튼 -> PlaylistActivity
+            startActivity(intent) }
         binding.playlistBtn.setOnClickListener{
-            startActivity(Intent(this@MainActivity, PlaylistActivity::class.java))
-        }
-        ///검색 버튼 -> PlayNext
+            startActivity(Intent(this@MainActivity, PlaylistActivity::class.java)) }
         binding.searchSongBtn.setOnClickListener{
-            startActivity((Intent(this@MainActivity,SearchActivity::class.java)))
-        }
+            startActivity((Intent(this@MainActivity,SearchActivity::class.java))) }
 
-//로그인 part
+        //로그아웃 버튼
         auth = FirebaseAuth.getInstance()
-
-        //로그아웃 버튼 동작
         binding.logoutBtn.setOnClickListener{
             auth.signOut()
             Intent(this, LoginActivity::class.java).also{
@@ -65,22 +60,30 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    //런타임 권한요청(내부 저장소 접근)
-    private fun requestRuntimePermission(){
-        if(ActivityCompat.checkSelfPermission(this,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED)
-        {
-            ActivityCompat.requestPermissions(this,arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),13)
+        if(requestRuntimePermission()){
+            initializeLayout()
+            PlaylistActivity.musicPlaylist = MusicPlaylist()
         }
     }
 
+    //런타임 권한요청(내부 저장소 접근)
+    private fun requestRuntimePermission(): Boolean{
+        if(ActivityCompat.checkSelfPermission(this,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),13)
+            return false
+        }
+        return true
+    }
+
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode == 13){
-            if(grantResults.isNotEmpty()&&grantResults[0]== PackageManager.PERMISSION_GRANTED)
-                Toast.makeText(this,"Permission Granted", Toast.LENGTH_SHORT).show()
+            if(grantResults.isNotEmpty() && grantResults[0]== PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Permission Granted", Toast.LENGTH_SHORT).show()
+                initializeLayout()
+            }
             else
                 ActivityCompat.requestPermissions(this,arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),13)
         }
@@ -89,18 +92,25 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("SetTextI18n")
     private fun initializeLayout(){
-        requestRuntimePermission()
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        search = false
+        val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
+        sortOrder = sortEditor.getInt("sortOrder", 0)
 
-        binding.musicRV.setHasFixedSize(true)
-        val musicList = ArrayList<String>()
         MusicListMA = getAllAudio()
-        binding.musicRV.setItemViewCacheSize(13)
-        binding.musicRV.layoutManager= LinearLayoutManager(this@MainActivity)
+        binding.musicRV.setHasFixedSize(true) //o
+        binding.musicRV.setItemViewCacheSize(13)//o
+        binding.musicRV.layoutManager= LinearLayoutManager(this@MainActivity)//o
         musicAdapter = Adapter(this@MainActivity, MusicListMA)
         binding.musicRV.adapter = musicAdapter
         binding.totalSongs.text = "Total Songs : "+musicAdapter.itemCount
+
+        //refreshLayout = 새로고침
+        binding.refreshLayout.setOnRefreshListener{
+            MusicListMA = getAllAudio()
+            musicAdapter.updateMusicList(MusicListMA)
+
+            binding.refreshLayout.isRefreshing = false
+        }
     }
     @SuppressLint("Recycle", "Range")
     @RequiresApi(Build.VERSION_CODES.R)
@@ -111,9 +121,8 @@ class MainActivity : AppCompatActivity() {
             MediaStore.Audio.Media._ID, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.ALBUM,
             MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DURATION, MediaStore.Audio.Media.DATE_ADDED,
             MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM_ID)
-        val cursor = this.contentResolver.query(
-            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection,selection,null,
-            MediaStore.Audio.Media.DATE_ADDED+"DESC", null)
+        val cursor = this.contentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection,selection,null,
+            sortingList[sortOrder], null)
         if(cursor != null){
             if(cursor.moveToFirst())
                 do {

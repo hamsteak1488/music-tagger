@@ -31,7 +31,7 @@
         android:id="@+id/songAlbumMV"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
-        android:text="Song Name"
+        android:text="Song Album"
         android:layout_toEndOf="@id/imageMV"
         android:layout_toStartOf="@id/songDuration"
         android:layout_marginTop="30dp"

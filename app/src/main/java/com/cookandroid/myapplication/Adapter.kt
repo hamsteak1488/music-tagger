@@ -53,11 +53,26 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
         musicList.addAll(searchList)
         notifyDataSetChanged()
     }
-/*
-    private fun sendIntent(ref: String){
+
+    private fun sendIntent(ref: String, pos: Int){
         val intent = Intent(context, PlayMusicActivity::class.java)
         intent.putExtra("index", pos)
         intent.putExtra("class", ref)
         ContextCompat.startActivity(context, intent, null)
-    }*/
+    }
+    private fun addSong(song: Music): Boolean{
+        PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.forEachIndexed { index, music ->
+            if(song.id == music.id){
+                PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.removeAt(index)
+                return false
+            }
+        }
+        PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.add(song)
+        return true
+    }
+    fun refreshPlaylist(){
+        musicList = ArrayList()
+        musicList = PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist
+        notifyDataSetChanged() //리스트의 크기와 아이템이 둘 다 변경되는 경우 사용
+    }
 }

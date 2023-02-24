@@ -22,7 +22,7 @@ class SearchActivity : AppCompatActivity() {
         adapter = Adapter(this, MainActivity.MusicListMA, searchActivity = true)
         binding.searchRV.adapter = adapter
         binding.backBtnSA.setOnClickListener {finish()}
-/*
+
         //Search View 반영
         binding.searchViewSA.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean = true
@@ -38,6 +38,6 @@ class SearchActivity : AppCompatActivity() {
                 }
                 return true
             }
-        })*/
+        })
     }
 }
