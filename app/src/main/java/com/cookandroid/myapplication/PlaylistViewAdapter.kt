@@ -2,9 +2,11 @@ package com.cookandroid.myapplication
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.cookandroid.myapplication.databinding.PlaylistViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -29,9 +31,10 @@ class PlaylistViewAdapter(private val context: Context, private var playlistList
         holder.delete.setOnClickListener {
             val builder = MaterialAlertDialogBuilder(context)
             builder.setTitle(playlistList[position].name)
-                .setMessage("delete?")
+                .setMessage("delete playlist?")
                 .setPositiveButton("Yes") { dialog, _ ->
                     PlaylistActivity.musicPlaylist.ref.removeAt(position)
+                    refreshPlaylist()
                     dialog.dismiss()
                 }
                 .setNegativeButton("No"){dialog,_ ->
@@ -43,7 +46,9 @@ class PlaylistViewAdapter(private val context: Context, private var playlistList
             customDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
         }
         holder.root.setOnClickListener{
-
+            val intent = Intent(context, PlaylistDetails::class.java)
+            intent.putExtra("index", position)
+            ContextCompat.startActivity(context, intent, null)
         }
     }
     override fun getItemCount(): Int {

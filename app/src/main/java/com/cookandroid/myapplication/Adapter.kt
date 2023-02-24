@@ -8,11 +8,12 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.cookandroid.myapplication.Adapter.MyHolder
 import com.cookandroid.myapplication.databinding.MusicViewBinding
 
 class Adapter(private val context: Context, private var musicList: ArrayList<Music>, private val playlistDetails: Boolean = false,
               private val searchActivity: Boolean = false)
-    : RecyclerView.Adapter<Adapter.MyHolder>() {
+    : RecyclerView.Adapter<MyHolder>() {
 
     ///뮤직 뷰 binding
     class MyHolder(binding: MusicViewBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -52,11 +53,11 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
         musicList.addAll(searchList)
         notifyDataSetChanged()
     }
-
+/*
     private fun sendIntent(ref: String){
         val intent = Intent(context, PlayMusicActivity::class.java)
-        //intent.putExtra("index", pos)
+        intent.putExtra("index", pos)
         intent.putExtra("class", ref)
         ContextCompat.startActivity(context, intent, null)
-    }
+    }*/
 }

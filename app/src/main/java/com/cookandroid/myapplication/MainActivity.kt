@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    ///런타임 권한요청(내부 저장소 접근)
+    //런타임 권한요청(내부 저장소 접근)
     private fun requestRuntimePermission(){
         if(ActivityCompat.checkSelfPermission(this,android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
             != PackageManager.PERMISSION_GRANTED)
