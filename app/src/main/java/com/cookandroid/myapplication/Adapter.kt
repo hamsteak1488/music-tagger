@@ -62,7 +62,7 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
     }
     private fun addSong(song: Music): Boolean{
         PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.forEachIndexed { index, music ->
-            if(song.id == music.id){
+            if(song.title == music.title){
                 PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.removeAt(index)
                 return false
             }
