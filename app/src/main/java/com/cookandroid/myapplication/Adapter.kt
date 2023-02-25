@@ -60,6 +60,7 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
         intent.putExtra("class", ref)
         ContextCompat.startActivity(context, intent, null)
     }
+    /*
     private fun addSong(song: Music): Boolean{
         PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.forEachIndexed { index, music ->
             if(song.title == music.title){
@@ -70,6 +71,7 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
         PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.add(song)
         return true
     }
+    */
     fun refreshPlaylist(){
         musicList = ArrayList()
         musicList = PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist

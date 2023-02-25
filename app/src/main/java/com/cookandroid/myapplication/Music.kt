@@ -6,9 +6,8 @@ import android.media.MediaMetadataRetriever
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.color.MaterialColors
 import java.util.concurrent.TimeUnit
-import kotlin.system.exitProcess
 
-///음악 데이터 클래스
+///데이터 클래스(Music, Playlist, MusicPlaylist)
 data class Music(val title:String, val album:String, val artist:String,
                  val duration:Long=0, val path: String, val artUri:String)
 
@@ -20,7 +19,7 @@ class Playlist{
     lateinit var createdOn: String
 }
 
-class MusicPlaylist{
+class AllPlaylist {
     var ref: ArrayList<Playlist> = ArrayList() //플레이리스트의 리스트
 }
 

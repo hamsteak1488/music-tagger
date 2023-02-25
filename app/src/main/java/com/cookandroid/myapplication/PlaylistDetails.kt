@@ -10,6 +10,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.databinding.ActivityPlaylistDetailsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
+
+
 class PlaylistDetails : AppCompatActivity() {
     private lateinit var binding: ActivityPlaylistDetailsBinding
     private lateinit var adapter: Adapter

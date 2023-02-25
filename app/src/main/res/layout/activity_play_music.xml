@@ -24,18 +24,6 @@
             android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
             app:tint="@color/black" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:layout_marginRight="50dp"
-            android:gravity="center"
-            android:text="Title"
-            android:textColor="@color/black"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            tools:ignore="NestedWeights" />
-
     </LinearLayout>
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -54,7 +42,7 @@
         android:layout_marginHorizontal="20dp"
         android:gravity="center"
         android:text="Song Name"
-        android:textColor="?colorOnPrimary"
+        android:textColor="@color/black"
         android:textIsSelectable="true"
         android:textSize="18sp" />
 

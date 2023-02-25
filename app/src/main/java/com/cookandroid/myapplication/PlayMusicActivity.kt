@@ -6,9 +6,6 @@ import android.content.ServiceConnection
 import android.net.Uri
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.ImageButton
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.databinding.ActivityPlayMusicBinding
 import com.google.android.exoplayer2.MediaItem
 
@@ -62,9 +59,15 @@ class PlayMusicActivity : AppCompatActivity() {
         startService(intent)
         bindService(intent, serviceConnection, BIND_AUTO_CREATE)
 
+
+        binding.songNamePA.setOnClickListener {
+            musicService!!.getMusicMetadata("star walkin") {
+                binding.songNamePA.text = it?.title
+            }
+        }
     }
 
-    private fun setLayout(){
+    private fun setLayout(music:Music) : Unit {
         binding.songNamePA.text = musicService!!.getTitle()
     }
 }

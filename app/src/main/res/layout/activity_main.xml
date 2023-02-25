@@ -65,21 +65,6 @@
                     android:textAllCaps="false"/>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/totalSongs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="Total Songs"
-                android:textColor="?colorOnPrimary"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/musicRV"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
-                android:scrollbars="vertical"/>
-
 
         </LinearLayout>
 
