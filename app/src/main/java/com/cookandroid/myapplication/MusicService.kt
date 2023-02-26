@@ -1,6 +1,7 @@
 package com.cookandroid.myapplication
 
 import android.app.*
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Binder
@@ -21,17 +22,27 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import java.util.*
 
-class MusicService: Service() {
+class MusicService : Service() {
+
+    init {
+
+    }
+
     private var myBinder = MyBinder()
 
     private var exoPlayer : ExoPlayer? = null
     private var playerNotificationManager : PlayerNotificationManager? = null
 
-    private var playList:List<MediaItem>? = null;
+    private var playListMediaItem:ArrayList<MediaItem>? = null
+    private var playListTitle:ArrayList<String>? = null
+    private var currentMusic:Music? = null
 
     private var musicStartTime:Long = -1
-
     private lateinit var musicPlayHistory:MusicPlayHistory
+
+    private val baseUrlStr = "http://121.181.181.105:8080/"
+    val testAudioUriStr = baseUrlStr + "media?title=test_audio1.mp3"
+    val testVideoUriStr = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
 
     inner class MyBinder: Binder(){
         fun currentService():MusicService{
@@ -59,6 +70,10 @@ class MusicService: Service() {
         exoPlayer?.release()
     }
 
+    fun getSearchResult(title:String) : ArrayList<Music> {
+        return ArrayList<Music>()
+    }
+
     inner class PlayerStateListener : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             super.onIsPlayingChanged(isPlaying)
@@ -67,14 +82,18 @@ class MusicService: Service() {
                 Log.d("myTag", "isPlaying changed to true")
 
                 musicStartTime = System.currentTimeMillis()
+
+                getMusicMetadata(playListTitle!![exoPlayer!!.currentMediaItemIndex]) {
+                    currentMusic = it
+                }
             }
             else {
                 Log.d("myTag", "isPlaying changed to false")
 
                 if (musicStartTime != (-1).toLong()) {
                     val playedTime = System.currentTimeMillis() - musicStartTime
-                    // musicListenHistory.addPoint(exoPlayer!!.mediaMetadata.title!!, playedTime)
-                    musicPlayHistory.addPlaytime("star walkin", playedTime)
+                    musicPlayHistory.addPlaytime(currentMusic!!.title, playedTime)
+                    // musicPlayHistory.addPlaytime("star walkin", playedTime)
                     musicStartTime = -1
                 }
             }
@@ -128,8 +147,7 @@ class MusicService: Service() {
 
     // 음악 제목 얻기
     public fun getTitle() : CharSequence {
-        //return exoPlayer!!.mediaMetadata!!.title!!
-        return "getTitle"
+        return currentMusic!!.title
     }
 
     // 재생 지점 이동
@@ -145,12 +163,17 @@ class MusicService: Service() {
     }
 
     // 플레이리스트를 exoPlayer에 지정
-    public fun setPlayList(list: ArrayList<MediaItem>) {
-        playList = list
-        exoPlayer!!.setMediaItems(playList!!)
+    fun setPlayList(list: ArrayList<String>) {
+        playListTitle = list
+        playListMediaItem = ArrayList<MediaItem>().apply {
+            playListTitle!!.forEach { title ->
+                this.add(MediaItem.fromUri(baseUrlStr + "media?title=" + title + ".mp3"))
+            }
+        }
+        exoPlayer!!.setMediaItems(playListMediaItem!!)
     }
 
-    public fun setPlayerView(view:PlayerControlView) {
+    fun setPlayerView(view:PlayerControlView) {
 
         view.player = exoPlayer
     }
@@ -162,7 +185,7 @@ class MusicService: Service() {
 
     fun getMusicMetadata(title:String, operation:(Music?)->Unit) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://121.181.181.105:8080")
+            .baseUrl(baseUrlStr)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)

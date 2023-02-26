@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
@@ -29,6 +28,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Service 연결
+        if (MusicServiceConnection.musicService == null) {
+            val intent = Intent(this, MusicService::class.java)
+            startService(intent)
+            bindService(intent, MusicServiceConnection.getInstance(applicationContext), BIND_AUTO_CREATE)
+        }
 
         ///랜덤, 플레이리스트, 검색 버튼
         binding.shuffleBtn.setOnClickListener{

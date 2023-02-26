@@ -14,6 +14,6 @@ class MusicPlayHistory {
 
         playHistoryMap[title]!!.addPlaytime(playtime)
 
-        Log.d("myTag", "추가된 결과 : " + playHistoryMap[title])
+        Log.d("myTag", "추가된 결과 : " + playHistoryMap[title]!!.totalPlaytime)
     }
 }
