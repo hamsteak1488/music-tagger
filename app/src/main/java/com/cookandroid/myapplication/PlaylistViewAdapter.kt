@@ -8,6 +8,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.databinding.PlaylistViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -49,6 +51,12 @@ class PlaylistViewAdapter(private val context: Context, private var playlistList
             val intent = Intent(context, PlaylistDetails::class.java)
             intent.putExtra("index", position)
             ContextCompat.startActivity(context, intent, null)
+        }
+        if(PlaylistActivity.musicPlaylist.ref[position].playlist.size > 0){
+            Glide.with(context)
+                .load(PlaylistActivity.musicPlaylist.ref[position].playlist[0].artUri)
+                .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
+                .into(holder.image)
         }
     }
     override fun getItemCount(): Int {

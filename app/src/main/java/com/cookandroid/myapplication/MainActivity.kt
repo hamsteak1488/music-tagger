@@ -13,16 +13,14 @@ import com.google.firebase.auth.FirebaseAuth
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var musicAdapter: Adapter
     private lateinit var auth: FirebaseAuth
 
+    /*
     companion object{
-        lateinit var MusicListMA: ArrayList<Music>
         lateinit var musicListSearch: ArrayList<Music>
         var search: Boolean = false
     }
-
-    @RequiresApi(Build.VERSION_CODES.R)
+*/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,6 +31,8 @@ class MainActivity : AppCompatActivity() {
         ///랜덤, 플레이리스트, 검색 버튼
         binding.shuffleBtn.setOnClickListener{
             val intent = Intent(this@MainActivity,PlayMusicActivity::class.java)
+            intent.putExtra("index",0)
+            intent.putExtra("class","MainActivity")
             startActivity(intent) }
         binding.playlistBtn.setOnClickListener{
             startActivity(Intent(this@MainActivity, PlaylistActivity::class.java)) }

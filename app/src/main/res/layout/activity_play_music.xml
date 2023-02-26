@@ -22,7 +22,8 @@
             android:background="?attr/selectableItemBackground"
             android:padding="10dp"
             android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
-            app:tint="@color/black" />
+            app:tint="@color/black"
+            android:contentDescription="Back"/>
 
     </LinearLayout>
 
@@ -56,7 +57,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="30dp"
             android:layout_margin="16dp"
             android:layout_weight="1"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
@@ -67,13 +68,12 @@
                 android:text="Auto"
                 android:textSize="12dp"
                 android:padding="3dp"
-                android:gravity="center"
                 android:textColor="@color/black"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="30dp"
             android:layout_margin="16dp"
             android:layout_weight="1"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
@@ -85,11 +85,11 @@
                 android:textSize="12dp"
                 android:padding="3dp"
                 android:textColor="@color/black"
-                android:gravity="center"/>
+                android:singleLine="true"/>
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="30dp"
             android:layout_margin="16dp"
             android:layout_weight="1"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">

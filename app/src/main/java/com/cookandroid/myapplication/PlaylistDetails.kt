@@ -1,5 +1,6 @@
 package com.cookandroid.myapplication
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -30,14 +31,18 @@ class PlaylistDetails : AppCompatActivity() {
         binding.playlistDetailsRV.setHasFixedSize(true)
         binding.playlistDetailsRV.layoutManager = LinearLayoutManager(this)
 
-        PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist.addAll(MainActivity.MusicListMA)
         adapter = Adapter(this, PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist, playlistDetails = true)
 
         binding.playlistDetailsRV.adapter = adapter
+
+        //뒤로 가기
         binding.backBtnPD.setOnClickListener { finish() }
+
+        //음악 추가
         binding.addBtnPD.setOnClickListener{
             startActivity(Intent(this, SearchActivity::class.java))
         }
+        //음악 전체 삭제
         binding.removeAllPD.setOnClickListener{
             val builder = MaterialAlertDialogBuilder(this)
             builder.setTitle("remove")
@@ -57,6 +62,7 @@ class PlaylistDetails : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onResume() {
         super.onResume()
         binding.playlistNamePD.text = PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].name

@@ -10,16 +10,21 @@ class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
     private lateinit var adapter: Adapter
+    private lateinit var musicListSearch: ArrayList<Music>
+    private var search: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.searchRV.setItemViewCacheSize(30) //30만큼 항목 유지
-        binding.searchRV.setHasFixedSize(true)//리사이클러뷰 크기 고정 명시
+        musicListSearch = ArrayList()
+
+        binding.searchRV.setItemViewCacheSize(15) //Int 만큼 항목 유지
+        binding.searchRV.setHasFixedSize(true)//리사이클러뷰 크기 고정
         binding.searchRV.layoutManager = LinearLayoutManager(this)
-        adapter = Adapter(this, MainActivity.MusicListMA, searchActivity = true)
+
+        adapter = Adapter(this, musicListSearch, searchActivity = true)
         binding.searchRV.adapter = adapter
         binding.backBtnSA.setOnClickListener {finish()}
 
@@ -27,17 +32,20 @@ class SearchActivity : AppCompatActivity() {
         binding.searchViewSA.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
             override fun onQueryTextSubmit(query: String?): Boolean = true
             override fun onQueryTextChange(newText: String?): Boolean {
-                MainActivity.musicListSearch = ArrayList()
                 if(newText != null){
                     val userInput = newText.lowercase()
-                    for (song in MainActivity.MusicListMA)
-                        if(song.title.lowercase().contains(userInput))
-                            MainActivity.musicListSearch.add(song)
-                    MainActivity.search = true
-                    adapter.updateMusicList(searchList = MainActivity.musicListSearch)
+                    musicListSearch = getSearchResult(userInput)
+                    search = true
+                    //검색 결과로 리스트 초기화
+                    adapter.updateMusicList(searchList = musicListSearch)
                 }
                 return true
             }
         })
+    }
+
+    //서버로 검색어 전송, 결과 리스트 반환
+    fun getSearchResult(title:String) : ArrayList<Music> {
+        return ArrayList<Music>()
     }
 }
