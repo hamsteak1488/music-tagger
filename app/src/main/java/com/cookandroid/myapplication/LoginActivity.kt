@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import com.cookandroid.myapplication.databinding.ActivityLoginBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.jakewharton.rxbinding2.widget.RxTextView
 
 @SuppressLint("CheckResult")
@@ -16,6 +17,17 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
+//자동 로그인
+    override fun onStart() { //로그인 액티비티 시작시 유저 체크 후 유저 확인시 자동 로그인
+        super.onStart()
+        moveMainPage(auth?.currentUser)
+    }
+    fun moveMainPage(user: FirebaseUser?){
+        if(user!=null){
+            startActivity(Intent(this,MainActivity::class.java))
+            finish()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,6 +103,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun loginUser(email: String, pw: String) {
+
         auth.signInWithEmailAndPassword(email, pw)
             .addOnCompleteListener(this) { login ->
                 if (login.isSuccessful) {

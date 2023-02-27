@@ -8,8 +8,10 @@ import androidx.core.content.ContextCompat
 import com.cookandroid.myapplication.databinding.ActivityRegisterBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
+
 
 class RegisterActivity : AppCompatActivity() {
 

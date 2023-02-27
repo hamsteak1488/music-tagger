@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class MainActivity : AppCompatActivity() {
 
@@ -53,4 +54,6 @@ class MainActivity : AppCompatActivity() {
         // 로그인 후 플레이리스트 서버로부터 받아오기
         PlaylistActivity.musicPlaylist = AllPlaylist()
     }
+
+
 }
