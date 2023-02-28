@@ -6,7 +6,7 @@ class PlaytimeEachEnvironment {
 
     private var timeOfDay = HashMap<CharSequence, Long>()
     private var weather = HashMap<CharSequence, Long>()
-    private var temperature = HashMap<CharSequence, Long>()
+    private var season = HashMap<CharSequence, Long>()
     
     // 현재가 하루 중 어느 때인지 반환
     private fun getTimeOfDay() : CharSequence {
@@ -29,6 +29,6 @@ class PlaytimeEachEnvironment {
 
         timeOfDay[timeNow] = timeOfDay.getOrDefault(timeNow, 0) + playtime
         weather[weatherNow] = weather.getOrDefault(weatherNow, 0) + playtime
-        temperature[seasonNow] = temperature.getOrDefault(seasonNow, 0) + playtime
+        season[seasonNow] = season.getOrDefault(seasonNow, 0) + playtime
     }
 }

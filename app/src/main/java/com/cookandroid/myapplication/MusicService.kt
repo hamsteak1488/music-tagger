@@ -1,7 +1,6 @@
 package com.cookandroid.myapplication
 
 import android.app.*
-import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Binder
@@ -50,7 +49,7 @@ class MusicService : Service() {
         }
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
+    override fun onBind(intent: Intent?): IBinder {
         return myBinder
     }
 
@@ -72,6 +71,7 @@ class MusicService : Service() {
 
     fun getSearchResult(title:String) : ArrayList<Music> {
         return ArrayList<Music>()
+        TODO("getSearchList 내부 구현 필요")
     }
 
     inner class PlayerStateListener : Player.Listener {
@@ -128,36 +128,36 @@ class MusicService : Service() {
 
 
     // 음악 재생
-    public fun playMusic() {
+    fun playMusic() {
         exoPlayer!!.prepare()
         exoPlayer!!.play()
     }
 
     // 음악 정지
-    public fun pauseMusic() {
+    fun pauseMusic() {
         if (exoPlayer!!.isPlaying) {
             exoPlayer!!.stop()
         }
     }
 
     // 음악 재생 여부
-    public fun isPlaying() : Boolean {
+    fun isPlaying() : Boolean {
         return exoPlayer!!.isPlaying
     }
 
     // 음악 제목 얻기
-    public fun getTitle() : CharSequence {
+    fun getTitle() : CharSequence {
         return currentMusic!!.title
     }
 
     // 재생 지점 이동
-    public fun seekTo(progress:Int) {
+    fun seekTo(progress:Int) {
         // progress는 0~100 사이의 값, 음악 길이를 100으로 나눠서 progress만큼 곱해준다
         exoPlayer!!.seekTo(exoPlayer!!.duration / 100 * progress)
     }
 
     // 재생 지점 반환 (0 ~ 100)
-    public fun getProgress(): Int {
+    fun getProgress(): Int {
         val p = (exoPlayer!!.currentPosition / exoPlayer!!.duration * 100).toInt()
         return p
     }

@@ -1,13 +1,8 @@
 package com.cookandroid.myapplication
 
-import android.content.ComponentName
-import android.content.Intent
-import android.content.ServiceConnection
-import android.net.Uri
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
 import com.cookandroid.myapplication.databinding.ActivityPlayMusicBinding
-import com.google.android.exoplayer2.MediaItem
 
 class PlayMusicActivity : AppCompatActivity() {
 
