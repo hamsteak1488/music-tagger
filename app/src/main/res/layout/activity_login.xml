@@ -60,15 +60,6 @@
         android:textColor="@color/white"
         android:backgroundTint="#273A8E"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingTop="50dp"
-        android:text="INSERT LOGO"
-        android:textColor="#273A8E"
-        android:textSize="50dp" />
-
     <CheckBox
         android:id="@+id/autoCheckBox"
         android:layout_width="match_parent"
@@ -77,5 +68,11 @@
         android:clickable="true"
         android:text="Remember email and pw"
         app:centerIfNoTextEnabled="false" />
+
+    <CheckBox
+        android:id="@+id/autoLogincheckBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Auto Login" />
 
 </LinearLayout>

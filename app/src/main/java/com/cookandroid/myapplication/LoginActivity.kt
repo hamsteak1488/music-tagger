@@ -20,20 +20,7 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
-//자동 로그인
-    override fun onStart() { //로그인 액티비티 시작시 유저 체크 후 유저 확인시 자동 로그인
-        super.onStart()
-        //moveMainPage(auth?.currentUser)
 
-
-}
-    private fun moveMainPage(user: FirebaseUser?){
-        if(user!=null){
-            startActivity(Intent(this,MainActivity::class.java))
-            finish()
-        }
-
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,27 +37,31 @@ class LoginActivity : AppCompatActivity() {
             finish()
         }*/
         // id pw 저장
-        val pref: SharedPreferences
-        val editor: SharedPreferences.Editor
 
-        pref = getSharedPreferences("pref", Activity.MODE_PRIVATE);
-        editor = pref.edit();
+        val pref: SharedPreferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        val editor: SharedPreferences.Editor = pref.edit();
 
         var ID = pref.getString("id",null)
         var PW = pref.getString("pw",null)
         var OX = pref.getBoolean("ox",false)
-
-        if(OX){
+        var AUTO = pref.getBoolean("auto",false)
+        if(AUTO){
+            if (ID != null) {
+                if (PW != null) {
+                    binding.autoLogincheckBox.isChecked=true
+                    binding.autoCheckBox.isChecked=true
+                    binding.userEmail.setText(ID)
+                    binding.userPW.setText(PW)
+                    loginUser(ID,PW)
+                }
+            }
+        }
+        else if(OX){
             binding.autoCheckBox.isChecked=true
             binding.userEmail.setText(ID)
             binding.userPW.setText(PW)
         }
 
-        /*if(OX){
-            val email = binding.userEmail.text.toString().trim()
-            val pw = binding.userPW.text.toString().trim()
-            loginUser(email, pw)
-        }*/
 
 
 
@@ -106,11 +97,19 @@ class LoginActivity : AppCompatActivity() {
             loginUser(email, pw)
             //startActivity(Intent(this, MainActivity::class.java))
 
-            // 체크 박스 체크되어 있을 시로 그인 버튼 클릭시 text box의 id pw 저장
-            if(binding.autoCheckBox.isChecked){
+            // 체크 박스 체크되어 있을 시 로그인 버튼 클릭시 text box의 id pw 저장
+            if(binding.autoLogincheckBox.isChecked){
                 editor.putString("id",email)
                 editor.putString("pw",pw)
                 editor.putBoolean("ox",true)
+                editor.putBoolean("auto",true)
+                editor.apply()
+            }
+            else if(binding.autoCheckBox.isChecked){
+                editor.putString("id",email)
+                editor.putString("pw",pw)
+                editor.putBoolean("ox",true)
+                editor.putBoolean("auto",binding.autoLogincheckBox.isChecked)
                 editor.apply()
             }
             else{
