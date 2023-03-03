@@ -69,4 +69,13 @@
         android:textColor="#273A8E"
         android:textSize="50dp" />
 
+    <CheckBox
+        android:id="@+id/autoCheckBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:clickable="true"
+        android:text="Remember email and pw"
+        app:centerIfNoTextEnabled="false" />
+
 </LinearLayout>
