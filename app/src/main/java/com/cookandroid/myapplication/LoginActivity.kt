@@ -7,6 +7,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.helper.widget.MotionEffect.AUTO
 import androidx.core.content.ContextCompat
 import com.cookandroid.myapplication.databinding.ActivityLoginBinding
 import com.google.firebase.FirebaseApp
@@ -25,6 +26,9 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
+
+
+
         setContentView(binding.root)
 //Auth part
         FirebaseApp.initializeApp(this)
@@ -35,20 +39,24 @@ class LoginActivity : AppCompatActivity() {
 
         // id pw 저장
         //구현 : SharedPreferences 앱의 임시 저장소에 id,pw ox(이메일,pw저장), auto(자동로그인)
-        val pref: SharedPreferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
-        val editor: SharedPreferences.Editor = pref.edit();
-
+        /*val pref: SharedPreferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        val editor: SharedPreferences.Editor = pref.edit();*/
+        val pref: SharedPreferences = getSharedPreferences("pref", Activity.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = pref.edit()
         var ID = pref.getString("id",null)
         var PW = pref.getString("pw",null)
         var OX = pref.getBoolean("ox",false)
         var AUTO = pref.getBoolean("auto",false)
-        if(AUTO){
+
+        if (AUTO){
             if (ID != null) {
                 if (PW != null) {
-                    binding.autoLogincheckBox.isChecked=true
+                    apply { binding }
                     binding.autoCheckBox.isChecked=true
+                    binding.autoLogincheckBox.isChecked=true
                     binding.userEmail.setText(ID)
                     binding.userPW.setText(PW)
+
                     loginUser(ID,PW)
                 }
             }
@@ -122,6 +130,10 @@ class LoginActivity : AppCompatActivity() {
             binding.loginBtn.isEnabled = false
             binding.loginBtn.backgroundTintList =
                 ContextCompat.getColorStateList(this, R.color.gray)
+        }
+        else{
+            binding.loginBtn.backgroundTintList =
+                ContextCompat.getColorStateList(this, R.color.deepBlue)
         }
 
         //레지스터 버튼 -> RegisterActivity
