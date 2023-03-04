@@ -30,14 +30,11 @@ class LoginActivity : AppCompatActivity() {
         FirebaseApp.initializeApp(this)
         auth = FirebaseAuth.getInstance()
 
-//자동로그인 파이어베이스 토큰 1시간
+//자동로그인
 
-        /*if(auth?.currentUser!=null){
-            startActivity(Intent(this,MainActivity::class.java))
-            finish()
-        }*/
+
         // id pw 저장
-
+        //구현 : SharedPreferences 앱의 임시 저장소에 id,pw ox(이메일,pw저장), auto(자동로그인)
         val pref: SharedPreferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
         val editor: SharedPreferences.Editor = pref.edit();
 
