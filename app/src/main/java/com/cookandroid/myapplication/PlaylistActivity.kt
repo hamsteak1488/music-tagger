@@ -48,13 +48,15 @@ class PlaylistActivity : AppCompatActivity() {
             .setTitle("Playlist Details")
             .setPositiveButton("ADD"){ dialog, _ ->
                 val playlistName = binder.playlistName.text
-                val createdBy = binder.yourName.text
-                if(playlistName != null && createdBy != null)
-                    if(playlistName.isNotEmpty() && createdBy.isNotEmpty())
+                if(playlistName != null)
+                    if(playlistName.isNotEmpty())
                     {
-                        addPlaylist(playlistName.toString(), createdBy.toString())
+                        addPlaylist(playlistName.toString())
                     }
 
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel"){dialog,_ ->
                 dialog.dismiss()
             }.create()
         dialog.show()
@@ -63,7 +65,7 @@ class PlaylistActivity : AppCompatActivity() {
 
     }
     ///플레이리스트 추가 수행
-    private fun addPlaylist(name: String, createdBy: String){
+    private fun addPlaylist(name: String){
         var playlistExists = false
         for(i in musicPlaylist.ref) {
             if (name == i.name){
@@ -77,10 +79,6 @@ class PlaylistActivity : AppCompatActivity() {
             val tempPlaylist = Playlist()
             tempPlaylist.name = name
             tempPlaylist.playlist = ArrayList()
-            tempPlaylist.createdBy = createdBy
-            val calendar = Calendar.getInstance().time
-            val sdf = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
-            tempPlaylist.createdOn = sdf.format(calendar)
             musicPlaylist.ref.add(tempPlaylist)
             adapter.refreshPlaylist()
         }
