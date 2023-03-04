@@ -57,6 +57,7 @@ class LoginActivity : AppCompatActivity() {
             binding.autoCheckBox.isChecked=true
             binding.userEmail.setText(ID)
             binding.userPW.setText(PW)
+
         }
 
 
@@ -116,9 +117,13 @@ class LoginActivity : AppCompatActivity() {
 
         }
         //버튼 초기 상태 사용 불가, 회색
-        binding.loginBtn.isEnabled = false
-        binding.loginBtn.backgroundTintList =
-            ContextCompat.getColorStateList(this, R.color.gray)
+        // email, pw 저장설정이 켜져있을 경우 버튼 초기 상태 사용 가능, 파랑색
+        if (!OX){
+            binding.loginBtn.isEnabled = false
+            binding.loginBtn.backgroundTintList =
+                ContextCompat.getColorStateList(this, R.color.gray)
+        }
+
         //레지스터 버튼 -> RegisterActivity
         binding.registerBtn.setOnClickListener{
             startActivity(Intent(this, RegisterActivity::class.java))
