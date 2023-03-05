@@ -48,20 +48,8 @@ class LoginActivity : AppCompatActivity() {
         var OX = pref.getBoolean("ox",false)
         var AUTO = pref.getBoolean("auto",false)
 
-        if (AUTO){
-            if (ID != null) {
-                if (PW != null) {
-                    apply { binding }
-                    binding.autoCheckBox.isChecked=true
-                    binding.autoLogincheckBox.isChecked=true
-                    binding.userEmail.setText(ID)
-                    binding.userPW.setText(PW)
 
-                    loginUser(ID,PW)
-                }
-            }
-        }
-        else if(OX){
+        if(OX){
             binding.autoCheckBox.isChecked=true
             binding.userEmail.setText(ID)
             binding.userPW.setText(PW)
