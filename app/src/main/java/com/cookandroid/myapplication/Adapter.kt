@@ -74,7 +74,7 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
     */
     fun refreshPlaylist(){
         musicList = ArrayList()
-        musicList = PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist
+        musicList = PlaylistManager.allPlayList[PlaylistDetails.currentPlaylistPos].playlist
         notifyDataSetChanged() //리스트의 크기와 아이템이 둘 다 변경되는 경우 사용
     }
 }

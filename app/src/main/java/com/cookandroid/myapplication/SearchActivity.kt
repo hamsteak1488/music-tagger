@@ -8,6 +8,7 @@ import com.cookandroid.myapplication.databinding.ActivitySearchBinding
 
 class SearchActivity : AppCompatActivity() {
 
+    // TODO: 음악 클릭 시, 플레이리스트들 나열할 액티비티 생성하고 동작 구현할 것
     private lateinit var binding: ActivitySearchBinding
     private lateinit var adapter: Adapter
 
@@ -19,23 +20,21 @@ class SearchActivity : AppCompatActivity() {
         binding.searchRV.setItemViewCacheSize(30) //30만큼 항목 유지
         binding.searchRV.setHasFixedSize(true)//리사이클러뷰 크기 고정 명시
         binding.searchRV.layoutManager = LinearLayoutManager(this)
-        adapter = Adapter(this, MainActivity.MusicListMA, searchActivity = true)
-        binding.searchRV.adapter = adapter
         binding.backBtnSA.setOnClickListener {finish()}
 
         //Search View 반영
         binding.searchViewSA.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
-            override fun onQueryTextSubmit(query: String?): Boolean = true
-            override fun onQueryTextChange(newText: String?): Boolean {
-                MainActivity.musicListSearch = ArrayList()
-                if(newText != null){
-                    val userInput = newText.lowercase()
-                    for (song in MainActivity.MusicListMA)
-                        if(song.title.lowercase().contains(userInput))
-                            MainActivity.musicListSearch.add(song)
-                    MainActivity.search = true
-                    adapter.updateMusicList(searchList = MainActivity.musicListSearch)
+            override fun onQueryTextSubmit(query: String?): Boolean {
+
+                MusicServiceConnection.musicService!!.getMusicMetadataList("title", query!!) {
+                    adapter = Adapter(this@SearchActivity, it as ArrayList<Music>, searchActivity = true)
+                    binding.searchRV.adapter = adapter
                 }
+
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
                 return true
             }
         })

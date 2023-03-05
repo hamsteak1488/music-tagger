@@ -33,13 +33,13 @@ class MusicService : Service() {
     private var playerNotificationManager : PlayerNotificationManager? = null
 
     private var playListMediaItem:ArrayList<MediaItem>? = null
-    private var playListTitle:ArrayList<String>? = null
+    private var mediaIdList:ArrayList<Int>? = null
     private var currentMusic:Music? = null
 
     private var musicStartTime:Long = -1
     private lateinit var musicPlayHistory:MusicPlayHistory
 
-    private val baseUrlStr = "http://121.181.181.105:8080/"
+    private val baseUrlStr = "http://10.0.2.2:8080/"
     val testAudioUriStr = baseUrlStr + "media?title=test_audio1.mp3"
     val testVideoUriStr = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
 
@@ -69,11 +69,6 @@ class MusicService : Service() {
         exoPlayer?.release()
     }
 
-    fun getSearchResult(title:String) : ArrayList<Music> {
-        return ArrayList<Music>()
-        TODO("getSearchList 내부 구현 필요")
-    }
-
     inner class PlayerStateListener : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             super.onIsPlayingChanged(isPlaying)
@@ -83,8 +78,8 @@ class MusicService : Service() {
 
                 musicStartTime = System.currentTimeMillis()
 
-                getMusicMetadata(playListTitle!![exoPlayer!!.currentMediaItemIndex]) {
-                    currentMusic = it
+                getMusicMetadata(mediaIdList!![exoPlayer!!.currentMediaItemIndex]) {
+                    currentMusic = it;
                 }
             }
             else {
@@ -92,7 +87,7 @@ class MusicService : Service() {
 
                 if (musicStartTime != (-1).toLong()) {
                     val playedTime = System.currentTimeMillis() - musicStartTime
-                    musicPlayHistory.addPlaytime(currentMusic!!.title, playedTime)
+                    musicPlayHistory.addPlaytime(currentMusic!!.id, playedTime)
                     // musicPlayHistory.addPlaytime("star walkin", playedTime)
                     musicStartTime = -1
                 }
@@ -125,49 +120,17 @@ class MusicService : Service() {
         playerNotificationManager!!.setUseStopAction(true)
     }
 
-
-
-    // 음악 재생
-    fun playMusic() {
-        exoPlayer!!.prepare()
-        exoPlayer!!.play()
-    }
-
-    // 음악 정지
-    fun pauseMusic() {
-        if (exoPlayer!!.isPlaying) {
-            exoPlayer!!.stop()
-        }
-    }
-
-    // 음악 재생 여부
-    fun isPlaying() : Boolean {
-        return exoPlayer!!.isPlaying
-    }
-
     // 음악 제목 얻기
     fun getTitle() : CharSequence {
         return currentMusic!!.title
     }
 
-    // 재생 지점 이동
-    fun seekTo(progress:Int) {
-        // progress는 0~100 사이의 값, 음악 길이를 100으로 나눠서 progress만큼 곱해준다
-        exoPlayer!!.seekTo(exoPlayer!!.duration / 100 * progress)
-    }
-
-    // 재생 지점 반환 (0 ~ 100)
-    fun getProgress(): Int {
-        val p = (exoPlayer!!.currentPosition / exoPlayer!!.duration * 100).toInt()
-        return p
-    }
-
     // 플레이리스트를 exoPlayer에 지정
-    fun setPlayList(list: ArrayList<String>) {
-        playListTitle = list
+    fun setPlayList(list: ArrayList<Int>) {
+        mediaIdList = list
         playListMediaItem = ArrayList<MediaItem>().apply {
-            playListTitle!!.forEach { title ->
-                this.add(MediaItem.fromUri(baseUrlStr + "media?title=" + title + ".mp3"))
+            mediaIdList!!.forEach { id ->
+                this.add(MediaItem.fromUri(baseUrlStr + "media?id=" + id))
             }
         }
         exoPlayer!!.setMediaItems(playListMediaItem!!)
@@ -180,16 +143,19 @@ class MusicService : Service() {
 
     interface RetrofitAPI {
         @GET("/metadata")
-        fun getMetadata(@Query("title") title:String) : Call<Music>
+        fun getMetadata(@Query("id") id:Int) : Call<Music>
+
+        @GET("/metadatalist")
+        fun getMetadataList(@Query("item") item:String, @Query("name") name:String) : Call<List<Music>>
     }
 
-    fun getMusicMetadata(title:String, operation:(Music?)->Unit) {
+    fun getMusicMetadata(id:Int, operation:(Music?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
-        val callGetMetadata = api.getMetadata(title)
+        val callGetMetadata = api.getMetadata(id)
         callGetMetadata.enqueue(object:Callback<Music> {
             override fun onResponse(call: Call<Music>, response: Response<Music>) {
                 Log.d("myTag", "success : ${response.raw()}")
@@ -197,8 +163,27 @@ class MusicService : Service() {
                 Log.d("myTag", result.toString())
                 operation(response.body())
             }
-
             override fun onFailure(call: Call<Music>, t: Throwable) {
+                Log.d("myTag", "failure : $t")
+            }
+        })
+    }
+
+    fun getMusicMetadataList(item:String, name:String, operation:(List<Music>?)->Unit) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrlStr)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(RetrofitAPI::class.java)
+        val callGetMetadata = api.getMetadataList(item, name)
+        callGetMetadata.enqueue(object:Callback<List<Music>> {
+            override fun onResponse(call: Call<List<Music>>, response: Response<List<Music>>) {
+                Log.d("myTag", "success : ${response.raw()}")
+                val result = response.body()
+                Log.d("myTag", result.toString())
+                operation(response.body())
+            }
+            override fun onFailure(call: Call<List<Music>>, t: Throwable) {
                 Log.d("myTag", "failure : $t")
             }
         })

@@ -15,9 +15,9 @@ class PlayMusicActivity : AppCompatActivity() {
         binding = ActivityPlayMusicBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val playList = ArrayList<String>().apply {
-            this.add("test_audio1")
-            this.add("test_audio2")
+        val playList = ArrayList<Int>().apply {
+            this.add(1000)
+            this.add(1001)
         }
         MusicServiceConnection.musicService!!.setPlayList(playList)
 

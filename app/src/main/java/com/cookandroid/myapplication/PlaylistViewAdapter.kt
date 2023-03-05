@@ -33,7 +33,7 @@ class PlaylistViewAdapter(private val context: Context, private var playlistList
             builder.setTitle(playlistList[position].name)
                 .setMessage("delete playlist?")
                 .setPositiveButton("Yes") { dialog, _ ->
-                    PlaylistActivity.musicPlaylist.ref.removeAt(position)
+                    PlaylistManager.allPlayList.removeAt(position)
                     refreshPlaylist()
                     dialog.dismiss()
                 }
@@ -57,7 +57,7 @@ class PlaylistViewAdapter(private val context: Context, private var playlistList
     ///플레이리스트 목록 갱신
     fun refreshPlaylist(){
         playlistList = ArrayList()
-        playlistList.addAll(PlaylistActivity.musicPlaylist.ref)
+        playlistList.addAll(PlaylistManager.allPlayList)
         notifyDataSetChanged()
     }
 }
