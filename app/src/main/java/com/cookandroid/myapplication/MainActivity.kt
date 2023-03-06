@@ -1,6 +1,8 @@
 package com.cookandroid.myapplication
 
+import android.app.Activity
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +13,7 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 
 class MainActivity : AppCompatActivity() {
 
@@ -59,6 +62,13 @@ class MainActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         binding.logoutBtn.setOnClickListener{
             auth.signOut()
+
+            //로그아웃시 자동로그인 안되게 수정
+            val pref: SharedPreferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+            val editor: SharedPreferences.Editor = pref.edit();
+            editor.putBoolean("auto",false)
+            editor.putBoolean("ox",false)
+            editor.apply()
             Intent(this, LoginActivity::class.java).also{
                 it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(it)
@@ -97,4 +107,6 @@ class MainActivity : AppCompatActivity() {
     private fun getMainList():ArrayList<Music>{
         return ArrayList<Music>()
     }
+
+
 }
