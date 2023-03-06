@@ -18,6 +18,9 @@ class PlaylistActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlaylistBinding
     private lateinit var adapter: PlaylistViewAdapter
 
+    companion object{
+        var musicPlaylist = AllPlaylist()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,13 +30,13 @@ class PlaylistActivity : AppCompatActivity() {
         binding.playlistRV.setHasFixedSize(true)
         binding.playlistRV.setItemViewCacheSize(13)
         binding.playlistRV.layoutManager = LinearLayoutManager(this@PlaylistActivity)
-        adapter = PlaylistViewAdapter(this, playlistList = PlaylistManager.allPlayList)
+        adapter = PlaylistViewAdapter(this, playlistList = musicPlaylist.ref)
         binding.playlistRV.adapter = adapter
         binding.backBtnPLA.setOnClickListener { finish() }
         binding.addPlaylistBtn.setOnClickListener { customAlertDialog() }
 
         //생성된 플레이리스트가 존재하면 (플레이리스트 생성 문구) 노출 x
-        if(PlaylistManager.allPlayList.isNotEmpty()) binding.instructionPA.visibility = View.GONE
+        if(musicPlaylist.ref.isNotEmpty()) binding.instructionPA.visibility = View.GONE
     }
 
     ///플레이리스트 추가 창
@@ -53,6 +56,9 @@ class PlaylistActivity : AppCompatActivity() {
                     }
 
                 dialog.dismiss()
+            }
+            .setNegativeButton("Cancel"){dialog,_ ->
+                dialog.dismiss()
             }.create()
         dialog.show()
         setDialogBtnBackground(this, dialog)
@@ -60,9 +66,9 @@ class PlaylistActivity : AppCompatActivity() {
 
     }
     ///플레이리스트 추가 수행
-    private fun addPlaylist(name: String, createdBy: String){
+    private fun addPlaylist(name: String){
         var playlistExists = false
-        for(i in PlaylistManager.allPlayList) {
+        for(i in musicPlaylist.ref) {
             if (name == i.name){
                 playlistExists = true
                 break
@@ -74,11 +80,7 @@ class PlaylistActivity : AppCompatActivity() {
             val tempPlaylist = Playlist()
             tempPlaylist.name = name
             tempPlaylist.playlist = ArrayList()
-            tempPlaylist.createdBy = createdBy
-            val calendar = Calendar.getInstance().time
-            val sdf = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
-            tempPlaylist.createdOn = sdf.format(calendar)
-            PlaylistManager.allPlayList.add(tempPlaylist)
+            musicPlaylist.ref.add(tempPlaylist)
             adapter.refreshPlaylist()
         }
     }

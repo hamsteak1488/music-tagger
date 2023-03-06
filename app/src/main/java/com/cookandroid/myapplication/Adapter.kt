@@ -24,14 +24,16 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
         val root = binding.root
     }
 
+    //뷰 홀더 생성
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
         return MyHolder(MusicViewBinding.inflate(LayoutInflater.from(context), parent, false))
     }
-    ///뷰 홀더
+    ///뷰 홀더에 내용 입력
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         holder.title.text = musicList[position].title
         holder.album.text = musicList[position].album
         holder.duration.text = formatDuration(musicList[position].duration)
+        //glide = uri로 이미지 적용
         Glide.with(context)
             .load(musicList[position].artUri)
             .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
@@ -42,12 +44,46 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
             intent.putExtra("class", "MusicAdapter")
             ContextCompat.startActivity(context, intent, null)
         }
+        //롱클릭 동작으로 음악 추가 수행
+        holder.root.setOnLongClickListener{
+
+            return@setOnLongClickListener true
+        }
+
+        //페이지별 음악 클릭 동작
+        when{
+            playlistDetails ->{
+                holder.root.setOnClickListener {
+                    sendIntent(ref = "PlaylistDetailsAdapter", pos = position)
+                }
+            }
+            searchActivity ->{
+                holder.root.setOnClickListener {
+                    if(addSong(musicList[position]))
+                        holder.root.setBackgroundColor(ContextCompat.getColor(context, R.color.customBlue))
+                    else
+                        holder.root.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
+
+                }
+            }/*
+            else ->{
+                holder.root.setOnClickListener {
+
+                    when{
+                        MainActivity.search -> sendIntent(ref = "MusicAdapterSearch", pos = position)
+                        musicList[position].id == PlayerActivity.nowPlayingId ->
+                            sendIntent(ref = "NowPlaying", pos = PlayerActivity.songPosition)
+                        else->sendIntent(ref="MusicAdapter", pos = position) } }
+            }*/
+
+        }
     }
 
     override fun getItemCount(): Int {
         return musicList.size
     }
 
+    //검색한 음악 리스트로 초기화
     fun updateMusicList(searchList: ArrayList<Music>){
         musicList = ArrayList()
         musicList.addAll(searchList)
@@ -60,10 +96,10 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
         intent.putExtra("class", ref)
         ContextCompat.startActivity(context, intent, null)
     }
-    /*
+
     private fun addSong(song: Music): Boolean{
         PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.forEachIndexed { index, music ->
-            if(song.id == music.id){
+            if(song.title == music.title){
                 PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.removeAt(index)
                 return false
             }
@@ -71,7 +107,7 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
         PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.add(song)
         return true
     }
-    */
+
     fun refreshPlaylist(){
         musicList = ArrayList()
         musicList = PlaylistManager.allPlayList[PlaylistDetails.currentPlaylistPos].playlist

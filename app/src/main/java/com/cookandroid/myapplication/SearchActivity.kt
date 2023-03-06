@@ -11,14 +11,18 @@ class SearchActivity : AppCompatActivity() {
     // TODO: 음악 클릭 시, 플레이리스트들 나열할 액티비티 생성하고 동작 구현할 것
     private lateinit var binding: ActivitySearchBinding
     private lateinit var adapter: Adapter
+    private lateinit var musicListSearch: ArrayList<Music>
+    private var search: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.searchRV.setItemViewCacheSize(30) //30만큼 항목 유지
-        binding.searchRV.setHasFixedSize(true)//리사이클러뷰 크기 고정 명시
+        musicListSearch = ArrayList()
+
+        binding.searchRV.setItemViewCacheSize(15) //Int 만큼 항목 유지
+        binding.searchRV.setHasFixedSize(true)//리사이클러뷰 크기 고정
         binding.searchRV.layoutManager = LinearLayoutManager(this)
         binding.backBtnSA.setOnClickListener {finish()}
 

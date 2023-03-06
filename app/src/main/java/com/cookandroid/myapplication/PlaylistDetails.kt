@@ -1,5 +1,6 @@
 package com.cookandroid.myapplication
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -34,16 +35,21 @@ class PlaylistDetails : AppCompatActivity() {
         adapter = Adapter(this, PlaylistManager.allPlayList[currentPlaylistPos].playlist, playlistDetails = true)
 
         binding.playlistDetailsRV.adapter = adapter
+
+        //뒤로 가기
         binding.backBtnPD.setOnClickListener { finish() }
+
+        //음악 추가
         binding.addBtnPD.setOnClickListener{
             startActivity(Intent(this, SearchActivity::class.java))
         }
+        //음악 전체 삭제
         binding.removeAllPD.setOnClickListener{
             val builder = MaterialAlertDialogBuilder(this)
             builder.setTitle("remove")
                 .setMessage("Remove all songs from playlist?")
                 .setPositiveButton("Yes"){dialog, _ ->
-                    PlaylistManager.allPlayList[currentPlaylistPos].playlist.clear()
+                    PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist.clear()
                     adapter.refreshPlaylist()
                     dialog.dismiss()
                 }
@@ -57,15 +63,14 @@ class PlaylistDetails : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onResume() {
         super.onResume()
-        binding.playlistNamePD.text = PlaylistManager.allPlayList[currentPlaylistPos].name
-        binding.moreInfoPD.text = "Total ${adapter.itemCount} Songs.\n\n" +
-                "Created On: ${PlaylistManager.allPlayList[currentPlaylistPos].createdOn}\n\n" +
-                "  -- ${PlaylistManager.allPlayList[currentPlaylistPos].createdBy}"
+        binding.playlistNamePD.text = PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].name
+        binding.moreInfoPD.text = "Total ${adapter.itemCount} Songs.\n\n"
         if(adapter.itemCount > 0){
             Glide.with(this)
-                .load(PlaylistManager.allPlayList[currentPlaylistPos].playlist[0].artUri)
+                .load(PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist[0].artUri)
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_video_24).centerCrop())
                 .into(binding.playlistImgPD)
         }
