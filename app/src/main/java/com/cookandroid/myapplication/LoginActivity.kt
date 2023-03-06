@@ -1,29 +1,63 @@
 package com.cookandroid.myapplication
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.helper.widget.MotionEffect.AUTO
 import androidx.core.content.ContextCompat
 import com.cookandroid.myapplication.databinding.ActivityLoginBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.jakewharton.rxbinding2.widget.RxTextView
+
 
 @SuppressLint("CheckResult")
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
-
+    private lateinit var pref:SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
+
+
+
         setContentView(binding.root)
 //Auth part
         FirebaseApp.initializeApp(this)
         auth = FirebaseAuth.getInstance()
+
+//자동로그인
+
+
+        // id pw 저장
+        //구현 : SharedPreferences 앱의 임시 저장소에 id,pw ox(이메일,pw저장), auto(자동로그인)
+        /*val pref: SharedPreferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+        val editor: SharedPreferences.Editor = pref.edit();*/
+        pref= getSharedPreferences("pref", Activity.MODE_PRIVATE)
+        editor = pref.edit()
+        var ID = pref.getString("id",null)
+        var PW = pref.getString("pw",null)
+        var OX = pref.getBoolean("ox",false)
+        var AUTO = pref.getBoolean("auto",false)
+
+
+        if(OX){
+            binding.autoCheckBox.isChecked=true
+            binding.userEmail.setText(ID)
+
+        }
+
+
+
+
 
 //stream part
 
@@ -55,11 +89,39 @@ class LoginActivity : AppCompatActivity() {
             val pw = binding.userPW.text.toString().trim()
             loginUser(email, pw)
             //startActivity(Intent(this, MainActivity::class.java))
+
+            // 체크 박스 체크되어 있을 시 로그인 버튼 클릭시 text box의 id pw 저장
+            if(binding.autoLogincheckBox.isChecked){
+                editor.putString("id",email)
+                editor.putString("pw",pw)
+                editor.putBoolean("ox",true)
+                editor.putBoolean("auto",true)
+                editor.apply()
+            }
+            else if(binding.autoCheckBox.isChecked){
+                editor.putString("id",email)
+                editor.putBoolean("ox",true)
+                editor.putBoolean("auto",binding.autoLogincheckBox.isChecked)
+                editor.apply()
+            }
+            else{
+                editor.putBoolean("ox",false)
+                editor.apply()
+            }
+
         }
         //버튼 초기 상태 사용 불가, 회색
-        binding.loginBtn.isEnabled = false
-        binding.loginBtn.backgroundTintList =
-            ContextCompat.getColorStateList(this, R.color.gray)
+        // email, pw 저장설정이 켜져있을 경우 버튼 초기 상태 사용 가능, 파랑색
+        if (!OX){
+            binding.loginBtn.isEnabled = false
+            binding.loginBtn.backgroundTintList =
+                ContextCompat.getColorStateList(this, R.color.gray)
+        }
+        else{
+            binding.loginBtn.backgroundTintList =
+                ContextCompat.getColorStateList(this, R.color.deepBlue)
+        }
+
         //레지스터 버튼 -> RegisterActivity
         binding.registerBtn.setOnClickListener{
             startActivity(Intent(this, RegisterActivity::class.java))
@@ -80,7 +142,11 @@ class LoginActivity : AppCompatActivity() {
                     ContextCompat.getColorStateList(this, R.color.deepBlue)
             }
         }
+
     }
+
+
+
 
     //Alert part
     private fun showTextExistAlert(isNotValid: Boolean, text: String){
@@ -90,7 +156,11 @@ class LoginActivity : AppCompatActivity() {
             binding.userPW.error = if(isNotValid) "비밀번호를 입력하세요" else null
     }
 
+
+
+
     private fun loginUser(email: String, pw: String) {
+
         auth.signInWithEmailAndPassword(email, pw)
             .addOnCompleteListener(this) { login ->
                 if (login.isSuccessful) {
@@ -99,7 +169,11 @@ class LoginActivity : AppCompatActivity() {
                         startActivity(it)
                     }
                 } else {
-
+                    editor.putString("id",null)
+                    editor.putString("pw",null)
+                    editor.putBoolean("ox",false)
+                    editor.putBoolean("auto",false)
+                    editor.apply()
                     Toast.makeText(this, login.exception?.message, Toast.LENGTH_SHORT).show()
                 }
             }

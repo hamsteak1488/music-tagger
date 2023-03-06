@@ -18,11 +18,11 @@
             android:id="@+id/backBtnSA"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
-            android:contentDescription="Go Back"
+            android:layout_margin="5dp"
             android:backgroundTint="?colorOnPrimary"
-            app:tint="@color/black"
-            android:layout_margin="5dp"/>
+            android:contentDescription="Go Back"
+            android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
+            app:tint="@color/black" />
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchViewSA"
