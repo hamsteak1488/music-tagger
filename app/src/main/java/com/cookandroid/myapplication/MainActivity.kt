@@ -51,8 +51,9 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent) }
         binding.playlistBtn.setOnClickListener{
             startActivity(Intent(this@MainActivity, PlaylistActivity::class.java)) }
-        binding.searchSongBtn.setOnClickListener{
-            startActivity((Intent(this@MainActivity,SearchActivity::class.java))) }
+        binding.searchSongBtn.setOnClickListener {
+            startActivity((Intent(this@MainActivity, SearchActivity::class.java)))
+        }
 
         //로그아웃 버튼
         auth = FirebaseAuth.getInstance()
@@ -65,8 +66,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // 로그인 후 플레이리스트 서버로부터 받아오기
-        PlaylistActivity.musicPlaylist = AllPlaylist()
+        // TODO: 로그인 후 플레이리스트 서버로부터 받아오기
 
         //테마 RV 구현
         allThemePlaylist = getThemeLists()
