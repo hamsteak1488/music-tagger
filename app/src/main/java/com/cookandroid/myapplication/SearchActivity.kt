@@ -1,7 +1,9 @@
 package com.cookandroid.myapplication
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.databinding.ActivitySearchBinding
@@ -10,28 +12,40 @@ class SearchActivity : AppCompatActivity() {
 
     // TODO: 음악 클릭 시, 플레이리스트들 나열할 액티비티 생성하고 동작 구현할 것
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var adapter: Adapter
-    private lateinit var musicListSearch: ArrayList<Music>
-    private var search: Boolean = false
+    private lateinit var adapter: MusicAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        musicListSearch = ArrayList()
-
         binding.searchRV.setItemViewCacheSize(15) //Int 만큼 항목 유지
         binding.searchRV.setHasFixedSize(true)//리사이클러뷰 크기 고정
         binding.searchRV.layoutManager = LinearLayoutManager(this)
         binding.backBtnSA.setOnClickListener {finish()}
 
-        //Search View 반영
+        // 검색창 이벤트
         binding.searchViewSA.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            // 검색버튼 이벤트
             override fun onQueryTextSubmit(query: String?): Boolean {
-
-                MusicServiceConnection.musicService!!.getMusicMetadataList("title", query!!) {
-                    adapter = Adapter(this@SearchActivity, it as ArrayList<Music>, searchActivity = true)
+                // MusicService에서 검색 후 결과를 adapter로 연결
+                MusicServiceConnection.musicService!!.getMusicMetadataList(listOf("title", "artist"), query!!) {
+                    adapter = MusicAdapter(this@SearchActivity, it as ArrayList<Music>, object:MusicAdapter.OnItemClickListener {
+                        override fun onItemClick(view: View, pos: Int) {
+                            if (intent.getBooleanExtra("searchForAdd", false)) {
+                                val returnIntent = Intent(this@SearchActivity, PlaylistDetails::class.java)
+                                returnIntent.putExtra("musicID", it[pos].id)
+                                setResult(RESULT_OK, returnIntent)
+                                finish()
+                            }
+                            else {
+                                val playMusicIntent =
+                                    Intent(this@SearchActivity, PlayMusicActivity::class.java)
+                                MusicServiceConnection.musicService!!.setPlayList(arrayListOf(it[pos].id))
+                                startActivity(playMusicIntent)
+                            }
+                        }
+                    })
                     binding.searchRV.adapter = adapter
                 }
 

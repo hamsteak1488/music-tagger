@@ -75,7 +75,7 @@ class PlaylistActivity : AppCompatActivity() {
         else {
             val tempPlaylist = Playlist()
             tempPlaylist.name = name
-            tempPlaylist.playlist = ArrayList()
+            tempPlaylist.musicList = ArrayList()
             PlaylistManager.allPlayList.add(tempPlaylist)
             adapter.refreshPlaylist()
         }

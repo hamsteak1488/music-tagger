@@ -2,6 +2,8 @@ package com.cookandroid.myapplication
 
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.databinding.ActivityPlayMusicBinding
 
 class PlayMusicActivity : AppCompatActivity() {
@@ -15,24 +17,18 @@ class PlayMusicActivity : AppCompatActivity() {
         binding = ActivityPlayMusicBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val playList = ArrayList<Int>().apply {
-            this.add(1000)
-            this.add(1001)
-        }
-        MusicServiceConnection.musicService!!.setPlayList(playList)
-
         MusicServiceConnection.musicService!!.setPlayerView(binding.exoControlView)
 
-        //뒤로 가기 버튼
-        binding.backBtnPA.setOnClickListener { finish() }
-
-
-        binding.songNamePA.setOnClickListener {
+        if (MusicServiceConnection.musicService!!.currentList != null) {
             setLayout()
         }
     }
 
     private fun setLayout() {
-        binding.songNamePA.text = MusicServiceConnection.musicService!!.getTitle()
+        binding.songNamePA.text = MusicServiceConnection.musicService!!.currentMusic!!.title
+        Glide.with(this@PlayMusicActivity)
+            .load("http://10.0.2.2:8080/img?id=" + (MusicServiceConnection.musicService!!.currentMusic!!.id))
+            .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
+            .into(binding.songImg)
     }
 }

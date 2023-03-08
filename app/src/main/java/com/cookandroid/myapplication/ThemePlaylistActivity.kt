@@ -5,13 +5,12 @@ import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.cookandroid.myapplication.databinding.ActivityPlaylistBinding
 import com.cookandroid.myapplication.databinding.ActivityThemePlaylistBinding
 
 class ThemePlaylistActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityThemePlaylistBinding
-    private lateinit var adapter: Adapter
+    private lateinit var adapter: MusicAdapter
     private var currentThemePos: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,7 +25,7 @@ class ThemePlaylistActivity : AppCompatActivity() {
         binding.themePlaylistRV.setHasFixedSize(true)
         binding.themePlaylistRV.layoutManager = LinearLayoutManager(this)
 
-        adapter = Adapter(this, MainActivity.allThemePlaylist[currentThemePos].playlist)
+        adapter = MusicAdapter(this, MainActivity.allThemePlaylist[currentThemePos].musicList)
         binding.themePlaylistRV.adapter = adapter
 
     }
