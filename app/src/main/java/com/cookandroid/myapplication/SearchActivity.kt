@@ -38,9 +38,6 @@ class SearchActivity : AppCompatActivity() {
                 return true
             }
 
-            override fun onQueryTextChange(newText: String?): Boolean {
-                return true
-            }
         })
     }
 }
