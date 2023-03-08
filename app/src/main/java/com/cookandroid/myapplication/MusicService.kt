@@ -40,8 +40,11 @@ class MusicService : Service() {
     /** 플레이리스트내의 음악들의 id를 저장하는 리스트 */
     private var mediaIdList:ArrayList<Int>? = null
 
+    /** 현재 재생중인 음악 플레이리스트 인덱스 */
+    var currentList:Int? = null
+
     /** 현재 재생중인 음악 메타데이터 정보 */
-    private var currentMusic:Music? = null
+    var currentMusic:Music? = null
 
     /** 음악 청취 기록을 위한 음악 재생시작 시간 정보 */
     private var musicStartTime:Long = -1
@@ -81,6 +84,33 @@ class MusicService : Service() {
         exoPlayer?.release()
     }
 
+    /** 서비스 시작시 진행되는 초기화 과정 */
+    private fun initPlayer() {
+        /** exoPlayer 초기화 */
+        exoPlayer = ExoPlayer.Builder(applicationContext).build()
+        /** 청취기록객체 초기화 */
+        musicPlayHistory = MusicPlayHistory()
+        /** 이벤트 리스너 지정 */
+        exoPlayer!!.addListener(PlayerStateListener())
+
+        /** 알림 채널 생성 */
+        createNotificationChannel()
+
+        /** 알림 창 초기화 */
+        playerNotificationManager = PlayerNotificationManager.Builder(
+            applicationContext,
+            getString(R.string.NOTIFICATION_ID).toInt(),
+            getString(R.string.CHANNEL_ID)
+        )
+            .setNotificationListener(MyNotificationListener())
+            .setMediaDescriptionAdapter(MyMediaDescriptionAdapter())
+            .build()
+
+        playerNotificationManager!!.setPlayer(exoPlayer)
+        playerNotificationManager!!.setPriority(NotificationCompat.PRIORITY_MAX)
+        playerNotificationManager!!.setUseStopAction(true)
+    }
+
     /** 재생 동작이 변경될 때마다 이벤트 처리 */
     inner class PlayerStateListener : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
@@ -114,36 +144,13 @@ class MusicService : Service() {
         }
     }
 
-    /** 서비스 시작시 진행되는 초기화 과정 */
-    private fun initPlayer() {
-        /** exoPlayer 초기화 */
-        exoPlayer = ExoPlayer.Builder(applicationContext).build()
-        /** 청취기록객체 초기화 */
-        musicPlayHistory = MusicPlayHistory()
-        /** 이벤트 리스너 지정 */
-        exoPlayer!!.addListener(PlayerStateListener())
-
-        /** 알림 채널 생성 */
-        createNotificationChannel()
-
-        /** 알림 창 초기화 */
-        playerNotificationManager = PlayerNotificationManager.Builder(
-            applicationContext,
-            getString(R.string.NOTIFICATION_ID).toInt(),
-            getString(R.string.CHANNEL_ID)
-        )
-            .setNotificationListener(MyNotificationListener())
-            .setMediaDescriptionAdapter(MyMediaDescriptionAdapter())
-            .build()
-
-        playerNotificationManager!!.setPlayer(exoPlayer)
-        playerNotificationManager!!.setPriority(NotificationCompat.PRIORITY_MAX)
-        playerNotificationManager!!.setUseStopAction(true)
+    /** 재생 */
+    fun play() {
+        exoPlayer!!.play()
     }
 
-    /** 음악 제목 얻기 */
-    fun getTitle() : CharSequence {
-        return currentMusic!!.title
+    fun isPlaylistEmpty() : Boolean {
+        return mediaIdList.isNullOrEmpty()
     }
 
     /** exoPlayer 내부의 플레이리스트 지정 */
@@ -156,6 +163,10 @@ class MusicService : Service() {
             }
         }
         exoPlayer!!.setMediaItems(playListMediaItem!!)
+
+        getMusicMetadata(mediaIdList!![0]) {
+            currentMusic = it
+        }
     }
 
     /** 플레이어뷰의 플레이어를 exoPlayer로 지정 */
@@ -171,7 +182,11 @@ class MusicService : Service() {
 
         /** 메타데이터 항목의 내용으로 접근, 여러 결과가 나올 수 있으므로 반환형은 List<Music> */
         @GET("/metadatalist")
-        fun getMetadataList(@Query("item") item:String, @Query("name") name:String) : Call<List<Music>>
+        fun getMetadataList(@Query("items") item:List<String>, @Query("name") name:String) : Call<List<Music>>
+
+        /** id를 통해 ArtImage 요청 */
+        @GET("/img")
+        fun getArtImg(@Query("id") id:Int) : Call<Array<Byte>>
     }
 
     /** 호출 시 id를 통해 메타데이터를 서버에 요청, response가 오면 호출될 함수 operation을 인자로 넘겨주어야 함 */
@@ -200,13 +215,13 @@ class MusicService : Service() {
     }
 
     /** 호출 시 항목이름과 항목내용을 통해 메타데이터를 서버에 요청, 호출될 함수 operation의 인자가 리스트형태 */
-    fun getMusicMetadataList(item:String, name:String, operation:(List<Music>?)->Unit) {
+    fun getMusicMetadataList(items:List<String>, name:String, operation:(List<Music>?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
-        val callGetMetadata = api.getMetadataList(item, name)
+        val callGetMetadata = api.getMetadataList(items, name)
         callGetMetadata.enqueue(object:Callback<List<Music>> {
             override fun onResponse(call: Call<List<Music>>, response: Response<List<Music>>) {
                 Log.d("myTag", "success : ${response.raw()}")
@@ -215,6 +230,27 @@ class MusicService : Service() {
                 operation(response.body())
             }
             override fun onFailure(call: Call<List<Music>>, t: Throwable) {
+                Log.d("myTag", "failure : $t")
+            }
+        })
+    }
+
+    /** 호출 시 항목이름과 항목내용을 통해 메타데이터를 서버에 요청, 호출될 함수 operation의 인자가 리스트형태 */
+    fun getMusicArtImg(id:Int, operation:(Array<Byte>?)->Unit) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrlStr)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(RetrofitAPI::class.java)
+        val callGetMetadata = api.getArtImg(id)
+        callGetMetadata.enqueue(object:Callback<Array<Byte>> {
+            override fun onResponse(call: Call<Array<Byte>>, response: Response<Array<Byte>>) {
+                Log.d("myTag", "success : ${response.raw()}")
+                val result = response.body()
+                Log.d("myTag", result.toString())
+                operation(response.body())
+            }
+            override fun onFailure(call: Call<Array<Byte>>, t: Throwable) {
                 Log.d("myTag", "failure : $t")
             }
         })

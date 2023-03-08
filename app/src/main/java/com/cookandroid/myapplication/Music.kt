@@ -14,7 +14,7 @@ data class Music(val id:Int, val title:String, val album:String, val artist:Stri
 //플레이리스트
 class Playlist{
     lateinit var name: String //플레이리스트 명
-    lateinit var playlist: ArrayList<Music> //포함된 음악 ArrayList
+    lateinit var musicList: ArrayList<Music> //포함된 음악 ArrayList
     lateinit var artUri: String //테마 이미지
 }
 

@@ -6,21 +6,18 @@ import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.MediaStore
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var adapterTheme: ThemeViewAdapter
-    private lateinit var adapterMain: Adapter
+    private lateinit var adapterMain: MusicAdapter
 
 
     // TODO: 로그인 된 정보 가져와서 아이디를 키값으로 서버에서 모든 플레이리스트들과 음악 청취 기록 모두 가져올 것
@@ -95,7 +92,7 @@ class MainActivity : AppCompatActivity() {
         binding.mainRV.setHasFixedSize(true)
         binding.mainRV.layoutManager = LinearLayoutManager(this@MainActivity)
 
-        adapterMain = Adapter(this, mainPlaylist)
+        adapterMain = MusicAdapter(this, mainPlaylist)
         binding.mainRV.adapter = adapterMain
     }
 

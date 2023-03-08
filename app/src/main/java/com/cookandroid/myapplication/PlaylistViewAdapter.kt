@@ -52,9 +52,9 @@ class PlaylistViewAdapter(private val context: Context, private var playlistList
             intent.putExtra("index", position)
             ContextCompat.startActivity(context, intent, null)
         }
-        if(PlaylistManager.allPlayList[position].playlist.size > 0){
+        if(PlaylistManager.allPlayList[position].musicList.size > 0){
             Glide.with(context)
-                .load(PlaylistManager.allPlayList[position].playlist[0].artUri)
+                .load(PlaylistManager.allPlayList[position].musicList[0].artUri)
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
                 .into(holder.image)
         }
