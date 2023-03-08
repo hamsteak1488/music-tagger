@@ -31,7 +31,9 @@ class PlaylistDetails : AppCompatActivity() {
         binding.playlistDetailsRV.setHasFixedSize(true)
         binding.playlistDetailsRV.layoutManager = LinearLayoutManager(this)
 
-        adapter = Adapter(this, PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist, playlistDetails = true)
+        //PlaylistManager.allPlayList[currentPlaylistPos].playlist.addAll(AllPlaylist)
+        adapter = Adapter(this, PlaylistManager.allPlayList[currentPlaylistPos].playlist, playlistDetails = true)
+
 
         binding.playlistDetailsRV.adapter = adapter
 
@@ -48,7 +50,7 @@ class PlaylistDetails : AppCompatActivity() {
             builder.setTitle("remove")
                 .setMessage("Remove all songs from playlist?")
                 .setPositiveButton("Yes"){dialog, _ ->
-                    PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist.clear()
+                    PlaylistManager.allPlayList[currentPlaylistPos].playlist.clear()
                     adapter.refreshPlaylist()
                     dialog.dismiss()
                 }
@@ -62,14 +64,14 @@ class PlaylistDetails : AppCompatActivity() {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     override fun onResume() {
         super.onResume()
-        binding.playlistNamePD.text = PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].name
+        binding.playlistNamePD.text = PlaylistManager.allPlayList[currentPlaylistPos].name
         binding.moreInfoPD.text = "Total ${adapter.itemCount} Songs.\n\n"
+
         if(adapter.itemCount > 0){
             Glide.with(this)
-                .load(PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist[0].artUri)
+                .load(PlaylistManager.allPlayList[currentPlaylistPos].playlist[0].artUri)
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_video_24).centerCrop())
                 .into(binding.playlistImgPD)
         }

@@ -4,16 +4,16 @@ import android.util.Log
 
 class MusicPlayHistory {
 
-    private var playHistoryMap = HashMap<CharSequence, PlaytimeEachEnvironment>()
+    private var playHistoryMap = HashMap<Int, PlaytimeEachEnvironment>()
 
     //
-    fun addPlaytime(title:CharSequence, playtime:Long) {
-        if (!playHistoryMap.containsKey(title)) {
-            playHistoryMap[title] = PlaytimeEachEnvironment()
+    fun addPlaytime(id:Int, playtime:Long) {
+        if (!playHistoryMap.containsKey(id)) {
+            playHistoryMap[id] = PlaytimeEachEnvironment()
         }
 
-        playHistoryMap[title]!!.addPlaytime(playtime)
+        playHistoryMap[id]!!.addPlaytime(playtime)
 
-        Log.d("myTag", "추가된 결과 : " + playHistoryMap[title])
+        Log.d("myTag", "추가된 결과 : " + playHistoryMap[id]!!.totalPlaytime)
     }
 }

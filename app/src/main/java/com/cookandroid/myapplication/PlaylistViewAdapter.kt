@@ -35,7 +35,7 @@ class PlaylistViewAdapter(private val context: Context, private var playlistList
             builder.setTitle(playlistList[position].name)
                 .setMessage("delete playlist?")
                 .setPositiveButton("Yes") { dialog, _ ->
-                    PlaylistActivity.musicPlaylist.ref.removeAt(position)
+                    PlaylistManager.allPlayList.removeAt(position)
                     refreshPlaylist()
                     dialog.dismiss()
                 }
@@ -52,9 +52,9 @@ class PlaylistViewAdapter(private val context: Context, private var playlistList
             intent.putExtra("index", position)
             ContextCompat.startActivity(context, intent, null)
         }
-        if(PlaylistActivity.musicPlaylist.ref[position].playlist.size > 0){
+        if(PlaylistManager.allPlayList[position].playlist.size > 0){
             Glide.with(context)
-                .load(PlaylistActivity.musicPlaylist.ref[position].playlist[0].artUri)
+                .load(PlaylistManager.allPlayList[position].playlist[0].artUri)
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
                 .into(holder.image)
         }
@@ -65,7 +65,7 @@ class PlaylistViewAdapter(private val context: Context, private var playlistList
     ///플레이리스트 목록 갱신
     fun refreshPlaylist(){
         playlistList = ArrayList()
-        playlistList.addAll(PlaylistActivity.musicPlaylist.ref)
+        playlistList.addAll(PlaylistManager.allPlayList)
         notifyDataSetChanged()
     }
 }

@@ -3,7 +3,9 @@ package com.cookandroid.myapplication
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,10 +20,11 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
     ///뮤직 뷰 binding
     class MyHolder(binding: MusicViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.songNameMV
-        val album = binding.songAlbumMV
+        val artist = binding.artistMV
         val image = binding.imageMV
         val duration = binding.songDuration
         val root = binding.root
+        val option = binding.optionMV
     }
 
     //뷰 홀더 생성
@@ -31,7 +34,7 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
     ///뷰 홀더에 내용 입력
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         holder.title.text = musicList[position].title
-        holder.album.text = musicList[position].album
+        holder.artist.text = musicList[position].artist
         holder.duration.text = formatDuration(musicList[position].duration)
         //glide = uri로 이미지 적용
         Glide.with(context)
@@ -75,8 +78,13 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
                             sendIntent(ref = "NowPlaying", pos = PlayerActivity.songPosition)
                         else->sendIntent(ref="MusicAdapter", pos = position) } }
             }*/
-
         }
+        
+        /*//더보기 옵션 이벤트
+        holder.option.setOnClickListener {
+            PopupMenu popup = new PopupMenu(mCtx, holder.option)
+        }*/
+
     }
 
     override fun getItemCount(): Int {
@@ -98,19 +106,20 @@ class Adapter(private val context: Context, private var musicList: ArrayList<Mus
     }
 
     private fun addSong(song: Music): Boolean{
-        PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.forEachIndexed { index, music ->
+        PlaylistManager.allPlayList[PlaylistDetails.currentPlaylistPos].playlist.forEachIndexed { index, music ->
             if(song.title == music.title){
-                PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.removeAt(index)
+                PlaylistManager.allPlayList[PlaylistDetails.currentPlaylistPos].playlist.removeAt(index)
                 return false
             }
         }
-        PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist.add(song)
+        PlaylistManager.allPlayList[PlaylistDetails.currentPlaylistPos].playlist.add(song)
         return true
     }
 
     fun refreshPlaylist(){
         musicList = ArrayList()
-        musicList = PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist
+        musicList = PlaylistManager.allPlayList[PlaylistDetails.currentPlaylistPos].playlist
         notifyDataSetChanged() //리스트의 크기와 아이템이 둘 다 변경되는 경우 사용
     }
+
 }

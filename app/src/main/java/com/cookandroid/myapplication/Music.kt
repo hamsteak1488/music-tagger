@@ -8,7 +8,7 @@ import com.google.android.material.color.MaterialColors
 import java.util.concurrent.TimeUnit
 
 ///데이터 클래스(Music, Playlist, MusicPlaylist)
-data class Music(val title:String, val album:String, val artist:String,
+data class Music(val id:Int, val title:String, val album:String, val artist:String,
                  val duration:Long=0, val path: String, val artUri:String)
 
 //플레이리스트
@@ -18,8 +18,8 @@ class Playlist{
     lateinit var artUri: String //테마 이미지
 }
 
-class AllPlaylist {
-    var ref: ArrayList<Playlist> = ArrayList() //플레이리스트의 리스트
+object PlaylistManager {
+    var allPlayList: ArrayList<Playlist> = ArrayList<Playlist>() //플레이리스트의 리스트
 }
 
 fun formatDuration(duration: Long):String{

@@ -18,37 +18,44 @@
         android:id="@+id/songNameMV"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
-        android:layout_toStartOf="@id/songDuration"
-        android:layout_toEndOf="@id/imageMV"
         android:gravity="center_vertical"
         android:singleLine="true"
         android:text="Song Name"
-        android:textColor="@color/black"
-        android:layout_marginStart="70dp"
-        android:layout_marginEnd="50dp"/>
+        android:layout_toEndOf="@id/imageMV"
+        android:layout_toStartOf="@id/songDuration"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/black"/>
 
     <TextView
-        android:id="@+id/songAlbumMV"
+        android:id="@+id/artistMV"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
-        android:text="Song Album"
+        android:text="Artist"
         android:layout_toEndOf="@id/imageMV"
         android:layout_toStartOf="@id/songDuration"
         android:layout_marginTop="30dp"
+        android:layout_marginStart="10dp"
         android:gravity="center_vertical"
-        android:singleLine="true"
-        android:layout_marginStart="70dp"
-        android:layout_marginEnd="50dp"/>
+        android:singleLine="true"/>
 
     <TextView
         android:id="@+id/songDuration"
         android:layout_width="50dp"
         android:layout_height="match_parent"
         android:text="@string/start_tv"
-        android:layout_alignParentEnd="true"
         android:gravity="center"
         android:layout_gravity="end"
-        android:textColor="?colorOnPrimary"
+        android:textColor="@color/black"
+        android:layout_toStartOf="@id/optionMV"
         android:layout_marginHorizontal="5dp"/>
+
+    <ImageButton
+        android:id="@+id/optionMV"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/baseline_more_vert_24"
+        android:layout_alignParentEnd="true"
+        android:background="@color/white"
+        android:contentDescription="More Options"/>
 
 </RelativeLayout>
