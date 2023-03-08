@@ -34,7 +34,6 @@ class PlaylistDetails : AppCompatActivity() {
         //PlaylistManager.allPlayList[currentPlaylistPos].playlist.addAll(AllPlaylist)
         adapter = Adapter(this, PlaylistManager.allPlayList[currentPlaylistPos].playlist, playlistDetails = true)
 
-
         binding.playlistDetailsRV.adapter = adapter
 
         //뒤로 가기
@@ -64,11 +63,11 @@ class PlaylistDetails : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onResume() {
         super.onResume()
         binding.playlistNamePD.text = PlaylistManager.allPlayList[currentPlaylistPos].name
         binding.moreInfoPD.text = "Total ${adapter.itemCount} Songs.\n\n"
-
         if(adapter.itemCount > 0){
             Glide.with(this)
                 .load(PlaylistManager.allPlayList[currentPlaylistPos].playlist[0].artUri)

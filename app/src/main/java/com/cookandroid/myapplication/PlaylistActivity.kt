@@ -76,8 +76,6 @@ class PlaylistActivity : AppCompatActivity() {
             val tempPlaylist = Playlist()
             tempPlaylist.name = name
             tempPlaylist.playlist = ArrayList()
-            val calendar = Calendar.getInstance().time
-            val sdf = SimpleDateFormat("dd MMM yyyy", Locale.ENGLISH)
             PlaylistManager.allPlayList.add(tempPlaylist)
             adapter.refreshPlaylist()
         }

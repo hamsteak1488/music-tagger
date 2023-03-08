@@ -22,12 +22,22 @@ object PlaylistManager {
     var allPlayList: ArrayList<Playlist> = ArrayList<Playlist>() //플레이리스트의 리스트
 }
 
+
+
 fun formatDuration(duration: Long):String{
     val minutes = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)
     val seconds = (TimeUnit.SECONDS.convert(duration, TimeUnit.MILLISECONDS) -
             minutes* TimeUnit.SECONDS.convert(1, TimeUnit.MINUTES))
     return String.format("%2d:%2d", minutes, seconds)
 }
+
+
+fun getImgArt(path: String): ByteArray?{
+    val retriever = MediaMetadataRetriever()
+    retriever.setDataSource(path)
+    return retriever.embeddedPicture
+}
+
 
 ///Dialog 버튼 컬러
 fun setDialogBtnBackground(context: Context, dialog: AlertDialog){

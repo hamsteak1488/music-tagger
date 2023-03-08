@@ -21,8 +21,8 @@ class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
-
-
+    private lateinit var pref:SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -41,32 +41,17 @@ class LoginActivity : AppCompatActivity() {
         //구현 : SharedPreferences 앱의 임시 저장소에 id,pw ox(이메일,pw저장), auto(자동로그인)
         /*val pref: SharedPreferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
         val editor: SharedPreferences.Editor = pref.edit();*/
-        val pref: SharedPreferences = getSharedPreferences("pref", Activity.MODE_PRIVATE)
-        val editor: SharedPreferences.Editor = pref.edit()
+        pref= getSharedPreferences("pref", Activity.MODE_PRIVATE)
+        editor = pref.edit()
         var ID = pref.getString("id",null)
         var PW = pref.getString("pw",null)
         var OX = pref.getBoolean("ox",false)
         var AUTO = pref.getBoolean("auto",false)
 
-        if (AUTO){
-            if (ID != null) {
-                if (PW != null) {
-                    apply { binding }
-                    binding.autoCheckBox.isChecked=true
-                    binding.autoLogincheckBox.isChecked=true
-                    binding.userEmail.setText(ID)
-                    binding.userPW.setText(PW)
 
-                    loginUser(ID,PW)
-                    //val intent = Intent(this, MainActivity::class.java)
-                    //startActivity(intent)
-                }
-            }
-        }
-        else if(OX){
+        if(OX){
             binding.autoCheckBox.isChecked=true
             binding.userEmail.setText(ID)
-            binding.userPW.setText(PW)
 
         }
 
@@ -115,7 +100,6 @@ class LoginActivity : AppCompatActivity() {
             }
             else if(binding.autoCheckBox.isChecked){
                 editor.putString("id",email)
-                editor.putString("pw",pw)
                 editor.putBoolean("ox",true)
                 editor.putBoolean("auto",binding.autoLogincheckBox.isChecked)
                 editor.apply()
@@ -176,13 +160,20 @@ class LoginActivity : AppCompatActivity() {
 
 
     private fun loginUser(email: String, pw: String) {
+
         auth.signInWithEmailAndPassword(email, pw)
             .addOnCompleteListener(this) { login ->
                 if (login.isSuccessful) {
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                    Intent(this, MainActivity::class.java).also {
+                        it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(it)
+                    }
                 } else {
+                    editor.putString("id",null)
+                    editor.putString("pw",null)
+                    editor.putBoolean("ox",false)
+                    editor.putBoolean("auto",false)
+                    editor.apply()
                     Toast.makeText(this, login.exception?.message, Toast.LENGTH_SHORT).show()
                 }
             }

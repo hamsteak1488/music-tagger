@@ -16,6 +16,8 @@ import com.cookandroid.myapplication.databinding.MusicViewBinding
 class Adapter(private val context: Context, private var musicList: ArrayList<Music>, private val playlistDetails: Boolean = false,
               private val searchActivity: Boolean = false)
     : RecyclerView.Adapter<MyHolder>() {
+    
+    // TODO : Adapter 내에서 searchActivity 동작 설계해볼것
 
     ///뮤직 뷰 binding
     class MyHolder(binding: MusicViewBinding) : RecyclerView.ViewHolder(binding.root) {

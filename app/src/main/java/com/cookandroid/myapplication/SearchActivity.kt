@@ -30,6 +30,11 @@ class SearchActivity : AppCompatActivity() {
                     adapter = Adapter(this@SearchActivity, it as ArrayList<Music>, searchActivity = true)
                     binding.searchRV.adapter = adapter
                 }
+
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
                 return true
             }
 
@@ -37,10 +42,5 @@ class SearchActivity : AppCompatActivity() {
                 return true
             }
         })
-    }
-
-    //서버로 검색어 전송, 결과 리스트 반환
-    fun getSearchResult(title:String) : ArrayList<Music> {
-        return ArrayList<Music>()
     }
 }
