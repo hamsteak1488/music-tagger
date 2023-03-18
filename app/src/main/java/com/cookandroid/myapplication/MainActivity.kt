@@ -22,9 +22,6 @@ class MainActivity : AppCompatActivity() {
 
     // TODO: 로그인 된 정보 가져와서 아이디를 키값으로 서버에서 모든 플레이리스트들과 음악 청취 기록 모두 가져올 것
     companion object{
-        //lateinit var MusicListMA: ArrayList<Music>
-        lateinit var musicListSearch: ArrayList<Music>
-        var search: Boolean = false
         var allThemePlaylist = ArrayList<Playlist>() //모든 테마 리스트
         var mainPlaylist = ArrayList<Music>() //메인 리스트(TOP 20)
     }

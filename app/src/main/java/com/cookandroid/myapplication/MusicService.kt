@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.Player
@@ -15,9 +16,12 @@ import com.google.android.exoplayer2.ui.PlayerControlView
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
+import org.json.JSONObject
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 import java.util.*
 
@@ -37,20 +41,19 @@ class MusicService : Service() {
     /** id를 통해 만들어진 Uri로 Mediaitem으로 변경 후 저장할 리스트 */
     private var playListMediaItem:ArrayList<MediaItem>? = null
 
-    /** 플레이리스트내의 음악들의 id를 저장하는 리스트 */
-    private var mediaIdList:ArrayList<Int>? = null
-
     /** 현재 재생중인 음악 플레이리스트 인덱스 */
-    var currentList:Int? = null
+    var currentListPos:Int = -1
 
     /** 현재 재생중인 음악 메타데이터 정보 */
     var currentMusic:Music? = null
+
+    var currentMusicPos:Int = -1
 
     /** 음악 청취 기록을 위한 음악 재생시작 시간 정보 */
     private var musicStartTime:Long = -1
 
     /** 음악 청취 기록을 관리하는 객체 */
-    private lateinit var musicPlayHistory:MusicPlayHistory
+    private lateinit var playtimeHistory:PlaytimeHistory
 
     /** MusicTagger의 서버 baseUrl */
     private val baseUrlStr = "http://10.0.2.2:8080/"
@@ -89,7 +92,8 @@ class MusicService : Service() {
         /** exoPlayer 초기화 */
         exoPlayer = ExoPlayer.Builder(applicationContext).build()
         /** 청취기록객체 초기화 */
-        musicPlayHistory = MusicPlayHistory()
+        playtimeHistory = PlaytimeHistory()
+        loadPlaytimeHistory("woals1488") { }
         /** 이벤트 리스너 지정 */
         exoPlayer!!.addListener(PlayerStateListener())
 
@@ -123,8 +127,10 @@ class MusicService : Service() {
                 /** 재생시작시간 기록 */
                 musicStartTime = System.currentTimeMillis()
 
+                currentMusicPos = exoPlayer!!.currentMediaItemIndex
+
                 /** currentMediaItemIndex를 통해 현재 재생중인 음악의 인덱스를 얻은 후, id를 통해 메타데이터 받아와서 currentMusic에 저장 */
-                getMusicMetadata(mediaIdList!![exoPlayer!!.currentMediaItemIndex]) {
+                getMusicMetadata(PlaylistManager.allPlayList[currentListPos].musicList[exoPlayer!!.currentMediaItemIndex].id) {
                     currentMusic = it;
                 }
             }
@@ -136,37 +142,48 @@ class MusicService : Service() {
                 /** 재생시작시간 정보를 통해 재생된시간 계산 후 기록 */
                 if (musicStartTime != (-1).toLong()) {
                     val playedTime = System.currentTimeMillis() - musicStartTime
-                    musicPlayHistory.addPlaytime(currentMusic!!.id, playedTime)
-                    // musicPlayHistory.addPlaytime("star walkin", playedTime)
+                    playtimeHistory.addPlaytime(currentMusic!!.id, playedTime)
                     musicStartTime = -1
+                }
+
+                savePlaytimeHistory("woals:1000", playtimeHistory.toJson()) {
+
                 }
             }
         }
     }
 
-    /** 재생 */
-    fun play() {
-        exoPlayer!!.play()
+    fun setMusicPos(pos:Int) {
+        currentMusic = PlaylistManager.allPlayList[currentListPos].musicList[pos]
+        currentMusicPos = pos
     }
 
-    fun isPlaylistEmpty() : Boolean {
-        return mediaIdList.isNullOrEmpty()
-    }
-
-    /** exoPlayer 내부의 플레이리스트 지정 */
-    fun setPlayList(list: ArrayList<Int>) {
-        mediaIdList = list
-        /** 음악 id를 통해 MediaItem 리스트를 생성한 후, exoPlayer의 리스트로 설정 */
+    fun setPlayList(idList:List<Int>) {
         playListMediaItem = ArrayList<MediaItem>().apply {
-            mediaIdList!!.forEach { id ->
+            idList.forEach { id ->
                 this.add(MediaItem.fromUri(baseUrlStr + "media?id=" + id))
             }
         }
         exoPlayer!!.setMediaItems(playListMediaItem!!)
 
-        getMusicMetadata(mediaIdList!![0]) {
+        getMusicMetadata(idList[0]) {
             currentMusic = it
         }
+    }
+
+    /** exoPlayer 플레이리스트 리로드 */
+    fun reloadPlayer() {
+        /** 음악 id를 통해 MediaItem 리스트를 생성한 후, exoPlayer의 리스트로 설정 */
+        playListMediaItem = ArrayList<MediaItem>().apply {
+            PlaylistManager.allPlayList[currentListPos].musicList.forEach { music ->
+                this.add(MediaItem.fromUri(baseUrlStr + "media?id=" + music.id))
+            }
+        }
+        exoPlayer!!.setMediaItems(playListMediaItem!!)
+
+        currentMusic = PlaylistManager.allPlayList[currentListPos].musicList[currentMusicPos]
+
+        exoPlayer!!.seekTo(currentMusicPos, C.TIME_UNSET)
     }
 
     /** 플레이어뷰의 플레이어를 exoPlayer로 지정 */
@@ -187,6 +204,18 @@ class MusicService : Service() {
         /** id를 통해 ArtImage 요청 */
         @GET("/img")
         fun getArtImg(@Query("id") id:Int) : Call<Array<Byte>>
+
+        /** 태그데이터 삽입 */
+        @POST("/playtimehistory/insert")
+        fun insertPlaytimeHistory(@Query("emailAndMusicId") emailAndMusicId:String, @Body tagInfo:JSONObject) : Call<String>
+        
+        /** 태그데이터 업데이트 */
+        @POST("/playtimehistory/update")
+        fun updatePlaytimeHistory(@Query("emailAndMusicId") emailAndMusicId:String, @Body tagInfo:JSONObject) : Call<String>
+
+        /** 태그데이터 불러오기 */
+        @POST("/playtimehistory/select")
+        fun getPlaytimeHistory(@Query("emailAndMusicId") emailAndMusicId:String) : Call<JSONObject>
     }
 
     /** 호출 시 id를 통해 메타데이터를 서버에 요청, response가 오면 호출될 함수 operation을 인자로 넘겨주어야 함 */
@@ -254,6 +283,68 @@ class MusicService : Service() {
                 Log.d("myTag", "failure : $t")
             }
         })
+    }
+
+    fun loadPlaytimeHistory(emailAndMusicId: String, operation:(Boolean?)->Unit) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrlStr)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(RetrofitAPI::class.java)
+
+        val callGetMetadata = api.getPlaytimeHistory(emailAndMusicId)
+        callGetMetadata.enqueue(object:Callback<JSONObject> {
+            override fun onResponse(call: Call<JSONObject>, response: Response<JSONObject>) {
+                Log.d("myTag", "success : ${response.raw()}")
+                val result = response.body()
+                Log.d("myTag", result.toString())
+
+                playtimeHistory.set(response.body()!!)
+                operation(true)
+            }
+            override fun onFailure(call: Call<JSONObject>, t: Throwable) {
+                Log.d("myTag", "failure : $t")
+                operation(false)
+            }
+        })
+    }
+    fun savePlaytimeHistory(emailAndMusicId: String, tagInfo: JSONObject, operation:(Boolean?)->Unit) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrlStr)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(RetrofitAPI::class.java)
+
+        loadPlaytimeHistory(emailAndMusicId) {
+            if (it!!) {
+                val callGetMetadata = api.insertPlaytimeHistory(emailAndMusicId, tagInfo)
+                callGetMetadata.enqueue(object:Callback<String> {
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        Log.d("myTag", "success : ${response.raw()}")
+                        val result = response.body()
+                        Log.d("myTag", result.toString())
+                        operation(true)
+                    }
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        Log.d("myTag", "failure : $t")
+                    }
+                })
+            }
+            else {
+                val callGetMetadata = api.updatePlaytimeHistory(emailAndMusicId, tagInfo)
+                callGetMetadata.enqueue(object:Callback<String> {
+                    override fun onResponse(call: Call<String>, response: Response<String>) {
+                        Log.d("myTag", "success : ${response.raw()}")
+                        val result = response.body()
+                        Log.d("myTag", result.toString())
+                        operation(false)
+                    }
+                    override fun onFailure(call: Call<String>, t: Throwable) {
+                        Log.d("myTag", "failure : $t")
+                    }
+                })
+            }
+        }
     }
 
 

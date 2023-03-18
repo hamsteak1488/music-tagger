@@ -33,14 +33,15 @@ class SearchActivity : AppCompatActivity() {
                     adapter = MusicAdapter(this@SearchActivity, it as ArrayList<Music>, object:MusicAdapter.OnItemClickListener {
                         override fun onItemClick(view: View, pos: Int) {
                             if (intent.getBooleanExtra("searchForAdd", false)) {
-                                val returnIntent = Intent(this@SearchActivity, PlaylistDetails::class.java)
-                                returnIntent.putExtra("musicID", it[pos].id)
-                                setResult(RESULT_OK, returnIntent)
-                                finish()
+                                val listPos = intent.getIntExtra("listPos", -1)
+                                MusicServiceConnection.musicService!!.getMusicMetadata(it[pos].id) {
+                                    PlaylistManager.allPlayList[listPos].musicList.add(it!!)
+                                    finish()
+                                }
                             }
                             else {
-                                val playMusicIntent =
-                                    Intent(this@SearchActivity, PlayMusicActivity::class.java)
+                                //todo: 메인->검색창->음악선택 : 임시 플레이리스트 생성하여 재생
+                                val playMusicIntent = Intent(this@SearchActivity, PlayMusicActivity::class.java)
                                 MusicServiceConnection.musicService!!.setPlayList(arrayListOf(it[pos].id))
                                 startActivity(playMusicIntent)
                             }

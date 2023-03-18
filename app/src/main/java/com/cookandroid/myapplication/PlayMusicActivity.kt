@@ -19,7 +19,7 @@ class PlayMusicActivity : AppCompatActivity() {
 
         MusicServiceConnection.musicService!!.setPlayerView(binding.exoControlView)
 
-        if (MusicServiceConnection.musicService!!.currentList != null) {
+        if (MusicServiceConnection.musicService!!.currentListPos != -1) {
             setLayout()
         }
     }
