@@ -37,14 +37,15 @@ class PlaytimeEachEnvironment {
     }
 
     fun set(jo:JSONObject) {
-        val tagInfoKeys = jo.keys()
-        while (tagInfoKeys.hasNext()) {
-            val tagInfoKey = tagInfoKeys.next()
-            val categoryJO = jo.get(tagInfoKey) as JSONObject
-            val categoryKeys = categoryJO.keys()
-            while (categoryKeys.hasNext()) {
-                val categoryKey = categoryKeys.next()
-                tagInfo[tagInfoKey]!!.set(categoryKey, categoryJO.get(categoryKey).toString().toLong())
+
+        val categoryKeys = jo.keys()
+        while (categoryKeys.hasNext()) {
+            val categoryKey = categoryKeys.next()
+            val tagJO = jo.get(categoryKey) as JSONObject
+            val tagKeys = tagJO.keys()
+            while (tagKeys.hasNext()) {
+                val tagKey = tagKeys.next()
+                tagInfo[categoryKey]!![tagKey] = tagJO.get(tagKey).toString().toLong()
             }
         }
     }
