@@ -308,6 +308,7 @@ class MusicService : Service() {
             }
         })
     }
+    //TODO : json 객체가 서버에 도착했을때 값이 이상하게 나오는 문제 수정할 것
     fun savePlaytimeHistory(emailAndMusicId: String, tagInfo: JSONObject, operation:(Boolean?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
@@ -317,7 +318,7 @@ class MusicService : Service() {
 
         loadPlaytimeHistory(emailAndMusicId) {
             if (it!!) {
-                val callGetMetadata = api.insertPlaytimeHistory(emailAndMusicId, tagInfo)
+                val callGetMetadata = api.updatePlaytimeHistory(emailAndMusicId, tagInfo)
                 callGetMetadata.enqueue(object:Callback<String> {
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         Log.d("myTag", "success : ${response.raw()}")
@@ -331,7 +332,7 @@ class MusicService : Service() {
                 })
             }
             else {
-                val callGetMetadata = api.updatePlaytimeHistory(emailAndMusicId, tagInfo)
+                val callGetMetadata = api.insertPlaytimeHistory(emailAndMusicId, tagInfo)
                 callGetMetadata.enqueue(object:Callback<String> {
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         Log.d("myTag", "success : ${response.raw()}")
