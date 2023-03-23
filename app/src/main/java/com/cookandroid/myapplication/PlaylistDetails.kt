@@ -68,7 +68,6 @@ class PlaylistDetails : AppCompatActivity() {
         }
     }
 
-    // todo: 음악을 검색해서 추가한 후, 뒤로가기 눌렀을 때 곧바로 앨범이미지와 곡 개수 정보들이 화면에 반영되지 않음
     override fun onResume() {
         super.onResume()
         binding.playlistNamePD.text = PlaylistManager.allPlayList[currentPlaylistPos].name

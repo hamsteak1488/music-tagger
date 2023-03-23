@@ -16,14 +16,17 @@ import com.google.android.exoplayer2.ui.PlayerControlView
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
-import org.json.JSONObject
+import com.google.gson.JsonObject
+import okhttp3.ResponseBody
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
+import java.lang.reflect.Type
 import java.util.*
+
 
 class MusicService : Service() {
 
@@ -45,7 +48,7 @@ class MusicService : Service() {
     var currentListPos:Int = -1
 
     /** 현재 재생중인 음악 메타데이터 정보 */
-    var currentMusic:Music? = null
+    lateinit var currentMusic:Music
 
     var currentMusicPos:Int = -1
 
@@ -93,7 +96,12 @@ class MusicService : Service() {
         exoPlayer = ExoPlayer.Builder(applicationContext).build()
         /** 청취기록객체 초기화 */
         playtimeHistory = PlaytimeHistory()
-        loadPlaytimeHistory("woals1488") { }
+        // todo : 이메일 정보를 키값으로 청취기록 리스트 가져와서 불러오기 할 것
+        loadPlaytimeHistory("woals", 1002) {
+            if (it != null) {
+                playtimeHistory.set(1002, it)
+            }
+        }
         /** 이벤트 리스너 지정 */
         exoPlayer!!.addListener(PlayerStateListener())
 
@@ -131,7 +139,7 @@ class MusicService : Service() {
 
                 /** currentMediaItemIndex를 통해 현재 재생중인 음악의 인덱스를 얻은 후, id를 통해 메타데이터 받아와서 currentMusic에 저장 */
                 getMusicMetadata(PlaylistManager.allPlayList[currentListPos].musicList[exoPlayer!!.currentMediaItemIndex].id) {
-                    currentMusic = it;
+                    currentMusic = it!!;
                 }
             }
                 
@@ -142,11 +150,12 @@ class MusicService : Service() {
                 /** 재생시작시간 정보를 통해 재생된시간 계산 후 기록 */
                 if (musicStartTime != (-1).toLong()) {
                     val playedTime = System.currentTimeMillis() - musicStartTime
-                    playtimeHistory.addPlaytime(currentMusic!!.id, playedTime)
+                    playtimeHistory.addPlaytime(currentMusic.id, playedTime)
                     musicStartTime = -1
                 }
 
-                savePlaytimeHistory("woals:1000", playtimeHistory.toJson()) {
+                //todo: 이메일 정보 가져와서 참조시킬것
+                savePlaytimeHistory("woals", currentMusic.id, playtimeHistory.toJson(currentMusic.id)) {
 
                 }
             }
@@ -167,7 +176,7 @@ class MusicService : Service() {
         exoPlayer!!.setMediaItems(playListMediaItem!!)
 
         getMusicMetadata(idList[0]) {
-            currentMusic = it
+            currentMusic = it!!
         }
     }
 
@@ -191,6 +200,22 @@ class MusicService : Service() {
         view.player = exoPlayer
     }
 
+    class NullOnEmptyConverterFactory : Converter.Factory() {
+        override fun responseBodyConverter(
+            type: Type,
+            annotations: Array<Annotation>,
+            retrofit: Retrofit
+        ): Converter<ResponseBody, *> {
+            val delegate: Converter<ResponseBody, *> =
+                retrofit.nextResponseBodyConverter<Any>(this, type, annotations)
+            return Converter { body ->
+                if (body.contentLength() == 0L) null else delegate.convert(
+                    body
+                )
+            }
+        }
+    }
+
     /** http 통신을 위한 retrofit의 API 인터페이스 */
     interface RetrofitAPI {
         /** id를 통해 메타데이터에 접근, id는 유일성을 가지므로 반환형은 Music */
@@ -207,15 +232,15 @@ class MusicService : Service() {
 
         /** 태그데이터 삽입 */
         @POST("/playtimehistory/insert")
-        fun insertPlaytimeHistory(@Query("emailAndMusicId") emailAndMusicId:String, @Body tagInfo:JSONObject) : Call<String>
+        fun insertPlaytimeHistory(@Query("email") email:String, @Query("musicId") musicId:Int, @Body tagInfo:JsonObject) : Call<String>
         
         /** 태그데이터 업데이트 */
         @POST("/playtimehistory/update")
-        fun updatePlaytimeHistory(@Query("emailAndMusicId") emailAndMusicId:String, @Body tagInfo:JSONObject) : Call<String>
+        fun updatePlaytimeHistory(@Query("email") email:String, @Query("musicId") musicId:Int, @Body tagInfo:JsonObject) : Call<String>
 
         /** 태그데이터 불러오기 */
         @POST("/playtimehistory/select")
-        fun getPlaytimeHistory(@Query("emailAndMusicId") emailAndMusicId:String) : Call<JSONObject>
+        fun getPlaytimeHistory(@Query("email") email:String, @Query("musicId") musicId:Int) : Call<JsonObject>
     }
 
     /** 호출 시 id를 통해 메타데이터를 서버에 요청, response가 오면 호출될 함수 operation을 인자로 넘겨주어야 함 */
@@ -223,6 +248,7 @@ class MusicService : Service() {
         /** retrofit 객체 초기화 */
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
+            .addConverterFactory(NullOnEmptyConverterFactory())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
@@ -285,40 +311,39 @@ class MusicService : Service() {
         })
     }
 
-    fun loadPlaytimeHistory(emailAndMusicId: String, operation:(Boolean?)->Unit) {
+    fun loadPlaytimeHistory(email: String, musicId: Int, operation:(JsonObject?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
+            .addConverterFactory(NullOnEmptyConverterFactory())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
 
-        val callGetMetadata = api.getPlaytimeHistory(emailAndMusicId)
-        callGetMetadata.enqueue(object:Callback<JSONObject> {
-            override fun onResponse(call: Call<JSONObject>, response: Response<JSONObject>) {
+        val callGetMetadata = api.getPlaytimeHistory(email, musicId)
+        callGetMetadata.enqueue(object:Callback<JsonObject> {
+            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 Log.d("myTag", "success : ${response.raw()}")
                 val result = response.body()
                 Log.d("myTag", result.toString())
 
-                playtimeHistory.set(response.body()!!)
-                operation(true)
+
+                operation(response.body())
             }
-            override fun onFailure(call: Call<JSONObject>, t: Throwable) {
+            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
                 Log.d("myTag", "failure : $t")
-                operation(false)
             }
         })
     }
-    //TODO : json 객체가 서버에 도착했을때 값이 이상하게 나오는 문제 수정할 것
-    fun savePlaytimeHistory(emailAndMusicId: String, tagInfo: JSONObject, operation:(Boolean?)->Unit) {
+    fun savePlaytimeHistory(email: String, musicId: Int, tagInfo: JsonObject, operation:(Boolean?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
 
-        loadPlaytimeHistory(emailAndMusicId) {
-            if (it!!) {
-                val callGetMetadata = api.updatePlaytimeHistory(emailAndMusicId, tagInfo)
+        loadPlaytimeHistory(email, musicId) {
+            if (it != null) {
+                val callGetMetadata = api.updatePlaytimeHistory(email, musicId, tagInfo)
                 callGetMetadata.enqueue(object:Callback<String> {
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         Log.d("myTag", "success : ${response.raw()}")
@@ -332,7 +357,7 @@ class MusicService : Service() {
                 })
             }
             else {
-                val callGetMetadata = api.insertPlaytimeHistory(emailAndMusicId, tagInfo)
+                val callGetMetadata = api.insertPlaytimeHistory(email, musicId, tagInfo)
                 callGetMetadata.enqueue(object:Callback<String> {
                     override fun onResponse(call: Call<String>, response: Response<String>) {
                         Log.d("myTag", "success : ${response.raw()}")

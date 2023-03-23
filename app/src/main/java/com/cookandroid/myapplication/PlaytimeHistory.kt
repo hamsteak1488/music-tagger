@@ -1,7 +1,7 @@
 package com.cookandroid.myapplication
 
 import android.util.Log
-import org.json.JSONObject
+import com.google.gson.JsonObject
 
 class PlaytimeHistory {
 
@@ -18,21 +18,14 @@ class PlaytimeHistory {
         Log.d("myTag", "추가된 결과 : " + playtimeHistoryMap[id]!!.totalPlaytime)
     }
 
-    fun set(jo: JSONObject) {
-        val keys = jo.keys()
-        while (keys.hasNext()) {
-            val key = keys.next()
-            playtimeHistoryMap[key.toInt()]?.set(jo.get(key) as JSONObject)
+    fun set(musicId:Int, jo: JsonObject) {
+        if(!playtimeHistoryMap.containsKey(musicId)) {
+            playtimeHistoryMap[musicId] = PlaytimeEachEnvironment()
         }
+        playtimeHistoryMap[musicId]!!.set(jo)
     }
 
-    fun toJson() : JSONObject {
-        val playtimeHistoryJO = JSONObject()
-
-        for (tagInfo in playtimeHistoryMap) {
-            playtimeHistoryJO.put(tagInfo.key.toString(), tagInfo.value.toJson())
-        }
-
-        return playtimeHistoryJO
+    fun toJson(musicId: Int) : JsonObject {
+        return playtimeHistoryMap[musicId]!!.toJson()
     }
 }
