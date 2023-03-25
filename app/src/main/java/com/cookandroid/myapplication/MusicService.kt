@@ -96,12 +96,18 @@ class MusicService : Service() {
         exoPlayer = ExoPlayer.Builder(applicationContext).build()
         /** 청취기록객체 초기화 */
         playtimeHistory = PlaytimeHistory()
-        // todo : 이메일 정보를 키값으로 청취기록 리스트 가져와서 불러오기 할 것
-        loadPlaytimeHistory("woals", 1002) {
+
+        loadPlaytimeHistoryList("woals") {
             if (it != null) {
-                playtimeHistory.set(1002, it)
+                val idKeys = it.keySet().iterator()
+                while (idKeys.hasNext()) {
+                    val idKey = idKeys.next()
+                    val tagInfo = it.get(idKey) as JsonObject
+                    playtimeHistory.set(idKey.toInt(), tagInfo)
+                }
             }
         }
+
         /** 이벤트 리스너 지정 */
         exoPlayer!!.addListener(PlayerStateListener())
 
@@ -241,6 +247,9 @@ class MusicService : Service() {
         /** 태그데이터 불러오기 */
         @POST("/playtimehistory/select")
         fun getPlaytimeHistory(@Query("email") email:String, @Query("musicId") musicId:Int) : Call<JsonObject>
+
+        @POST("/playtimehistory/select")
+        fun getPlaytimeHistoryList(@Query("email") email: String) : Call<JsonObject>
     }
 
     /** 호출 시 id를 통해 메타데이터를 서버에 요청, response가 오면 호출될 함수 operation을 인자로 넘겨주어야 함 */
@@ -323,10 +332,27 @@ class MusicService : Service() {
         callGetMetadata.enqueue(object:Callback<JsonObject> {
             override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
                 Log.d("myTag", "success : ${response.raw()}")
-                val result = response.body()
-                Log.d("myTag", result.toString())
+                Log.d("myTag", response.body().toString())
+                operation(response.body())
+            }
+            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+                Log.d("myTag", "failure : $t")
+            }
+        })
+    }
+    fun loadPlaytimeHistoryList(email:String, operation:(JsonObject?)->Unit) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrlStr)
+            .addConverterFactory(NullOnEmptyConverterFactory())
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(RetrofitAPI::class.java)
 
-
+        val callGetMetadata = api.getPlaytimeHistoryList(email)
+        callGetMetadata.enqueue(object:Callback<JsonObject> {
+            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+                Log.d("myTag", "success : ${response.raw()}")
+                Log.d("myTag", response.body().toString())
                 operation(response.body())
             }
             override fun onFailure(call: Call<JsonObject>, t: Throwable) {
