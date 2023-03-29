@@ -1,4 +1,4 @@
-package com.cookandroid.myapplication
+package com.cookandroid.myapplication.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -7,12 +7,11 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.helper.widget.MotionEffect.AUTO
 import androidx.core.content.ContextCompat
+import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityLoginBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.jakewharton.rxbinding2.widget.RxTextView
 
 

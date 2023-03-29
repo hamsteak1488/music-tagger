@@ -1,13 +1,11 @@
-package com.cookandroid.myapplication
+package com.cookandroid.myapplication.activities
 
 import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import com.cookandroid.myapplication.databinding.ActivityLoadingBinding
-import com.cookandroid.myapplication.databinding.ActivityLoginBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 

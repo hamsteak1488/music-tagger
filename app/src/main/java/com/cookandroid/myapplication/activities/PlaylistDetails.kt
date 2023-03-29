@@ -1,4 +1,4 @@
-package com.cookandroid.myapplication
+package com.cookandroid.myapplication.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -7,6 +7,7 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.databinding.ActivityPlaylistDetailsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -29,17 +30,20 @@ class PlaylistDetails : AppCompatActivity() {
         binding.playlistDetailsRV.setHasFixedSize(true)
         binding.playlistDetailsRV.layoutManager = LinearLayoutManager(this)
 
-        adapter = MusicAdapter(this@PlaylistDetails, PlaylistManager.allPlayList[currentPlaylistPos].musicList,
-            object:MusicAdapter.OnItemClickListener {
-                override fun onItemClick(view: View, pos: Int) {
-                    MusicServiceConnection.musicService!!.currentListPos = currentPlaylistPos
-                    MusicServiceConnection.musicService!!.setMusicPos(pos)
-                    MusicServiceConnection.musicService!!.reloadPlayer()
-                    startActivity(Intent(this@PlaylistDetails, PlayMusicActivity::class.java))
-                }
-            })
+        MusicServiceConnection.musicService!!.getMusicMetadataList(PlaylistManager.playlists[currentPlaylistPos].musicList) {
+            if (it == null) return@getMusicMetadataList
+            adapter = MusicAdapter(this@PlaylistDetails, it.toCollection(ArrayList()),
+                object: MusicAdapter.OnItemClickListener {
+                    override fun onItemClick(view: View, pos: Int) {
+                        MusicServiceConnection.musicService!!.currentListPos = currentPlaylistPos
+                        MusicServiceConnection.musicService!!.setMusicPos(pos)
+                        MusicServiceConnection.musicService!!.reloadPlayer()
+                        startActivity(Intent(this@PlaylistDetails, PlayMusicActivity::class.java))
+                    }
+                })
 
-        binding.playlistDetailsRV.adapter = adapter
+            binding.playlistDetailsRV.adapter = adapter
+        }
 
         //음악 추가
         binding.addBtnPD.setOnClickListener{
@@ -54,7 +58,7 @@ class PlaylistDetails : AppCompatActivity() {
             builder.setTitle("remove")
                 .setMessage("Remove all songs from playlist?")
                 .setPositiveButton("Yes"){dialog, _ ->
-                    PlaylistManager.allPlayList[currentPlaylistPos].musicList.clear()
+                    PlaylistManager.playlists[currentPlaylistPos].musicList.clear()
                     //adapter.refreshPlaylist()
                     dialog.dismiss()
                 }
@@ -70,11 +74,11 @@ class PlaylistDetails : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        binding.playlistNamePD.text = PlaylistManager.allPlayList[currentPlaylistPos].name
-        binding.moreInfoPD.text = "Total ${PlaylistManager.allPlayList[currentPlaylistPos].musicList.size} Songs.\n\n"
-        if(PlaylistManager.allPlayList[currentPlaylistPos].musicList.size > 0){
+        binding.playlistNamePD.text = PlaylistManager.playlists[currentPlaylistPos].name
+        binding.moreInfoPD.text = "Total ${PlaylistManager.playlists[currentPlaylistPos].musicList.size} Songs.\n\n"
+        if(PlaylistManager.playlists[currentPlaylistPos].musicList.size > 0){
             Glide.with(this)
-                .load("http://10.0.2.2:8080/img?id=" + (PlaylistManager.allPlayList[currentPlaylistPos].musicList[0].id))
+                .load("http://10.0.2.2:8080/img?id=" + (PlaylistManager.playlists[currentPlaylistPos].musicList[0]))
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_video_24).centerCrop())
                 .into(binding.playlistImgPD)
         }

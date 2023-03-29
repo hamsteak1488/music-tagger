@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:openDrawer="start"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refreshLayout"

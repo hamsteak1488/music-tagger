@@ -1,16 +1,15 @@
-package com.cookandroid.myapplication
+package com.cookandroid.myapplication.activities
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.databinding.ActivityPlaylistBinding
 import com.cookandroid.myapplication.databinding.AddPlaylistBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.text.SimpleDateFormat
 import java.util.*
 
 class PlaylistActivity : AppCompatActivity() {
@@ -27,13 +26,13 @@ class PlaylistActivity : AppCompatActivity() {
         binding.playlistRV.setHasFixedSize(true)
         binding.playlistRV.setItemViewCacheSize(13)
         binding.playlistRV.layoutManager = LinearLayoutManager(this@PlaylistActivity)
-        adapter = PlaylistViewAdapter(this, playlistList = PlaylistManager.allPlayList)
+        adapter = PlaylistViewAdapter(this, playlistList = PlaylistManager.playlists)
         binding.playlistRV.adapter = adapter
         binding.backBtnPLA.setOnClickListener { finish() }
         binding.addPlaylistBtn.setOnClickListener { customAlertDialog() }
 
         //생성된 플레이리스트가 존재하면 (플레이리스트 생성 문구) 노출 x
-        if(PlaylistManager.allPlayList.isNotEmpty()) binding.instructionPA.visibility = View.GONE
+        if(PlaylistManager.playlists.isNotEmpty()) binding.instructionPA.visibility = View.GONE
     }
 
     ///플레이리스트 추가 창
@@ -64,7 +63,7 @@ class PlaylistActivity : AppCompatActivity() {
     ///플레이리스트 추가 수행
     private fun addPlaylist(name: String){
         var playlistExists = false
-        for(i in PlaylistManager.allPlayList) {
+        for(i in PlaylistManager.playlists) {
             if (name == i.name){
                 playlistExists = true
                 break
@@ -76,7 +75,7 @@ class PlaylistActivity : AppCompatActivity() {
             val tempPlaylist = Playlist()
             tempPlaylist.name = name
             tempPlaylist.musicList = ArrayList()
-            PlaylistManager.allPlayList.add(tempPlaylist)
+            PlaylistManager.playlists.add(tempPlaylist)
             adapter.refreshPlaylist()
         }
     }

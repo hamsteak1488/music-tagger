@@ -41,6 +41,14 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
 
     ///뷰 홀더에 내용 입력
     override fun onBindViewHolder(holder: MusicHolder, pos: Int) {
+        /*
+        MusicServiceConnection.musicService!!.getMusicMetadata(musicList[pos]) {
+            if (it == null) return@getMusicMetadata
+            holder.title.text = it.title
+            holder.album.text = it.album
+            holder.duration.text = formatDuration(it.duration)
+        }
+        */
         holder.title.text = musicList[pos].title
         holder.album.text = musicList[pos].album
         holder.duration.text = formatDuration(musicList[pos].duration)

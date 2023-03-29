@@ -1,4 +1,4 @@
-package com.cookandroid.myapplication
+package com.cookandroid.myapplication.activities
 
 import android.app.Activity
 import android.content.Intent
@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -37,12 +38,13 @@ class MainActivity : AppCompatActivity() {
         if (MusicServiceConnection.musicService == null) {
             val intent = Intent(this, MusicService::class.java)
             startService(intent)
-            bindService(intent, MusicServiceConnection.getInstance(applicationContext), BIND_AUTO_CREATE)
+            bindService(intent,
+                MusicServiceConnection.getInstance(applicationContext), BIND_AUTO_CREATE)
         }
 
         ///랜덤, 플레이리스트, 검색 버튼
         binding.shuffleBtn.setOnClickListener{
-            val intent = Intent(this@MainActivity,PlayMusicActivity::class.java)
+            val intent = Intent(this@MainActivity, PlayMusicActivity::class.java)
             intent.putExtra("index",0)
             intent.putExtra("class","MainActivity")
             startActivity(intent) }
@@ -89,8 +91,8 @@ class MainActivity : AppCompatActivity() {
         binding.mainRV.setHasFixedSize(true)
         binding.mainRV.layoutManager = LinearLayoutManager(this@MainActivity)
 
-        adapterMain = MusicAdapter(this, mainPlaylist)
-        binding.mainRV.adapter = adapterMain
+        //adapterMain = MusicAdapter(this, mainPlaylist)
+        //binding.mainRV.adapter = adapterMain
     }
 
     //테마 리스트 받아오기

@@ -1,14 +1,14 @@
-package com.cookandroid.myapplication
+package com.cookandroid.myapplication.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityRegisterBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 
@@ -113,7 +113,7 @@ class RegisterActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, pw)
             .addOnCompleteListener(this){
                 if(it.isSuccessful){
-                    startActivity(Intent(this,LoginActivity::class.java))
+                    startActivity(Intent(this, LoginActivity::class.java))
                     Toast.makeText(this, "계정이 생성되었습니다", Toast.LENGTH_SHORT).show()
                 } else{
                     Toast.makeText(this, it.exception?.message, Toast.LENGTH_SHORT).show()
