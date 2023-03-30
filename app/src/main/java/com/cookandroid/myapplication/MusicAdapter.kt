@@ -24,7 +24,7 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
     ///뮤직 뷰 binding
     class MusicHolder(binding: MusicViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.songNameMV
-        val album = binding.songAlbumMV
+        val artist = binding.songArtistMV
         val image = binding.imageMV
         val duration = binding.songDuration
         val root = binding.root
@@ -41,36 +41,17 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
 
     ///뷰 홀더에 내용 입력
     override fun onBindViewHolder(holder: MusicHolder, pos: Int) {
-        /*
-        MusicServiceConnection.musicService!!.getMusicMetadata(musicList[pos]) {
-            if (it == null) return@getMusicMetadata
-            holder.title.text = it.title
-            holder.album.text = it.album
-            holder.duration.text = formatDuration(it.duration)
-        }
-        */
+
         holder.title.text = musicList[pos].title
-        holder.album.text = musicList[pos].album
+        holder.artist.text = musicList[pos].artist
         holder.duration.text = formatDuration(musicList[pos].duration)
 
-        /*
-        MusicServiceConnection.musicService!!.getMusicArtImg(musicList[pos].id) {
-
-        }*/
         //glide = uri로 이미지 적용
         Glide.with(context)
             .load("http://10.0.2.2:8080/img?id=" + (musicList[pos].id))
             .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
             .into(holder.image)
 
-        /*
-        holder.root.setOnClickListener {
-            val intent = Intent(context, PlayMusicActivity::class.java)
-            intent.putExtra("index", position)
-            intent.putExtra("class", "MusicAdapter")
-            ContextCompat.startActivity(context, intent, null)
-        }
-        */
         //롱클릭 동작으로 음악 추가 수행
         holder.root.setOnLongClickListener{
             return@setOnLongClickListener true

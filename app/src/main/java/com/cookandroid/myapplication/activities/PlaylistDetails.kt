@@ -30,21 +30,6 @@ class PlaylistDetails : AppCompatActivity() {
         binding.playlistDetailsRV.setHasFixedSize(true)
         binding.playlistDetailsRV.layoutManager = LinearLayoutManager(this)
 
-        MusicServiceConnection.musicService!!.getMusicMetadataList(PlaylistManager.playlists[currentPlaylistPos].musicList) {
-            if (it == null) return@getMusicMetadataList
-            adapter = MusicAdapter(this@PlaylistDetails, it.toCollection(ArrayList()),
-                object: MusicAdapter.OnItemClickListener {
-                    override fun onItemClick(view: View, pos: Int) {
-                        MusicServiceConnection.musicService!!.currentListPos = currentPlaylistPos
-                        MusicServiceConnection.musicService!!.setMusicPos(pos)
-                        MusicServiceConnection.musicService!!.reloadPlayer()
-                        startActivity(Intent(this@PlaylistDetails, PlayMusicActivity::class.java))
-                    }
-                })
-
-            binding.playlistDetailsRV.adapter = adapter
-        }
-
         //음악 추가
         binding.addBtnPD.setOnClickListener{
             val addMusicIntent = Intent(this, SearchActivity::class.java)
@@ -59,8 +44,10 @@ class PlaylistDetails : AppCompatActivity() {
                 .setMessage("Remove all songs from playlist?")
                 .setPositiveButton("Yes"){dialog, _ ->
                     PlaylistManager.playlists[currentPlaylistPos].musicList.clear()
-                    //adapter.refreshPlaylist()
+                    MusicServiceConnection.musicService!!.savePlaylistManager("woals"){ }
                     dialog.dismiss()
+                    finish()
+                    startActivity(intent)
                 }
                 .setNegativeButton("No"){dialog, _ ->
                     dialog.dismiss()
@@ -74,6 +61,21 @@ class PlaylistDetails : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+
+        MusicServiceConnection.musicService!!.getMusicMetadataList(PlaylistManager.playlists[currentPlaylistPos].musicList) {
+            if (it == null) return@getMusicMetadataList
+            adapter = MusicAdapter(this@PlaylistDetails, it.toCollection(ArrayList()),
+                object: MusicAdapter.OnItemClickListener {
+                    override fun onItemClick(view: View, pos: Int) {
+                        MusicServiceConnection.musicService!!.currentListPos = currentPlaylistPos
+                        MusicServiceConnection.musicService!!.setMusicPos(pos)
+                        MusicServiceConnection.musicService!!.reloadPlayer()
+                        startActivity(Intent(this@PlaylistDetails, PlayMusicActivity::class.java))
+                    }
+                })
+            binding.playlistDetailsRV.adapter = adapter
+        }
+
         binding.playlistNamePD.text = PlaylistManager.playlists[currentPlaylistPos].name
         binding.moreInfoPD.text = "Total ${PlaylistManager.playlists[currentPlaylistPos].musicList.size} Songs.\n\n"
         if(PlaylistManager.playlists[currentPlaylistPos].musicList.size > 0){

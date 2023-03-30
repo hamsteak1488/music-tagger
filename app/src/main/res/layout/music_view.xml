@@ -28,17 +28,17 @@
         android:layout_marginEnd="50dp"/>
 
     <TextView
-        android:id="@+id/songAlbumMV"
+        android:id="@+id/songArtistMV"
         android:layout_width="wrap_content"
         android:layout_height="25dp"
-        android:text="Song Album"
-        android:layout_toEndOf="@id/imageMV"
-        android:layout_toStartOf="@id/songDuration"
+        android:layout_marginStart="70dp"
         android:layout_marginTop="30dp"
+        android:layout_marginEnd="50dp"
+        android:layout_toStartOf="@id/songDuration"
+        android:layout_toEndOf="@id/imageMV"
         android:gravity="center_vertical"
         android:singleLine="true"
-        android:layout_marginStart="70dp"
-        android:layout_marginEnd="50dp"/>
+        android:text="Song Artist" />
 
     <TextView
         android:id="@+id/songDuration"
