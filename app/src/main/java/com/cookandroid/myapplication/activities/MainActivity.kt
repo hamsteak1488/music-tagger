@@ -36,9 +36,10 @@ class MainActivity : AppCompatActivity() {
 
         // Service 연결
         if (MusicServiceConnection.musicService == null) {
-            val intent = Intent(this, MusicService::class.java)
-            startService(intent)
-            bindService(intent,
+            val serviceIntent = Intent(this, MusicService::class.java)
+            serviceIntent.putExtra("email", intent.getStringExtra("email")!!)
+            startService(serviceIntent)
+            bindService(serviceIntent,
                 MusicServiceConnection.getInstance(applicationContext), BIND_AUTO_CREATE)
         }
 

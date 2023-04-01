@@ -60,6 +60,8 @@ class MusicService : Service() {
     /** 음악 청취 기록을 관리하는 객체 */
     private lateinit var playtimeHistory:PlaytimeHistory
 
+    lateinit var email:String
+
     /** MusicTagger의 서버 baseUrl */
     private val baseUrlStr = "http://10.0.2.2:8080/"
 
@@ -72,6 +74,12 @@ class MusicService : Service() {
         }
     }
 
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        email = intent!!.getStringExtra("email")!!
+        initPlayer()
+        return super.onStartCommand(intent, flags, startId)
+    }
+
     override fun onBind(intent: Intent?): IBinder {
         return myBinder
     }
@@ -82,8 +90,6 @@ class MusicService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-
-        initPlayer()
     }
 
     override fun onDestroy() {
@@ -99,7 +105,7 @@ class MusicService : Service() {
         /** 청취기록객체 초기화 */
         playtimeHistory = PlaytimeHistory()
 
-        loadPlaytimeHistoryList("woals") {
+        loadPlaytimeHistoryList(email) {
             if (it != null) {
                 val idKeys = it.keySet().iterator()
                 while (idKeys.hasNext()) {
@@ -110,7 +116,7 @@ class MusicService : Service() {
             }
         }
 
-        loadPlaylistManager("woals") {
+        loadPlaylistManager(email) {
             if (it != null) {
                 PlaylistManager.set(it)
             }
@@ -173,7 +179,7 @@ class MusicService : Service() {
                 }
 
                 //todo: 이메일 정보 가져와서 참조시킬것
-                savePlaytimeHistory("woals", curMusicId, playtimeHistory.toJson(curMusicId)) {
+                savePlaytimeHistory(email, curMusicId, playtimeHistory.toJson(curMusicId)) {
 
                 }
             }
@@ -241,7 +247,6 @@ class MusicService : Service() {
         @GET("/metadata")
         fun getMetadata(@Query("id") id:Int) : Call<Music>
 
-        // todo : id 리스트 넘기면 musicList 받아올 수 있게 구현 필요
         @GET("/metadatalist")
         fun getMetadataList(@Query("ids") ids:List<Int>) : Call<List<Music>>
 

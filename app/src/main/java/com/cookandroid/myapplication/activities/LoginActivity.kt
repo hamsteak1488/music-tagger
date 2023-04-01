@@ -42,9 +42,9 @@ class LoginActivity : AppCompatActivity() {
         val editor: SharedPreferences.Editor = pref.edit();*/
         pref= getSharedPreferences("pref", Activity.MODE_PRIVATE)
         editor = pref.edit()
-        var ID = pref.getString("id",null)
-        var PW = pref.getString("pw",null)
-        var OX = pref.getBoolean("ox",false)
+        val ID = pref.getString("id",null)
+        // var PW = pref.getString("pw",null)
+        val OX = pref.getBoolean("ox",false)
         var AUTO = pref.getBoolean("auto",false)
 
 
@@ -164,6 +164,7 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { login ->
                 if (login.isSuccessful) {
                     Intent(this, MainActivity::class.java).also {
+                        it.putExtra("email", binding.userEmail.text.toString())
                         it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(it)
                     }

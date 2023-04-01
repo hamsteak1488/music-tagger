@@ -29,6 +29,7 @@ class PlaylistViewAdapter(private val context: Context, private var playlistList
         return MyHolder(PlaylistViewBinding.inflate(LayoutInflater.from(context), parent, false))
     }
 
+    // TODO : 이벤트 처리 전부 외부로 빼놓기
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         holder.name.text = playlistList[position].name
         holder.name.isSelected = true

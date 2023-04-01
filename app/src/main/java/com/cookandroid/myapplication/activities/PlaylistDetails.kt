@@ -19,10 +19,14 @@ class PlaylistDetails : AppCompatActivity() {
 
     private var currentPlaylistPos: Int = -1
 
+    private lateinit var mService:MusicService
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlaylistDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        mService = MusicServiceConnection.musicService!!
 
         currentPlaylistPos = intent.extras!!.getInt("index", -1)
 
@@ -44,7 +48,7 @@ class PlaylistDetails : AppCompatActivity() {
                 .setMessage("Remove all songs from playlist?")
                 .setPositiveButton("Yes"){dialog, _ ->
                     PlaylistManager.playlists[currentPlaylistPos].musicList.clear()
-                    MusicServiceConnection.musicService!!.savePlaylistManager("woals"){ }
+                    mService.savePlaylistManager(mService.email){ }
                     dialog.dismiss()
                     finish()
                     startActivity(intent)
@@ -62,23 +66,22 @@ class PlaylistDetails : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        MusicServiceConnection.musicService!!.getMusicMetadataList(PlaylistManager.playlists[currentPlaylistPos].musicList) {
-            if (it == null) return@getMusicMetadataList
-            adapter = MusicAdapter(this@PlaylistDetails, it.toCollection(ArrayList()),
-                object: MusicAdapter.OnItemClickListener {
-                    override fun onItemClick(view: View, pos: Int) {
-                        MusicServiceConnection.musicService!!.currentListPos = currentPlaylistPos
-                        MusicServiceConnection.musicService!!.setMusicPos(pos)
-                        MusicServiceConnection.musicService!!.reloadPlayer()
-                        startActivity(Intent(this@PlaylistDetails, PlayMusicActivity::class.java))
-                    }
-                })
-            binding.playlistDetailsRV.adapter = adapter
-        }
-
         binding.playlistNamePD.text = PlaylistManager.playlists[currentPlaylistPos].name
         binding.moreInfoPD.text = "Total ${PlaylistManager.playlists[currentPlaylistPos].musicList.size} Songs.\n\n"
         if(PlaylistManager.playlists[currentPlaylistPos].musicList.size > 0){
+            mService.getMusicMetadataList(PlaylistManager.playlists[currentPlaylistPos].musicList) {
+                if (it == null) return@getMusicMetadataList
+                adapter = MusicAdapter(this@PlaylistDetails, it.toCollection(ArrayList()),
+                    object: MusicAdapter.OnItemClickListener {
+                        override fun onItemClick(view: View, pos: Int) {
+                            mService.currentListPos = currentPlaylistPos
+                            mService.setMusicPos(pos)
+                            mService.reloadPlayer()
+                            startActivity(Intent(this@PlaylistDetails, PlayMusicActivity::class.java))
+                        }
+                    })
+                binding.playlistDetailsRV.adapter = adapter
+            }
             Glide.with(this)
                 .load("http://10.0.2.2:8080/img?id=" + (PlaylistManager.playlists[currentPlaylistPos].musicList[0]))
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_video_24).centerCrop())
