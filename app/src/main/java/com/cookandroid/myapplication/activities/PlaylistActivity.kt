@@ -1,11 +1,15 @@
 package com.cookandroid.myapplication.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.databinding.ActivityPlaylistBinding
 import com.cookandroid.myapplication.databinding.AddPlaylistBinding
@@ -26,8 +30,6 @@ class PlaylistActivity : AppCompatActivity() {
         binding.playlistRV.setHasFixedSize(true)
         binding.playlistRV.setItemViewCacheSize(13)
         binding.playlistRV.layoutManager = LinearLayoutManager(this@PlaylistActivity)
-        adapter = PlaylistViewAdapter(this, playlistList = PlaylistManager.playlists)
-        binding.playlistRV.adapter = adapter
         binding.backBtnPLA.setOnClickListener { finish() }
         binding.addPlaylistBtn.setOnClickListener { customAlertDialog() }
 
@@ -82,6 +84,17 @@ class PlaylistActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        adapter.notifyDataSetChanged()
+
+        if(PlaylistManager.playlists.size > 0){
+            adapter = PlaylistViewAdapter(this@PlaylistActivity, PlaylistManager.playlists,
+                object: PlaylistViewAdapter.OnItemClickListener {
+                    override fun onItemClick(view: View, pos: Int) {
+                        val playlistDetailIntent = Intent(this@PlaylistActivity, PlaylistDetails::class.java)
+                        playlistDetailIntent.putExtra("index", pos)
+                        startActivity(playlistDetailIntent)
+                    }
+                })
+            binding.playlistRV.adapter = adapter
+        }
     }
 }

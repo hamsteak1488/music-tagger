@@ -30,6 +30,8 @@ class PlaylistDetails : AppCompatActivity() {
 
         currentPlaylistPos = intent.extras!!.getInt("index", -1)
 
+        binding.playlistNamePD.text = PlaylistManager.playlists[currentPlaylistPos].name
+
         binding.playlistDetailsRV.setItemViewCacheSize(10)
         binding.playlistDetailsRV.setHasFixedSize(true)
         binding.playlistDetailsRV.layoutManager = LinearLayoutManager(this)
@@ -66,7 +68,6 @@ class PlaylistDetails : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        binding.playlistNamePD.text = PlaylistManager.playlists[currentPlaylistPos].name
         binding.moreInfoPD.text = "Total ${PlaylistManager.playlists[currentPlaylistPos].musicList.size} Songs.\n\n"
         if(PlaylistManager.playlists[currentPlaylistPos].musicList.size > 0){
             mService.getMusicMetadataList(PlaylistManager.playlists[currentPlaylistPos].musicList) {

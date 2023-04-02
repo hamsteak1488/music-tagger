@@ -143,6 +143,8 @@ class MusicService : Service() {
         playerNotificationManager!!.setUseStopAction(true)
     }
 
+
+
     /** 재생 동작이 변경될 때마다 이벤트 처리 */
     inner class PlayerStateListener : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {

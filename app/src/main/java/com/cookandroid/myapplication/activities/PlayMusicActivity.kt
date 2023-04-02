@@ -26,7 +26,6 @@ class PlayMusicActivity : AppCompatActivity() {
         if (MusicServiceConnection.musicService!!.currentListPos != -1 && MusicServiceConnection.musicService!!.currentMusicPos != -1) {
             setLayout()
         }
-        invalidateMenu()
     }
 
     private fun setLayout() {
