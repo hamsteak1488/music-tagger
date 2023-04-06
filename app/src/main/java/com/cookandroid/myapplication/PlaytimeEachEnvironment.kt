@@ -1,47 +1,39 @@
 package com.cookandroid.myapplication
 
 import com.google.gson.JsonObject
-import org.json.JSONObject
 
 class PlaytimeEachEnvironment {
 
 
     var totalPlaytime:Long = 0
 
-    //private var timeOfDay = HashMap<CharSequence, Long>()
-    //private var weather = HashMap<CharSequence, Long>()
-    //private var season = HashMap<CharSequence, Long>()
-
-    private var tagInfo = HashMap<CharSequence, HashMap<CharSequence, Long>>()
+    private var tagInfoMap = HashMap<CharSequence, HashMap<CharSequence, Long>>()
 
     init {
-        if (!tagInfo.containsKey("날씨")) tagInfo.put("날씨", HashMap())
+        tagInfoMap.put("시간", HashMap())
+        tagInfoMap.put("날씨", HashMap())
+        tagInfoMap.put("계절", HashMap())
     }
     
     // 현재가 하루 중 어느 때인지 반환
-    private fun getTimeOfDay() : CharSequence {
-        return "morning"
-    }
-    private fun getWeather() : CharSequence {
-        return "sunny"
-    }
-    private fun getSeason() : CharSequence {
-        return "warm";
+    private fun getCurrentInformation(categoryName:CharSequence) : CharSequence {
+
+        // TODO: categoryName에 따라 시간, 날씨, 계절 정보 등을 문자열로 반환시켜줘야함
+
+        return "asdf"
     }
 
     fun addPlaytime(playtime:Long) {
 
         totalPlaytime += playtime
 
-        val timeNow = getTimeOfDay()
-        val weatherNow = getWeather()
-        val seasonNow = getSeason()
-
-        //timeOfDay[timeNow] = timeOfDay.getOrDefault(timeNow, 0) + playtime
-        //weather[weatherNow] = weather.getOrDefault(weatherNow, 0) + playtime
-        //season[seasonNow] = season.getOrDefault(seasonNow, 0) + playtime
-
-        tagInfo["날씨"]!!["비"] = tagInfo["날씨"]!!.getOrDefault("비", 0) + playtime
+        for (category in tagInfoMap) {
+            val infoNow = getCurrentInformation(category.key)
+            if (!category.value.containsKey(infoNow)) {
+                category.value.put(infoNow, 0)
+            }
+            category.value[infoNow] = category.value[infoNow]!!.plus(playtime)
+        }
     }
 
     fun set(jo:JsonObject) {
@@ -53,7 +45,7 @@ class PlaytimeEachEnvironment {
             val tagKeys = tagJO.keySet().iterator()
             while (tagKeys.hasNext()) {
                 val tagKey = tagKeys.next()
-                tagInfo[categoryKey]!![tagKey] = tagJO.get(tagKey).toString().toLong()
+                tagInfoMap[categoryKey]!![tagKey] = tagJO.get(tagKey).toString().toLong()
             }
         }
     }
@@ -61,7 +53,7 @@ class PlaytimeEachEnvironment {
     fun toJson() : JsonObject {
         val tagInfoJO = JsonObject()
 
-        for (category in tagInfo) {
+        for (category in tagInfoMap) {
             val categoryJO = JsonObject()
 
             for (tag in category.value) {

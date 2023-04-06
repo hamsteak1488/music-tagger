@@ -180,7 +180,6 @@ class MusicService : Service() {
                     musicStartTime = -1
                 }
 
-                //todo: 이메일 정보 가져와서 참조시킬것
                 savePlaytimeHistory(email, curMusicId, playtimeHistory.toJson(curMusicId)) {
 
                 }

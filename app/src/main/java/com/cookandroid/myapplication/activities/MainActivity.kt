@@ -20,8 +20,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapterTheme: ThemeViewAdapter
     private lateinit var adapterMain: MusicAdapter
 
-
-    // TODO: 로그인 된 정보 가져와서 아이디를 키값으로 서버에서 모든 플레이리스트들과 음악 청취 기록 모두 가져올 것
     companion object{
         var allThemePlaylist = ArrayList<Playlist>() //모든 테마 리스트
         var mainPlaylist = ArrayList<Music>() //메인 리스트(TOP 20)
@@ -72,8 +70,6 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
             }
         }
-
-        // TODO: 로그인 후 플레이리스트 서버로부터 받아오기
 
         //테마 RV 구현
         allThemePlaylist = getThemeLists()
