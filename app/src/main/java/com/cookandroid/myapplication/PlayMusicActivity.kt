@@ -17,6 +17,8 @@ class PlayMusicActivity : AppCompatActivity() {
         binding = ActivityPlayMusicBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.backBtnPA.setOnClickListener { finish() }
+
         MusicServiceConnection.musicService!!.setPlayerView(binding.exoControlView)
 
         if (MusicServiceConnection.musicService!!.currentList != null) {

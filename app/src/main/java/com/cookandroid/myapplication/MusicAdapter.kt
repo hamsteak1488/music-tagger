@@ -24,7 +24,7 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
     ///뮤직 뷰 binding
     class MusicHolder(binding: MusicViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.songNameMV
-        val album = binding.songAlbumMV
+        val artist = binding.artistMV
         val image = binding.imageMV
         val duration = binding.songDuration
         val root = binding.root
@@ -42,7 +42,7 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
     ///뷰 홀더에 내용 입력
     override fun onBindViewHolder(holder: MusicHolder, pos: Int) {
         holder.title.text = musicList[pos].title
-        holder.album.text = musicList[pos].album
+        holder.artist.text = musicList[pos].artist
         holder.duration.text = formatDuration(musicList[pos].duration)
 
         /*

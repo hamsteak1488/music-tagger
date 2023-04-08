@@ -17,7 +17,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 class PlaylistDetails : AppCompatActivity() {
     private lateinit var binding: ActivityPlaylistDetailsBinding
     private lateinit var adapter: MusicAdapter
-
     private var currentPlaylistPos: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
