@@ -1,4 +1,4 @@
-package com.cookandroid.myapplication
+package com.cookandroid.myapplication.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -7,12 +7,11 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.helper.widget.MotionEffect.AUTO
 import androidx.core.content.ContextCompat
+import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityLoginBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.jakewharton.rxbinding2.widget.RxTextView
 
 
@@ -43,9 +42,9 @@ class LoginActivity : AppCompatActivity() {
         val editor: SharedPreferences.Editor = pref.edit();*/
         pref= getSharedPreferences("pref", Activity.MODE_PRIVATE)
         editor = pref.edit()
-        var ID = pref.getString("id",null)
-        var PW = pref.getString("pw",null)
-        var OX = pref.getBoolean("ox",false)
+        val ID = pref.getString("id",null)
+        // var PW = pref.getString("pw",null)
+        val OX = pref.getBoolean("ox",false)
         var AUTO = pref.getBoolean("auto",false)
 
 
@@ -165,6 +164,7 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { login ->
                 if (login.isSuccessful) {
                     Intent(this, MainActivity::class.java).also {
+                        it.putExtra("email", binding.userEmail.text.toString())
                         it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(it)
                     }

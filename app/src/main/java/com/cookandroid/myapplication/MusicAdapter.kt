@@ -1,11 +1,9 @@
 package com.cookandroid.myapplication
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -24,7 +22,7 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
     ///뮤직 뷰 binding
     class MusicHolder(binding: MusicViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.songNameMV
-        val artist = binding.artistMV
+        val artist = binding.songArtistMV
         val image = binding.imageMV
         val duration = binding.songDuration
         val root = binding.root
@@ -41,28 +39,17 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
 
     ///뷰 홀더에 내용 입력
     override fun onBindViewHolder(holder: MusicHolder, pos: Int) {
+
         holder.title.text = musicList[pos].title
         holder.artist.text = musicList[pos].artist
         holder.duration.text = formatDuration(musicList[pos].duration)
 
-        /*
-        MusicServiceConnection.musicService!!.getMusicArtImg(musicList[pos].id) {
-
-        }*/
         //glide = uri로 이미지 적용
         Glide.with(context)
             .load("http://10.0.2.2:8080/img?id=" + (musicList[pos].id))
             .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
             .into(holder.image)
 
-        /*
-        holder.root.setOnClickListener {
-            val intent = Intent(context, PlayMusicActivity::class.java)
-            intent.putExtra("index", position)
-            intent.putExtra("class", "MusicAdapter")
-            ContextCompat.startActivity(context, intent, null)
-        }
-        */
         //롱클릭 동작으로 음악 추가 수행
         holder.root.setOnLongClickListener{
             return@setOnLongClickListener true

@@ -1,4 +1,4 @@
-package com.cookandroid.myapplication
+package com.cookandroid.myapplication.activities
 
 import android.app.Activity
 import android.content.Intent
@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 
@@ -19,12 +20,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapterTheme: ThemeViewAdapter
     private lateinit var adapterMain: MusicAdapter
 
-
-    // TODO: 로그인 된 정보 가져와서 아이디를 키값으로 서버에서 모든 플레이리스트들과 음악 청취 기록 모두 가져올 것
     companion object{
-        //lateinit var MusicListMA: ArrayList<Music>
-        lateinit var musicListSearch: ArrayList<Music>
-        var search: Boolean = false
         var allThemePlaylist = ArrayList<Playlist>() //모든 테마 리스트
         var mainPlaylist = ArrayList<Music>() //메인 리스트(TOP 20)
     }
@@ -37,14 +33,16 @@ class MainActivity : AppCompatActivity() {
 
         // Service 연결
         if (MusicServiceConnection.musicService == null) {
-            val intent = Intent(this, MusicService::class.java)
-            startService(intent)
-            bindService(intent, MusicServiceConnection.getInstance(applicationContext), BIND_AUTO_CREATE)
+            val serviceIntent = Intent(this, MusicService::class.java)
+            serviceIntent.putExtra("email", intent.getStringExtra("email")!!)
+            startService(serviceIntent)
+            bindService(serviceIntent,
+                MusicServiceConnection.getInstance(applicationContext), BIND_AUTO_CREATE)
         }
 
         ///랜덤, 플레이리스트, 검색 버튼
         binding.shuffleBtn.setOnClickListener{
-            val intent = Intent(this@MainActivity,PlayMusicActivity::class.java)
+            val intent = Intent(this@MainActivity, PlayMusicActivity::class.java)
             intent.putExtra("index",0)
             intent.putExtra("class","MainActivity")
             startActivity(intent) }
@@ -72,8 +70,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // TODO: 로그인 후 플레이리스트 서버로부터 받아오기
-
         //테마 RV 구현
         allThemePlaylist = getThemeLists()
 
@@ -91,8 +87,8 @@ class MainActivity : AppCompatActivity() {
         binding.mainRV.setHasFixedSize(true)
         binding.mainRV.layoutManager = LinearLayoutManager(this@MainActivity)
 
-        adapterMain = MusicAdapter(this, mainPlaylist)
-        binding.mainRV.adapter = adapterMain
+        //adapterMain = MusicAdapter(this, mainPlaylist)
+        //binding.mainRV.adapter = adapterMain
     }
 
     //테마 리스트 받아오기
