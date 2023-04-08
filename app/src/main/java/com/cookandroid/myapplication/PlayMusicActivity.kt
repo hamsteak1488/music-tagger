@@ -21,16 +21,23 @@ class PlayMusicActivity : AppCompatActivity() {
 
         MusicServiceConnection.musicService!!.setPlayerView(binding.exoControlView)
 
-        if (MusicServiceConnection.musicService!!.currentList != null) {
+        if (MusicServiceConnection.musicService!!.currentListPos != null) {
             setLayout()
         }
     }
 
     private fun setLayout() {
-        binding.songNamePA.text = MusicServiceConnection.musicService!!.currentMusic!!.title
-        Glide.with(this@PlayMusicActivity)
-            .load("http://10.0.2.2:8080/img?id=" + (MusicServiceConnection.musicService!!.currentMusic!!.id))
-            .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
-            .into(binding.songImg)
+        MusicServiceConnection.musicService!!.getMusicMetadata(PlaylistManager.playlists[MusicServiceConnection.musicService!!.currentListPos].musicList[MusicServiceConnection.musicService!!.currentMusicPos]) {
+            if (it == null) return@getMusicMetadata
+            binding.songNamePA.text = it.title
+            binding.songNamePA.invalidate()
+            Glide.with(this@PlayMusicActivity)
+                .load("http://10.0.2.2:8080/img?id=" + (it.id))
+                .apply(
+                    RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop()
+                )
+                .into(binding.songImg)
+            binding.songImg.invalidate()
+        }
     }
 }
