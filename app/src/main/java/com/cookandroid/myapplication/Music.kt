@@ -19,44 +19,23 @@ data class Music(val id:Int, val title:String, val album:String, val artist:Stri
                  val duration:Long=0, val path: String, val artUri:String)
 
 //플레이리스트
-class Playlist() {
-    var name: String//플레이리스트 명
-    var musicList: ArrayList<Int> //포함된 음악 ArrayList
-    var artUri: String //테마 이미지
+class Playlist(var name:String, var musicList:ArrayList<Int>) {
 
-    init {
-        name = ""
-        musicList = ArrayList()
-        artUri = ""
-    }
 }
 
 object PlaylistManager {
     var playlists: ArrayList<Playlist> = ArrayList() //플레이리스트의 리스트
 
-    fun toDto(email:String) : PlaylistManagerDTO {
-        val parser = JsonParser()
+    init {
+        playlists.add(Playlist("tempPlaylist", ArrayList()))
+    }
 
+    fun toDto(email:String) : PlaylistManagerDTO {
         return PlaylistManagerDTO(email, Gson().toJsonTree(playlists) as JsonArray)
     }
 
     fun set(dto: PlaylistManagerDTO) {
-        val gson = Gson()
-
-        playlists = gson.fromJson(dto.musicIdList, Array<Playlist>::class.java).toCollection(ArrayList())
-
-        /*
-        val lsKeys = dto.musicIdList.keySet().iterator()
-        while (lsKeys.hasNext()) {
-            val ls = Playlist()
-            val lsKey = lsKeys.next()
-            val lsJo = dto.musicIdList.getAsJsonObject(lsKey)
-            ls.name = lsJo.get("name").toString()
-            ls.artUri = lsJo.get("artUri").toString()
-
-            ls.musicList = gson.fromJson(lsJo.get("musicList"), Array<Playlist>::class.java)
-        }
-        */
+        playlists = Gson().fromJson(dto.musicIdList, Array<Playlist>::class.java).toCollection(ArrayList())
     }
 }
 
@@ -67,13 +46,6 @@ fun formatDuration(duration: Long):String{
     val seconds = (TimeUnit.SECONDS.convert(duration, TimeUnit.MILLISECONDS) -
             minutes* TimeUnit.SECONDS.convert(1, TimeUnit.MINUTES))
     return String.format("%2d:%2d", minutes, seconds)
-}
-
-
-fun getImgArt(path: String): ByteArray?{
-    val retriever = MediaMetadataRetriever()
-    retriever.setDataSource(path)
-    return retriever.embeddedPicture
 }
 
 

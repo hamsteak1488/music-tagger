@@ -12,8 +12,6 @@ import com.cookandroid.myapplication.databinding.MusicViewBinding
 
 class MusicAdapter(private val context: Context, private val musicList: ArrayList<Music>, private var itemClickListner: OnItemClickListener? = null)
     : RecyclerView.Adapter<MusicHolder>() {
-    
-    // TODO : Adapter 내에서 searchActivity 동작 설계해볼것
 
     interface OnItemClickListener {
         fun onItemClick(view:View, pos:Int)

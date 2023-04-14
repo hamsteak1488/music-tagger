@@ -158,13 +158,6 @@ class MusicService : Service() {
                 musicStartTime = System.currentTimeMillis()
 
                 currentMusicPos = exoPlayer!!.currentMediaItemIndex
-
-                /** currentMediaItemIndex를 통해 현재 재생중인 음악의 인덱스를 얻은 후, id를 통해 메타데이터 받아와서 currentMusic에 저장 */
-                /*
-                getMusicMetadata(PlaylistManager.playlists[currentListPos].musicList[exoPlayer!!.currentMediaItemIndex]) {
-                    currentMusic = it!!;
-                }
-                */
             }
                 
             /** 재생이 멈췄을 때 */
@@ -198,12 +191,6 @@ class MusicService : Service() {
             }
         }
         exoPlayer!!.setMediaItems(playListMediaItem!!)
-
-        /*
-        getMusicMetadata(idList[0]) {
-            currentMusic = it!!
-        }
-        */
     }
 
     /** exoPlayer 플레이리스트 리로드 */
@@ -215,8 +202,6 @@ class MusicService : Service() {
             }
         }
         exoPlayer!!.setMediaItems(playListMediaItem!!)
-
-        //currentMusic = PlaylistManager.playlists[currentListPos].musicList[currentMusicPos]
 
         exoPlayer!!.seekTo(currentMusicPos, C.TIME_UNSET)
     }
@@ -282,6 +267,8 @@ class MusicService : Service() {
 
         @POST("/playlist/select")
         fun selectPlaylistManager(@Query("email") email: String) : Call<PlaylistManagerDTO>
+
+        // todo : /recommend/personalized 요청 인터페이스에 추가 필요
     }
 
     /** 호출 시 id를 통해 메타데이터를 서버에 요청, response가 오면 호출될 함수 operation을 인자로 넘겨주어야 함 */

@@ -74,10 +74,7 @@ class PlaylistActivity : AppCompatActivity() {
         ///동일명의 플레이리스트 존재 시 추가 x, Toast 메시지 출력
         if(playlistExists) Toast.makeText(this, "Playlist Exist!!", Toast.LENGTH_SHORT).show()
         else {
-            val tempPlaylist = Playlist()
-            tempPlaylist.name = name
-            tempPlaylist.musicList = ArrayList()
-            PlaylistManager.playlists.add(tempPlaylist)
+            PlaylistManager.playlists.add(Playlist(name, ArrayList()))
             adapter.refreshPlaylist()
         }
     }

@@ -42,11 +42,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         ///랜덤, 플레이리스트, 검색 버튼
-        binding.shuffleBtn.setOnClickListener{
-            val intent = Intent(this@MainActivity, PlayMusicActivity::class.java)
-            intent.putExtra("index",0)
-            intent.putExtra("class","MainActivity")
-            startActivity(intent) }
+        binding.nominateBtn.setOnClickListener{
+            // todo: 서버로부터 추천 리스트 받아오기
+            PlaylistManager.playlists[0] = Playlist("playlist from server", ArrayList())
+            MusicServiceConnection.musicService!!.
+            startActivity(Intent(this@MainActivity, PlayMusicActivity::class.java))
+        }
         binding.playlistBtn.setOnClickListener{
             startActivity(Intent(this@MainActivity, PlaylistActivity::class.java)) }
         binding.searchSongBtn.setOnClickListener {

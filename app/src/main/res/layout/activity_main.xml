@@ -25,14 +25,14 @@
                 android:orientation="horizontal">
                 <!--셔플 버튼-->
                 <Button
-                    android:id="@+id/shuffleBtn"
+                    android:id="@+id/nominateBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_baseline_shuffle_24"
-                    android:text="Random"
-                    android:textColor="@color/black"
-                    android:textAllCaps="false"/>
+                    android:text="Nominate"
+                    android:textAllCaps="false"
+                    android:textColor="@color/black" />
                 <!--플레이리스트 버튼-->
                 <Button
                     android:id="@+id/playlistBtn"

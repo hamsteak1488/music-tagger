@@ -19,6 +19,7 @@ class PlaytimeEachEnvironment {
     private fun getCurrentInformation(categoryName:CharSequence) : CharSequence {
 
         // TODO: categoryName에 따라 시간, 날씨, 계절 정보 등을 문자열로 반환시켜줘야함
+        // todo : 여러 종류로 점수 추가 후, 서버 추천 리스트 받아오기 테스트 필요
 
         return "asdf"
     }

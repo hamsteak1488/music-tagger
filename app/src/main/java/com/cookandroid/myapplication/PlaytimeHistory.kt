@@ -5,6 +5,8 @@ import com.google.gson.JsonObject
 
 class PlaytimeHistory {
 
+    // todo : 특정 태그들만 선별해서 서버에 추천리스트 요청
+
     private var playtimeHistoryMap = HashMap<Int, PlaytimeEachEnvironment>()
 
     //
