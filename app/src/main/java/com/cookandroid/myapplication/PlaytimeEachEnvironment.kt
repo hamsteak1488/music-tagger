@@ -104,7 +104,7 @@ class PlaytimeEachEnvironment {
             else -> "night"
         }
     }
-    fun getWeather(): CharSequence {
+    private fun getWeather(): CharSequence {
         //return currentWeatherCall()
         var weather = -1
         return when(weather){
