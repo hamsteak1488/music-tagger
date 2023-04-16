@@ -59,6 +59,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.2'
+    implementation 'com.android.volley:volley:1.2.1'
 
 
     testImplementation 'junit:junit:4.13.2'

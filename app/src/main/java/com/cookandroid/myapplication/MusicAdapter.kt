@@ -48,7 +48,7 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
             .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
             .into(holder.image)
 
-        //롱클릭 동작으로 음악 추가 수행
+        //롱클릭으로 음악 추가 수행
         holder.root.setOnLongClickListener{
             return@setOnLongClickListener true
         }

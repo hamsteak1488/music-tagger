@@ -1,6 +1,7 @@
 package com.cookandroid.myapplication.activities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Build
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
@@ -20,15 +22,20 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adapterTheme: ThemeViewAdapter
     private lateinit var adapterMain: MusicAdapter
 
+    init{
+        instance = this
+    }
+
     companion object{
         var allThemePlaylist = ArrayList<Playlist>() //모든 테마 리스트
         var mainPlaylist = ArrayList<Music>() //메인 리스트(TOP 20)
+        var instance: MainActivity? = null
+        fun applicationContext(): Context { return instance!!.applicationContext}
     }
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

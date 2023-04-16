@@ -37,7 +37,7 @@ class PlaylistActivity : AppCompatActivity() {
         if(PlaylistManager.playlists.isNotEmpty()) binding.instructionPA.visibility = View.GONE
     }
 
-    ///플레이리스트 추가 창
+    //플레이리스트 추가 창
     private fun customAlertDialog(){
         val customDialog = LayoutInflater.from(this@PlaylistActivity).inflate(R.layout.add_playlist, binding.root, false)
         val binder = AddPlaylistBinding.bind(customDialog)
@@ -62,7 +62,7 @@ class PlaylistActivity : AppCompatActivity() {
 
 
     }
-    ///플레이리스트 추가 수행
+    //플레이리스트 추가 수행
     private fun addPlaylist(name: String){
         var playlistExists = false
         for(i in PlaylistManager.playlists) {
@@ -71,7 +71,7 @@ class PlaylistActivity : AppCompatActivity() {
                 break
             }
         }
-        ///동일명의 플레이리스트 존재 시 추가 x, Toast 메시지 출력
+        //동일명의 플레이리스트 존재 시 추가 x, Toast 메시지 출력
         if(playlistExists) Toast.makeText(this, "Playlist Exist!!", Toast.LENGTH_SHORT).show()
         else {
             PlaylistManager.playlists.add(Playlist(name, ArrayList()))

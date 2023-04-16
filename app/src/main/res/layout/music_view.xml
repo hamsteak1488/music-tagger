@@ -51,4 +51,13 @@
         android:textColor="?colorOnPrimary"
         android:layout_marginHorizontal="5dp"/>
 
+    <ImageButton
+        android:id="@+id/optionMV"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:src="@drawable/baseline_more_vert_24"
+        android:layout_alignParentEnd="true"
+        android:background="@color/white"
+        android:contentDescription="More Options"/>
+
 </RelativeLayout>
