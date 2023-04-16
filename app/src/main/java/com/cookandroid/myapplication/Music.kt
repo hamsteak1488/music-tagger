@@ -2,16 +2,11 @@ package com.cookandroid.myapplication
 
 import android.content.Context
 import android.graphics.Color
-import android.media.MediaMetadataRetriever
 import androidx.appcompat.app.AlertDialog
 import com.cookandroid.myapplication.dto.PlaylistManagerDTO
 import com.google.android.material.color.MaterialColors
-import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import com.google.gson.JsonArray
-import com.google.gson.JsonObject
-import com.google.gson.JsonParser
-import java.lang.reflect.Type
 import java.util.concurrent.TimeUnit
 
 ///데이터 클래스(Music, Playlist, MusicPlaylist)
