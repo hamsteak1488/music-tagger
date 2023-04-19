@@ -58,7 +58,7 @@ class MusicService : Service() {
     private var musicStartTime:Long = -1
 
     /** 음악 청취 기록을 관리하는 객체 */
-    private lateinit var playtimeHistory:PlaytimeHistory
+    private lateinit var playHistoryManager:PlayHistoryManager
 
     lateinit var email:String
 
@@ -103,7 +103,7 @@ class MusicService : Service() {
         /** exoPlayer 초기화 */
         exoPlayer = ExoPlayer.Builder(applicationContext).build()
         /** 청취기록객체 초기화 */
-        playtimeHistory = PlaytimeHistory()
+        playHistoryManager = PlayHistoryManager()
 
         loadPlaytimeHistoryList(email) {
             if (it != null) {
@@ -111,7 +111,7 @@ class MusicService : Service() {
                 while (idKeys.hasNext()) {
                     val idKey = idKeys.next()
                     val tagInfo = it.get(idKey) as JsonObject
-                    playtimeHistory.set(idKey.toInt(), tagInfo)
+                    playHistoryManager.set(idKey.toInt(), tagInfo)
                 }
             }
         }
@@ -169,11 +169,11 @@ class MusicService : Service() {
                 /** 재생시작시간 정보를 통해 재생된시간 계산 후 기록 */
                 if (musicStartTime != (-1).toLong()) {
                     val playedTime = System.currentTimeMillis() - musicStartTime
-                    playtimeHistory.addPlaytime(curMusicId, playedTime)
+                    playHistoryManager.addPlaytime(curMusicId, playedTime)
                     musicStartTime = -1
                 }
 
-                savePlaytimeHistory(email, curMusicId, playtimeHistory.toJson(curMusicId)) {
+                savePlaytimeHistory(email, curMusicId, playHistoryManager.toJson(curMusicId)) {
 
                 }
             }
@@ -244,14 +244,9 @@ class MusicService : Service() {
         @GET("/img")
         fun getArtImg(@Query("id") id:Int) : Call<Array<Byte>>
 
-        /** 태그데이터 삽입 */
-        @POST("/playtimehistory/insert")
-        fun insertPlaytimeHistory(@Query("email") email:String, @Query("musicId") musicId:Int, @Body tagInfo:JsonObject) : Call<String>
-        
-        /** 태그데이터 업데이트 */
-        @POST("/playtimehistory/update")
-        fun updatePlaytimeHistory(@Query("email") email:String, @Query("musicId") musicId:Int, @Body tagInfo:JsonObject) : Call<String>
-
+        /** 태그데이터 저장 */
+        @POST("/playtimehistory/save")
+        fun savePlaytimeHistory(@Query("email") email:String, @Query("musicId") musicId:Int, @Body tagInfo:JsonObject) : Call<String>
         /** 태그데이터 불러오기 */
         @POST("/playtimehistory/select")
         fun selectPlaytimeHistory(@Query("email") email:String, @Query("musicId") musicId:Int) : Call<JsonObject>
@@ -259,14 +254,12 @@ class MusicService : Service() {
         @POST("/playtimehistory/select")
         fun selectPlaytimeHistoryList(@Query("email") email: String) : Call<JsonObject>
 
-        @POST("/playlist/insert")
-        fun insertPlaylistManager(@Body playlistManagerDTO: PlaylistManagerDTO) : Call<String>
-
-        @POST("/playlist/update")
-        fun updatePlaylistManager(@Body playlistManagerDTO: PlaylistManagerDTO) : Call<String>
+        @POST("/playlist/save")
+        fun savePlaylistManager(@Body playlistManagerDTO: PlaylistManagerDTO) : Call<String>
 
         @POST("/playlist/select")
         fun selectPlaylistManager(@Query("email") email: String) : Call<PlaylistManagerDTO>
+
 
         // todo : /recommend/personalized 요청 인터페이스에 추가 필요
     }
@@ -379,6 +372,7 @@ class MusicService : Service() {
             }
         })
     }
+
     fun loadPlaytimeHistoryList(email:String, operation:(JsonObject?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
@@ -399,6 +393,7 @@ class MusicService : Service() {
             }
         })
     }
+
     fun savePlaytimeHistory(email: String, musicId: Int, tagInfo: JsonObject, operation:(Boolean?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
@@ -406,37 +401,20 @@ class MusicService : Service() {
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
 
-        loadPlaytimeHistory(email, musicId) {
-            if (it != null) {
-                val callGetMetadata = api.updatePlaytimeHistory(email, musicId, tagInfo)
-                callGetMetadata.enqueue(object:Callback<String> {
-                    override fun onResponse(call: Call<String>, response: Response<String>) {
-                        Log.d("myTag", "success : ${response.raw()}")
-                        val result = response.body()
-                        Log.d("myTag", result.toString())
-                        operation(true)
-                    }
-                    override fun onFailure(call: Call<String>, t: Throwable) {
-                        Log.d("myTag", "failure : $t")
-                    }
-                })
+        val callGetMetadata = api.savePlaytimeHistory(email, musicId, tagInfo)
+        callGetMetadata.enqueue(object:Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.d("myTag", "success : ${response.raw()}")
+                val result = response.body()
+                Log.d("myTag", result.toString())
+                operation(true)
             }
-            else {
-                val callGetMetadata = api.insertPlaytimeHistory(email, musicId, tagInfo)
-                callGetMetadata.enqueue(object:Callback<String> {
-                    override fun onResponse(call: Call<String>, response: Response<String>) {
-                        Log.d("myTag", "success : ${response.raw()}")
-                        val result = response.body()
-                        Log.d("myTag", result.toString())
-                        operation(false)
-                    }
-                    override fun onFailure(call: Call<String>, t: Throwable) {
-                        Log.d("myTag", "failure : $t")
-                    }
-                })
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.d("myTag", "failure : $t")
             }
-        }
+        })
     }
+
 
 
     fun loadPlaylistManager(email: String, operation:(PlaylistManagerDTO?)->Unit) {
@@ -459,6 +437,7 @@ class MusicService : Service() {
             }
         })
     }
+
     fun savePlaylistManager(email: String, operation:(Boolean?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
@@ -466,26 +445,18 @@ class MusicService : Service() {
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
 
-        loadPlaylistManager(email) {
-            val callGetMetadata : Call<String>
-            if (it != null) {
-                callGetMetadata = api.updatePlaylistManager(PlaylistManager.toDto(email))
+        val callGetMetadata = api.savePlaylistManager(PlaylistManager.toDto(email))
+        callGetMetadata.enqueue(object:Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.d("myTag", "success : ${response.raw()}")
+                val result = response.body()
+                Log.d("myTag", result.toString())
+                operation(true)
             }
-            else {
-                callGetMetadata = api.insertPlaylistManager(PlaylistManager.toDto(email))
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.d("myTag", "failure : $t")
             }
-            callGetMetadata.enqueue(object:Callback<String> {
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    Log.d("myTag", "success : ${response.raw()}")
-                    val result = response.body()
-                    Log.d("myTag", result.toString())
-                    operation(true)
-                }
-                override fun onFailure(call: Call<String>, t: Throwable) {
-                    Log.d("myTag", "failure : $t")
-                }
-            })
-        }
+        })
     }
 
 
