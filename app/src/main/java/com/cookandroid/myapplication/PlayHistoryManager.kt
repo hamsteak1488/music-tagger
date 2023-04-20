@@ -1,7 +1,9 @@
 package com.cookandroid.myapplication
 
 import android.util.Log
+import com.cookandroid.myapplication.util.SurroundingsManager
 import com.google.gson.JsonObject
+import com.tftf.util.PlayHistory
 
 class PlayHistoryManager {
 
@@ -15,7 +17,9 @@ class PlayHistoryManager {
             musicPlayHistory[id] = PlayHistory()
         }
 
-        musicPlayHistory[id]!!.addPlaytime(playtime)
+        SurroundingsManager.getCurrentSurroundings { s ->
+            musicPlayHistory[id]!!.addPlaytime(s, playtime)
+        }
 
         Log.d("myTag", "추가된 결과 : " + musicPlayHistory[id]!!.totalPlaytime)
     }
@@ -24,10 +28,10 @@ class PlayHistoryManager {
         if(!musicPlayHistory.containsKey(musicId)) {
             musicPlayHistory[musicId] = PlayHistory()
         }
-        musicPlayHistory[musicId]!!.set(jo)
+        musicPlayHistory[musicId]!!.importFromJson(jo)
     }
 
     fun toJson(musicId: Int) : JsonObject {
-        return musicPlayHistory[musicId]!!.toJson()
+        return musicPlayHistory[musicId]!!.exportToJson()
     }
 }

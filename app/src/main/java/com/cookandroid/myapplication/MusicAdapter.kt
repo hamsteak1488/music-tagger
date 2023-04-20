@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.MusicAdapter.MusicHolder
 import com.cookandroid.myapplication.databinding.MusicViewBinding
+import com.tftf.util.Music
 
 class MusicAdapter(private val context: Context, private val musicList: ArrayList<Music>, private var itemClickListner: OnItemClickListener? = null)
     : RecyclerView.Adapter<MusicHolder>() {
@@ -40,7 +41,8 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
 
         holder.title.text = musicList[pos].title
         holder.artist.text = musicList[pos].artist
-        holder.duration.text = formatDuration(musicList[pos].duration)
+        //holder.duration.text = formatDuration(musicList[pos].duration)
+        holder.duration.text = "holder.duration.text"
 
         //glide = uri로 이미지 적용
         Glide.with(context)

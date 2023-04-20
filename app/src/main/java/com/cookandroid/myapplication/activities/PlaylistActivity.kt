@@ -58,7 +58,7 @@ class PlaylistActivity : AppCompatActivity() {
                 dialog.dismiss()
             }.create()
         dialog.show()
-        setDialogBtnBackground(this, dialog)
+        //setDialogBtnBackground(this, dialog)
 
 
     }

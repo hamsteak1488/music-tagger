@@ -1,4 +1,4 @@
-package com.cookandroid.myapplication
+package com.cookandroid.myapplication.util
 
 import com.android.volley.AuthFailureError
 import com.android.volley.RequestQueue
@@ -11,6 +11,8 @@ import org.json.JSONObject
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
+
+import com.tftf.util.Surroundings;
 
 object SurroundingsManager {
 

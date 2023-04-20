@@ -60,7 +60,7 @@ class PlaylistDetails : AppCompatActivity() {
             val customDialog = builder.create()
             customDialog.show()
 
-            setDialogBtnBackground(this, customDialog)
+            //setDialogBtnBackground(this, customDialog)
         }
     }
 
