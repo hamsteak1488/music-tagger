@@ -1,4 +1,4 @@
-package com.cookandroid.myapplication.util
+package com.cookandroid.myapplication
 
 import com.android.volley.AuthFailureError
 import com.android.volley.RequestQueue
@@ -34,6 +34,10 @@ object SurroundingsManager {
                 surroundings.info["날씨"] = currentWeather
                 callbackOperation(surroundings)
             }
+        }
+        else {
+            surroundings.info["날씨"] = currentWeather
+            callbackOperation(surroundings)
         }
     }
 
