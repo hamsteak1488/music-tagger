@@ -38,7 +38,7 @@
             android:name=".activities.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.PlaylistDetails"
+            android:name=".activities.PlaylistDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".activities.RegisterActivity"

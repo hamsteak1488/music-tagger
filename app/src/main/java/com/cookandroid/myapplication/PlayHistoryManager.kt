@@ -3,7 +3,6 @@ package com.cookandroid.myapplication
 import android.util.Log
 import com.google.gson.JsonObject
 import com.tftf.util.PlayHistory
-import com.tftf.util.PlaylistManagerDTO
 
 class PlayHistoryManager {
 

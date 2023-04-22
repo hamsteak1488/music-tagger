@@ -6,10 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.databinding.ActivityPlaylistBinding
 import com.cookandroid.myapplication.databinding.AddPlaylistBinding
@@ -86,7 +83,7 @@ class PlaylistActivity : AppCompatActivity() {
             adapter = PlaylistViewAdapter(this@PlaylistActivity, PlaylistManager.playlists,
                 object: PlaylistViewAdapter.OnItemClickListener {
                     override fun onItemClick(view: View, pos: Int) {
-                        val playlistDetailIntent = Intent(this@PlaylistActivity, PlaylistDetails::class.java)
+                        val playlistDetailIntent = Intent(this@PlaylistActivity, PlaylistDetailsActivity::class.java)
                         playlistDetailIntent.putExtra("index", pos)
                         startActivity(playlistDetailIntent)
                     }

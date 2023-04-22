@@ -13,7 +13,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 
 
-class PlaylistDetails : AppCompatActivity() {
+class PlaylistDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPlaylistDetailsBinding
     private lateinit var adapter: MusicAdapter
     private var currentPlaylistPos: Int = -1
@@ -71,13 +71,13 @@ class PlaylistDetails : AppCompatActivity() {
         if(PlaylistManager.playlists[currentPlaylistPos].musicList.size > 0){
             mService.getMusicMetadataList(PlaylistManager.playlists[currentPlaylistPos].musicList) {
                 if (it == null) return@getMusicMetadataList
-                adapter = MusicAdapter(this@PlaylistDetails, it.toCollection(ArrayList()),
+                adapter = MusicAdapter(this@PlaylistDetailsActivity, it.toCollection(ArrayList()),
                     object: MusicAdapter.OnItemClickListener {
                         override fun onItemClick(view: View, pos: Int) {
                             mService.currentListPos = currentPlaylistPos
                             mService.setMusicPos(pos)
                             mService.reloadPlayer()
-                            startActivity(Intent(this@PlaylistDetails, PlayMusicActivity::class.java))
+                            startActivity(Intent(this@PlaylistDetailsActivity, PlayMusicActivity::class.java))
                         }
                     })
                 binding.playlistDetailsRV.adapter = adapter
