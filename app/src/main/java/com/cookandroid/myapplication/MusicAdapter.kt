@@ -10,10 +10,15 @@ import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.MusicAdapter.MusicHolder
 import com.cookandroid.myapplication.databinding.MusicViewBinding
 import com.tftf.util.Music
+import com.tftf.util.MusicTag
 
 // todo : 음악 태그들을 골랐을 때, 표시할 레이아웃 찾고 없으면 만들기
 
-class MusicAdapter(private val context: Context, private val musicList: ArrayList<Music>, private var itemClickListener: OnItemClickListener? = null)
+class MusicAdapter(private val context: Context,
+                   private val musicList: ArrayList<Music>,
+                   private val tagList: ArrayList<MusicTag>?,
+                   private val itemClickListener: OnItemClickListener?
+)
     : RecyclerView.Adapter<MusicHolder>() {
 
     interface OnItemClickListener {
@@ -53,7 +58,9 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
             .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
             .into(holder.image)
 
-        holder.rv.adapter = TagAdapter(arrayListOf("a", "b", "asdf", "qwer"))
+        if (tagList != null) {
+            holder.rv.adapter = TagAdapter(tagList[pos])
+        }
 
         //롱클릭으로 음악 추가 수행
         holder.root.setOnLongClickListener{
@@ -61,10 +68,7 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
         }
 
         holder.root.setOnClickListener {
-            try {
-                itemClickListener!!.onItemClick(it, pos)
-            } catch (e:NullPointerException) {
-            }
+            itemClickListener?.onItemClick(it, pos)
         }
 
 

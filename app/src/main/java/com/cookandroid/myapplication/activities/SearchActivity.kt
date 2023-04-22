@@ -35,7 +35,7 @@ class SearchActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 // MusicService에서 검색 후 결과를 adapter로 연결
                 mService.getMusicMetadataList(listOf("title", "artist"), query!!) {
-                    adapter = MusicAdapter(this@SearchActivity, it as ArrayList<Music>, object:
+                    adapter = MusicAdapter(this@SearchActivity, it as ArrayList<Music>, null, object:
                         MusicAdapter.OnItemClickListener {
                         override fun onItemClick(view: View, pos: Int) {
                             if (intent.getBooleanExtra("searchForAdd", false)) {

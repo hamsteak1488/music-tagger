@@ -59,9 +59,6 @@ class MusicService : Service() {
     /** 음악 청취 기록을 위한 음악 재생시작 시간 정보 */
     private var musicStartTime:Long = -1
 
-    /** 음악 청취 기록을 관리하는 객체 */
-    private lateinit var playHistoryManager:PlayHistoryManager
-
     lateinit var email:String
 
     /** MusicTagger의 서버 baseUrl */
@@ -104,13 +101,11 @@ class MusicService : Service() {
     private fun initPlayer() {
         /** exoPlayer 초기화 */
         exoPlayer = ExoPlayer.Builder(applicationContext).build()
-        /** 청취기록객체 초기화 */
-        playHistoryManager = PlayHistoryManager()
 
         loadPlaytimeHistoryList(email) { dtoList ->
             if (dtoList != null) {
                 for (dto in dtoList) {
-                    playHistoryManager.importFromJson(dto.musicId, dto.historyJO)
+                    PlayHistoryManager.importFromJson(dto.musicId, dto.historyJO)
                 }
             }
         }
@@ -168,8 +163,8 @@ class MusicService : Service() {
                 /** 재생시작시간 정보를 통해 재생된시간 계산 후 기록 */
                 if (musicStartTime != (-1).toLong()) {
                     val playedTime = System.currentTimeMillis() - musicStartTime
-                    playHistoryManager.addPlaytime(curMusicId, playedTime) {
-                        savePlaytimeHistory(PlaytimeHistoryDTO(email, curMusicId, playHistoryManager.exportToJson(curMusicId))) { }
+                    PlayHistoryManager.addPlaytime(curMusicId, playedTime) {
+                        savePlaytimeHistory(PlaytimeHistoryDTO(email, curMusicId, PlayHistoryManager.exportToJson(curMusicId))) { }
                     }
                     musicStartTime = -1
                 }

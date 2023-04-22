@@ -2,15 +2,16 @@ package com.cookandroid.myapplication
 
 import android.util.Log
 import com.google.gson.JsonObject
+import com.tftf.util.MusicTag
 import com.tftf.util.PlayHistory
 
-class PlayHistoryManager {
+object PlayHistoryManager {
 
     // todo : 특정 태그들만 선별해서 서버에 추천리스트 요청
 
     private var musicPlayHistory = HashMap<Int, PlayHistory>()
 
-    //
+
     fun addPlaytime(id:Int, playtime:Long, callbackOperation:()->Unit) {
         if (!musicPlayHistory.containsKey(id)) {
             musicPlayHistory[id] = PlayHistory()
@@ -23,6 +24,12 @@ class PlayHistoryManager {
 
         Log.d("myTag", "추가된 결과 : " + musicPlayHistory[id]!!.totalPlaytime)
     }
+
+
+    fun getMusicTag(id:Int) : MusicTag? {
+        return musicPlayHistory[id]?.musicTag
+    }
+
 
     fun importFromJson(musicId:Int, jo: JsonObject){
         if(!musicPlayHistory.containsKey(musicId)) {

@@ -10,7 +10,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.databinding.ActivityPlaylistDetailsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-
+import com.tftf.util.MusicTag
 
 
 class PlaylistDetailsActivity : AppCompatActivity() {
@@ -69,9 +69,17 @@ class PlaylistDetailsActivity : AppCompatActivity() {
 
         binding.moreInfoPD.text = "Total ${PlaylistManager.playlists[currentPlaylistPos].musicList.size} Songs.\n\n"
         if(PlaylistManager.playlists[currentPlaylistPos].musicList.size > 0){
-            mService.getMusicMetadataList(PlaylistManager.playlists[currentPlaylistPos].musicList) {
-                if (it == null) return@getMusicMetadataList
-                adapter = MusicAdapter(this@PlaylistDetailsActivity, it.toCollection(ArrayList()),
+            mService.getMusicMetadataList(PlaylistManager.playlists[currentPlaylistPos].musicList) { musicList ->
+                if (musicList == null) return@getMusicMetadataList
+                val tagList = ArrayList<MusicTag>().apply {
+                    musicList.forEach { music ->
+                        val tag = PlayHistoryManager.getMusicTag(music.id)
+                        if (tag == null) add(MusicTag())
+                        else add(tag)
+                    }
+                }
+
+                adapter = MusicAdapter(this@PlaylistDetailsActivity, musicList.toCollection(ArrayList()), tagList,
                     object: MusicAdapter.OnItemClickListener {
                         override fun onItemClick(view: View, pos: Int) {
                             mService.currentListPos = currentPlaylistPos
