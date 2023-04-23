@@ -25,24 +25,24 @@ object SurroundingsManager {
 
         val surroundings = Surroundings()
 
-        surroundings.info["시간"] = getTimeOfDay()
-        surroundings.info["요일"] = getWeekDay()
-        surroundings.info["계절"] = getSeason()
+        surroundings.infoMap["시간"] = getTimeOfDay()
+        surroundings.infoMap["요일"] = getWeekDay()
+        surroundings.infoMap["계절"] = getSeason()
 
         if (System.currentTimeMillis() - weatherUpdateTime > 1000 * 60 * 60) {
             updateWeather {
-                surroundings.info["날씨"] = currentWeather
+                surroundings.infoMap["날씨"] = currentWeather
                 callbackOperation(surroundings)
             }
         }
         else {
-            surroundings.info["날씨"] = currentWeather
+            surroundings.infoMap["날씨"] = currentWeather
             callbackOperation(surroundings)
         }
     }
 
     // 현재가 하루 중 어느 때인지 반환
-    fun getTimeOfDay() : CharSequence {
+    fun getTimeOfDay() : String {
         return when (LocalTime.now(ZoneId.of("Asia/Seoul")).hour) {
             in 1..5 -> "새벽"
             in 6..8 -> "이른 아침"
@@ -102,7 +102,7 @@ object SurroundingsManager {
     }
 
 
-    fun getSeason() : CharSequence {
+    fun getSeason() : String {
         return when (LocalDate.now(ZoneId.of("Asia/Seoul")).monthValue) {
             in 3..5 -> "봄"
             in 6..8 -> "여름"
@@ -112,7 +112,7 @@ object SurroundingsManager {
     }
 
 
-    fun getWeekDay(): CharSequence {
+    fun getWeekDay(): String {
         return when (LocalDate.now(ZoneId.of("Asia/Seoul")).dayOfWeek.value) {
             1 -> "월"
             2 -> "화"

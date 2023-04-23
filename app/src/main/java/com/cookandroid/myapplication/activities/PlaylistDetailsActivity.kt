@@ -1,6 +1,7 @@
 package com.cookandroid.myapplication.activities
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -9,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.databinding.ActivityPlaylistDetailsBinding
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tftf.util.MusicTag
 
@@ -58,9 +60,15 @@ class PlaylistDetailsActivity : AppCompatActivity() {
                     dialog.dismiss()
                 }
             val customDialog = builder.create()
-            customDialog.show()
 
-            //setDialogBtnBackground(this, customDialog)
+            customDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.setBackgroundColor(
+                MaterialColors.getColor(this@PlaylistDetailsActivity, R.attr.dialogBtnBackground, Color.RED)
+            )
+            customDialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.setBackgroundColor(
+                MaterialColors.getColor(this@PlaylistDetailsActivity, R.attr.dialogBtnBackground, Color.RED)
+            )
+
+            customDialog.show()
         }
     }
 

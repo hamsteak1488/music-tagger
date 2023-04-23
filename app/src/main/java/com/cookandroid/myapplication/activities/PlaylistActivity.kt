@@ -56,7 +56,6 @@ class PlaylistActivity : AppCompatActivity() {
             .setNegativeButton("Cancel"){dialog,_ ->
                 dialog.dismiss()
             }.create()
-        dialog.show()
 
         dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.setBackgroundColor(
             MaterialColors.getColor(this@PlaylistActivity, R.attr.dialogBtnBackground, Color.RED)
@@ -64,6 +63,8 @@ class PlaylistActivity : AppCompatActivity() {
         dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.setBackgroundColor(
             MaterialColors.getColor(this@PlaylistActivity, R.attr.dialogBtnBackground, Color.RED)
         )
+
+        dialog.show()
     }
     //플레이리스트 추가 수행
     private fun addPlaylist(name: String){

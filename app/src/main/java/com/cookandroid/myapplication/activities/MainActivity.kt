@@ -1,6 +1,7 @@
 package com.cookandroid.myapplication.activities
 
 import android.app.Activity
+import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -9,7 +10,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.annotation.RequiresApi
-import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
@@ -50,11 +50,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         ///랜덤, 플레이리스트, 검색 버튼
-        binding.nominateBtn.setOnClickListener{
+        binding.recommendBtn.setOnClickListener{
+            val mService = MusicServiceConnection.musicService!!
             // todo: 서버로부터 추천 리스트 받아오기
-            PlaylistManager.playlists[0] = Playlist("playlist from server", ArrayList())
-            MusicServiceConnection.musicService!!.
-            startActivity(Intent(this@MainActivity, PlayMusicActivity::class.java))
+            SurroundingsManager.getCurrentSurroundings { surroundings ->
+                mService.getPersonalizedList(mService.email, surroundings, 20) { musicList ->
+                    if (musicList == null) return@getPersonalizedList
+                    PlaylistManager.playlists[0] = Playlist("playlist from server",
+                        musicList as ArrayList<Int>
+                    )
+                    // startActivity(Intent(this@MainActivity, PlayMusicActivity::class.java))
+                }
+            }
         }
         binding.playlistBtn.setOnClickListener{
             startActivity(Intent(this@MainActivity, PlaylistActivity::class.java)) }

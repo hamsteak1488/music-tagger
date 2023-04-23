@@ -21,6 +21,7 @@ import com.google.gson.JsonObject
 import com.tftf.util.Music
 import com.tftf.util.PlaylistManagerDTO
 import com.tftf.util.PlaytimeHistoryDTO
+import com.tftf.util.Surroundings
 import okhttp3.ResponseBody
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
@@ -257,6 +258,10 @@ class MusicService : Service() {
 
 
         // todo : /recommend/personalized 요청 인터페이스에 추가 필요
+        @POST("/recommend/personalized")
+        fun getPersonalizedList(@Query("email") email: String,
+                                @Body surroundings: Surroundings,
+                                @Query("listSize") listSize: Int) : Call<List<Int>>
     }
 
     /** 호출 시 id를 통해 메타데이터를 서버에 요청, response가 오면 호출될 함수 operation을 인자로 넘겨주어야 함 */
@@ -449,6 +454,27 @@ class MusicService : Service() {
                 operation(true)
             }
             override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.d("myTag", "failure : $t")
+            }
+        })
+    }
+
+
+    fun getPersonalizedList(email: String, surroundings: Surroundings, listSize: Int = 20, operation:(List<Int>?)->Unit) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrlStr)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(RetrofitAPI::class.java)
+        val callGetMetadata = api.getPersonalizedList(email, surroundings, listSize)
+        callGetMetadata.enqueue(object:Callback<List<Int>> {
+            override fun onResponse(call: Call<List<Int>>, response: Response<List<Int>>) {
+                Log.d("myTag", "success : ${response.raw()}")
+                val result = response.body()
+                Log.d("myTag", result.toString())
+                operation(response.body())
+            }
+            override fun onFailure(call: Call<List<Int>>, t: Throwable) {
                 Log.d("myTag", "failure : $t")
             }
         })
