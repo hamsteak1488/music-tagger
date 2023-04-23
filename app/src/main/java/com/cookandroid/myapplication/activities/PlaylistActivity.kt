@@ -1,6 +1,7 @@
 package com.cookandroid.myapplication.activities
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.databinding.ActivityPlaylistBinding
 import com.cookandroid.myapplication.databinding.AddPlaylistBinding
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.*
 
@@ -55,9 +57,13 @@ class PlaylistActivity : AppCompatActivity() {
                 dialog.dismiss()
             }.create()
         dialog.show()
-        //setDialogBtnBackground(this, dialog)
 
-
+        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.setBackgroundColor(
+            MaterialColors.getColor(this@PlaylistActivity, R.attr.dialogBtnBackground, Color.RED)
+        )
+        dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.setBackgroundColor(
+            MaterialColors.getColor(this@PlaylistActivity, R.attr.dialogBtnBackground, Color.RED)
+        )
     }
     //플레이리스트 추가 수행
     private fun addPlaylist(name: String){
@@ -72,6 +78,8 @@ class PlaylistActivity : AppCompatActivity() {
         if(playlistExists) Toast.makeText(this, "Playlist Exist!!", Toast.LENGTH_SHORT).show()
         else {
             PlaylistManager.playlists.add(Playlist(name, ArrayList()))
+            val mService = MusicServiceConnection.musicService!!
+            mService.savePlaylistManager(mService.email) { }
             adapter.refreshPlaylist()
         }
     }
