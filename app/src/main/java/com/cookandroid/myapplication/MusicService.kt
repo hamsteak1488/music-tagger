@@ -9,10 +9,8 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.cookandroid.myapplication.activities.MainActivity
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.MediaItem.fromUri
 import com.google.android.exoplayer2.ui.PlayerControlView
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
@@ -59,6 +57,11 @@ class MusicService : Service() {
 
     /** 음악 청취 기록을 위한 음악 재생시작 시간 정보 */
     private var musicStartTime:Long = -1
+
+    interface OnMediaItemChangeListener {
+        fun onMediaItemChange()
+    }
+    private var mediaItemChangeListenerForPlayMusicActivity : OnMediaItemChangeListener? = null
 
     lateinit var email:String
 
@@ -171,6 +174,20 @@ class MusicService : Service() {
                 }
             }
         }
+
+        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            super.onMediaItemTransition(mediaItem, reason)
+
+            mediaItem?.apply {
+                currentMusicPos = mediaId.toInt()
+            }
+
+            mediaItemChangeListenerForPlayMusicActivity?.onMediaItemChange()
+        }
+    }
+
+    fun setMediaItemChangeListenerForPlayMusicActivity(listener:OnMediaItemChangeListener) {
+        mediaItemChangeListenerForPlayMusicActivity = listener
     }
 
     fun setMusicPos(pos:Int) {
@@ -190,13 +207,22 @@ class MusicService : Service() {
     fun reloadPlayer() {
         /** 음악 id를 통해 MediaItem 리스트를 생성한 후, exoPlayer의 리스트로 설정 */
         playListMediaItem = ArrayList<MediaItem>().apply {
-            PlaylistManager.playlists[currentListPos].musicList.forEach { music ->
-                this.add(MediaItem.fromUri(baseUrlStr + "media?id=" + music))
+            PlaylistManager.playlists[currentListPos].musicList.forEachIndexed { pos, musicId ->
+                this.add(MediaItem.Builder()
+                    .setUri(baseUrlStr + "media?id=" + musicId)
+                    .setMediaId(pos.toString())
+                    .build())
             }
         }
         exoPlayer!!.setMediaItems(playListMediaItem!!)
 
         exoPlayer!!.seekTo(currentMusicPos, C.TIME_UNSET)
+    }
+
+    fun reloadPlayer(listPos:Int, musicPos:Int) {
+        currentListPos = listPos
+        currentMusicPos = musicPos
+        reloadPlayer()
     }
 
     /** 플레이어뷰의 플레이어를 exoPlayer로 지정 */

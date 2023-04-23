@@ -89,10 +89,8 @@ class PlaylistDetailsActivity : AppCompatActivity() {
 
                 adapter = MusicAdapter(this@PlaylistDetailsActivity, musicList.toCollection(ArrayList()), tagList,
                     object: MusicAdapter.OnItemClickListener {
-                        override fun onItemClick(view: View, pos: Int) {
-                            mService.currentListPos = currentPlaylistPos
-                            mService.setMusicPos(pos)
-                            mService.reloadPlayer()
+                        override fun onItemClick(view: View, musicPos: Int) {
+                            mService.reloadPlayer(currentPlaylistPos, musicPos)
                             startActivity(Intent(this@PlaylistDetailsActivity, PlayMusicActivity::class.java))
                         }
                     })

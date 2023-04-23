@@ -52,14 +52,14 @@ class MainActivity : AppCompatActivity() {
         ///랜덤, 플레이리스트, 검색 버튼
         binding.recommendBtn.setOnClickListener{
             val mService = MusicServiceConnection.musicService!!
-            // todo: 서버로부터 추천 리스트 받아오기
             SurroundingsManager.getCurrentSurroundings { surroundings ->
                 mService.getPersonalizedList(mService.email, surroundings, 20) { musicList ->
                     if (musicList == null) return@getPersonalizedList
                     PlaylistManager.playlists[0] = Playlist("playlist from server",
                         musicList as ArrayList<Int>
                     )
-                    // startActivity(Intent(this@MainActivity, PlayMusicActivity::class.java))
+                    mService.reloadPlayer(0, 0)
+                    startActivity(Intent(this@MainActivity, PlayMusicActivity::class.java))
                 }
             }
         }
