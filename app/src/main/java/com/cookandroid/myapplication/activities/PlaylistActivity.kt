@@ -100,5 +100,7 @@ class PlaylistActivity : AppCompatActivity() {
                 })
             binding.playlistRV.adapter = adapter
         }
+
+        ControlViewManager.displayControlView(binding.exoControlView)
     }
 }

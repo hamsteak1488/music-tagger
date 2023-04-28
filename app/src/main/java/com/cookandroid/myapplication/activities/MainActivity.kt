@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.*
+import com.cookandroid.myapplication.ControlViewManager.displayControlView
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.tftf.util.Music
@@ -108,15 +109,7 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        val mService = MusicServiceConnection.musicService
-
-        if (mService?.hasCurrentMediaItem() == true) {
-            binding.exoControlView.visibility = View.VISIBLE
-            mService.setViewPlayer(binding.exoControlView)
-        }
-        else {
-            binding.exoControlView.visibility = View.INVISIBLE
-        }
+        displayControlView(binding.exoControlView)
     }
 
     //테마 리스트 받아오기

@@ -102,5 +102,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_video_24).centerCrop())
                 .into(binding.playlistImgPD)
         }
+
+        ControlViewManager.displayControlView(binding.exoControlView)
     }
 }

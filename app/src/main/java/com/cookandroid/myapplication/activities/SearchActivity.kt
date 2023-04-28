@@ -64,4 +64,10 @@ class SearchActivity : AppCompatActivity() {
             }
         })
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        ControlViewManager.displayControlView(binding.exoControlView)
+    }
 }
