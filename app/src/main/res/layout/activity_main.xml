@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:openDrawer="start"
     tools:context=".activities.MainActivity">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,8 +42,8 @@
                     android:layout_weight="1"
                     android:drawableTop="@drawable/ic_baseline_view_playlist_24"
                     android:text="Playlist"
-                    android:textColor="@color/black"
-                    android:textAllCaps="false"/>
+                    android:textAllCaps="false"
+                    android:textColor="@color/black" />
 
                 <Button
                     android:id="@+id/searchSongBtn"
@@ -51,8 +52,8 @@
                     android:layout_weight="1"
                     android:drawableTop="@drawable/baseline_search_24"
                     android:text="Search"
-                    android:textColor="@color/black"
-                    android:textAllCaps="false"/>
+                    android:textAllCaps="false"
+                    android:textColor="@color/black" />
                 <!--로그아웃-->
                 <Button
                     android:id="@+id/logoutBtn"
@@ -61,8 +62,8 @@
                     android:layout_weight="1"
                     android:drawableTop="@drawable/baseline_logout_24"
                     android:text="Logout"
-                    android:textColor="@color/black"
-                    android:textAllCaps="false"/>
+                    android:textAllCaps="false"
+                    android:textColor="@color/black" />
             </LinearLayout>
 
             <LinearLayout
@@ -73,53 +74,67 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
                     android:text="당신이 찾던 음악"
                     android:textColor="@color/black"
                     android:textSize="30dp"
-                    android:textStyle="bold"
-                    android:layout_margin="10dp"/>
+                    android:textStyle="bold" />
 
                 <!--테마 추천(리스트 추가하여 횡스크롤 구현)-->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/themeListRV"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/linearLayoutDetails"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal"
                     android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
                     android:scrollbars="vertical"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/linearLayoutDetails" />
             </LinearLayout>
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="10dp"
                 android:text="이번 달 TOP 20"
                 android:textColor="@color/black"
                 android:textSize="30dp"
-                android:textStyle="bold"
-                android:layout_margin="10dp"/>
+                android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/mainRV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/linearLayoutDetails"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
                 android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
                 android:scrollbars="vertical"
-                android:layout_marginBottom="20dp"
-                android:layout_marginTop="10dp"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/linearLayoutDetails" />
 
         </LinearLayout>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <com.google.android.exoplayer2.ui.PlayerControlView
+        android:id="@+id/exoControlView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        app:controller_layout_id="@layout/controller_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:show_timeout="0"
+        app:use_controller="true" />
 
-</LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

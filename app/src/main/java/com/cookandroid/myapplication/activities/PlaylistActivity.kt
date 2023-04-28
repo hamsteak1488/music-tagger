@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.*
+import com.cookandroid.myapplication.PlaylistManager.exploringListPos
 import com.cookandroid.myapplication.databinding.ActivityPlaylistBinding
 import com.cookandroid.myapplication.databinding.AddPlaylistBinding
 import com.google.android.material.color.MaterialColors
@@ -93,7 +94,7 @@ class PlaylistActivity : AppCompatActivity() {
                 object: PlaylistViewAdapter.OnItemClickListener {
                     override fun onItemClick(view: View, pos: Int) {
                         val playlistDetailIntent = Intent(this@PlaylistActivity, PlaylistDetailsActivity::class.java)
-                        playlistDetailIntent.putExtra("index", pos)
+                        exploringListPos = pos
                         startActivity(playlistDetailIntent)
                     }
                 })

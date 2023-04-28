@@ -24,7 +24,7 @@ class PlayMusicActivity : AppCompatActivity() {
         binding = ActivityPlayMusicBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        mService.setPlayerView(binding.exoControlView)
+        mService.setViewPlayer(binding.exoControlView)
 
         if (mService.currentListPos != -1 && mService.currentMusicPos != -1) {
             setLayout()
@@ -34,10 +34,18 @@ class PlayMusicActivity : AppCompatActivity() {
                 }
             })
         }
+    }
 
-        binding.exoControlView.setOnClickListener {
-            setLayout()
-        }
+    override fun onResume() {
+        super.onResume()
+
+
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        mService.removeMediaItemChangeListenerForPlayMusicActivity()
     }
 
     private fun setLayout() {

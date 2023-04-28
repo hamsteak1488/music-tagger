@@ -19,7 +19,7 @@ class PlayMusicActivity : AppCompatActivity() {
 
         binding.backBtnPA.setOnClickListener { finish() }
 
-        MusicServiceConnection.musicService!!.setPlayerView(binding.exoControlView)
+        MusicServiceConnection.musicService!!.setViewPlayer(binding.exoControlView)
 
         if (MusicServiceConnection.musicService!!.currentListPos != null) {
             setLayout()

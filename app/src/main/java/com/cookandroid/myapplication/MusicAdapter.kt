@@ -1,6 +1,7 @@
 package com.cookandroid.myapplication
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.MusicAdapter.MusicHolder
+import com.cookandroid.myapplication.PlaylistManager.exploringListPos
 import com.cookandroid.myapplication.databinding.MusicViewBinding
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tftf.util.Music
 import com.tftf.util.MusicTag
-
-// todo : 음악 태그들을 골랐을 때, 표시할 레이아웃 찾고 없으면 만들기
 
 class MusicAdapter(private val context: Context,
                    private val musicList: ArrayList<Music>,
@@ -31,6 +33,7 @@ class MusicAdapter(private val context: Context,
         val artist = binding.songArtistMV
         val image = binding.imageMV
         val duration = binding.songDuration
+        val option = binding.optionMV
         val rv = binding.musicTagRV
         val root = binding.root
     }
@@ -65,6 +68,24 @@ class MusicAdapter(private val context: Context,
         //롱클릭으로 음악 추가 수행
         holder.root.setOnLongClickListener{
             return@setOnLongClickListener true
+        }
+
+        holder.option.setOnClickListener {
+            val customDialog = MaterialAlertDialogBuilder(context)
+                .setTitle("option")
+                .setItems(arrayOf("삭제", "다른 플레이리스트로 이동")) { dialog, action ->
+                    when(action) {
+                        0 -> {
+                            PlaylistManager.playlists[exploringListPos].musicList.removeAt(pos)
+                            notifyItemRemoved(pos)
+                            notifyItemRangeChanged(pos, itemCount - pos)
+                            MusicServiceConnection.musicService!!.savePlaylistManager("1234@naver.com") { }
+                        }
+                        1 -> 1 //todo : 다른 플레이리스트로 이동 기능 구현 필요
+                    }
+                }
+                .create()
+            customDialog.show()
         }
 
         holder.root.setOnClickListener {

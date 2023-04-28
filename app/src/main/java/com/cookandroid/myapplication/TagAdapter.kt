@@ -6,10 +6,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.cookandroid.myapplication.databinding.TagViewBinding
 import com.tftf.util.MusicTag
 
-// todo : 음악 태그들을 골랐을 때, 표시할 레이아웃 찾고 없으면 만들기
-
-class TagAdapter(private val tagList: MusicTag)
+class TagAdapter(private val tag: MusicTag)
     : RecyclerView.Adapter<TagAdapter.TagHolder>() {
+
+    val tagList:ArrayList<CharSequence> = tag.toList()
 
     ///뮤직 뷰 binding
     class TagHolder(binding: TagViewBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -17,7 +17,7 @@ class TagAdapter(private val tagList: MusicTag)
     }
 
     override fun getItemCount(): Int {
-        return tagList.size
+        return tag.size
     }
 
     //뷰 홀더 생성
@@ -27,6 +27,6 @@ class TagAdapter(private val tagList: MusicTag)
 
     ///뷰 홀더에 내용 입력
     override fun onBindViewHolder(holder: TagHolder, pos: Int) {
-        holder.tagTV.text = tagList.at(pos)
+        holder.tagTV.text = tagList[pos]
     }
 }

@@ -5,11 +5,10 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
@@ -22,6 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var adapterTheme: ThemeViewAdapter
     private lateinit var adapterMain: MusicAdapter
+    private var mService : MusicService? = null
 
     init{
         instance = this
@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity() {
         fun applicationContext(): Context { return instance!!.applicationContext}
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -51,14 +50,13 @@ class MainActivity : AppCompatActivity() {
 
         ///랜덤, 플레이리스트, 검색 버튼
         binding.recommendBtn.setOnClickListener{
-            val mService = MusicServiceConnection.musicService!!
             SurroundingsManager.getCurrentSurroundings { surroundings ->
-                mService.getPersonalizedList(mService.email, surroundings, 20) { musicList ->
+                mService!!.getPersonalizedList(mService!!.email, surroundings, 20) { musicList ->
                     if (musicList == null) return@getPersonalizedList
                     PlaylistManager.playlists[0] = Playlist("playlist from server",
                         musicList as ArrayList<Int>
                     )
-                    mService.reloadPlayer(0, 0)
+                    mService!!.reloadPlayer(0, 0)
                     startActivity(Intent(this@MainActivity, PlayMusicActivity::class.java))
                 }
             }
@@ -75,8 +73,8 @@ class MainActivity : AppCompatActivity() {
             auth.signOut()
 
             //로그아웃시 자동로그인 안되게 수정
-            val pref: SharedPreferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
-            val editor: SharedPreferences.Editor = pref.edit();
+            val pref: SharedPreferences = getSharedPreferences("pref", Activity.MODE_PRIVATE)
+            val editor: SharedPreferences.Editor = pref.edit()
             editor.putBoolean("auto",false)
             editor.putBoolean("ox",false)
             editor.apply()
@@ -106,6 +104,20 @@ class MainActivity : AppCompatActivity() {
 
         //adapterMain = MusicAdapter(this, mainPlaylist)
         //binding.mainRV.adapter = adapterMain
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        mService = MusicServiceConnection.musicService
+
+        if (mService?.hasCurrentMediaItem() == true) {
+            binding.exoControlView.visibility = View.VISIBLE
+            mService!!.setViewPlayer(binding.exoControlView)
+        }
+        else {
+            binding.exoControlView.visibility = View.INVISIBLE
+        }
     }
 
     //테마 리스트 받아오기

@@ -46,7 +46,6 @@ class SearchActivity : AppCompatActivity() {
                                 }
                             }
                             else {
-                                //todo: 메인->검색창->음악선택 : 임시 플레이리스트 생성하여 재생
                                 val playMusicIntent = Intent(this@SearchActivity, PlayMusicActivity::class.java)
                                 PlaylistManager.playlists[0].musicList = arrayListOf(it[pos].id)
                                 mService.reloadPlayer(0, 0)

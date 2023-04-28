@@ -5,6 +5,9 @@ import com.google.gson.JsonArray
 import com.tftf.util.PlaylistManagerDTO
 
 object PlaylistManager {
+
+    var exploringListPos:Int = -1
+
     var playlists: ArrayList<Playlist> = ArrayList() //플레이리스트의 리스트
 
     init {

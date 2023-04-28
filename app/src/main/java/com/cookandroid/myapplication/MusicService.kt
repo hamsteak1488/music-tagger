@@ -190,6 +190,10 @@ class MusicService : Service() {
         mediaItemChangeListenerForPlayMusicActivity = listener
     }
 
+    fun removeMediaItemChangeListenerForPlayMusicActivity() {
+        mediaItemChangeListenerForPlayMusicActivity = null
+    }
+
     fun setMusicPos(pos:Int) {
         currentMusicPos = pos
     }
@@ -203,8 +207,12 @@ class MusicService : Service() {
         exoPlayer!!.setMediaItems(playListMediaItem!!)
     }
 
+    fun hasCurrentMediaItem() : Boolean {
+        return exoPlayer!!.currentMediaItem != null
+    }
+
     /** exoPlayer 플레이리스트 리로드 */
-    fun reloadPlayer() {
+    fun reloadPlaylist() {
         /** 음악 id를 통해 MediaItem 리스트를 생성한 후, exoPlayer의 리스트로 설정 */
         playListMediaItem = ArrayList<MediaItem>().apply {
             PlaylistManager.playlists[currentListPos].musicList.forEachIndexed { pos, musicId ->
@@ -214,19 +222,19 @@ class MusicService : Service() {
                     .build())
             }
         }
-        exoPlayer!!.setMediaItems(playListMediaItem!!)
-
-        exoPlayer!!.seekTo(currentMusicPos, C.TIME_UNSET)
     }
 
     fun reloadPlayer(listPos:Int, musicPos:Int) {
         currentListPos = listPos
+        reloadPlaylist()
+        exoPlayer!!.setMediaItems(playListMediaItem!!)
+
         currentMusicPos = musicPos
-        reloadPlayer()
+        exoPlayer!!.seekTo(currentMusicPos, C.TIME_UNSET)
     }
 
     /** 플레이어뷰의 플레이어를 exoPlayer로 지정 */
-    fun setPlayerView(view:PlayerControlView) {
+    fun setViewPlayer(view:PlayerControlView) {
         view.player = exoPlayer
     }
 
@@ -283,7 +291,6 @@ class MusicService : Service() {
         fun selectPlaylistManager(@Query("email") email: String) : Call<PlaylistManagerDTO>
 
 
-        // todo : /recommend/personalized 요청 인터페이스에 추가 필요
         @POST("/recommend/personalized")
         fun getPersonalizedList(@Query("email") email: String,
                                 @Body surroundings: Surroundings,
