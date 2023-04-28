@@ -33,6 +33,7 @@ class PlayMusicActivity : AppCompatActivity() {
                     setLayout()
                 }
             })
+            mService.prepareAndPlay()
         }
     }
 

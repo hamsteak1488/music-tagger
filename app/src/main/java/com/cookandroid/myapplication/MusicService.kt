@@ -194,6 +194,11 @@ class MusicService : Service() {
         mediaItemChangeListenerForPlayMusicActivity = null
     }
 
+    fun prepareAndPlay() {
+        exoPlayer!!.prepare()
+        exoPlayer!!.play()
+    }
+
     fun setMusicPos(pos:Int) {
         currentMusicPos = pos
     }

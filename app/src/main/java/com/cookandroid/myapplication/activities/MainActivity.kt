@@ -1,7 +1,6 @@
 package com.cookandroid.myapplication.activities
 
 import android.app.Activity
-import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -21,7 +20,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var auth: FirebaseAuth
     private lateinit var adapterTheme: ThemeViewAdapter
     private lateinit var adapterMain: MusicAdapter
-    private var mService : MusicService? = null
 
     init{
         instance = this
@@ -51,12 +49,13 @@ class MainActivity : AppCompatActivity() {
         ///랜덤, 플레이리스트, 검색 버튼
         binding.recommendBtn.setOnClickListener{
             SurroundingsManager.getCurrentSurroundings { surroundings ->
-                mService!!.getPersonalizedList(mService!!.email, surroundings, 20) { musicList ->
+                val mService = MusicServiceConnection.musicService!!
+                mService.getPersonalizedList(mService.email, surroundings, 20) { musicList ->
                     if (musicList == null) return@getPersonalizedList
                     PlaylistManager.playlists[0] = Playlist("playlist from server",
                         musicList as ArrayList<Int>
                     )
-                    mService!!.reloadPlayer(0, 0)
+                    mService.reloadPlayer(0, 0)
                     startActivity(Intent(this@MainActivity, PlayMusicActivity::class.java))
                 }
             }
@@ -109,11 +108,11 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        mService = MusicServiceConnection.musicService
+        val mService = MusicServiceConnection.musicService
 
         if (mService?.hasCurrentMediaItem() == true) {
             binding.exoControlView.visibility = View.VISIBLE
-            mService!!.setViewPlayer(binding.exoControlView)
+            mService.setViewPlayer(binding.exoControlView)
         }
         else {
             binding.exoControlView.visibility = View.INVISIBLE
