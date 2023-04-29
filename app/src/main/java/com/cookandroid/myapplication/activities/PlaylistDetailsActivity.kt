@@ -11,8 +11,10 @@ import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.PlaylistManager.exploringListPos
 import com.cookandroid.myapplication.databinding.ActivityPlaylistDetailsBinding
+import com.cookandroid.myapplication.databinding.MusicSelectedBinding
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.tftf.util.Music
 import com.tftf.util.MusicTag
 
 
@@ -22,10 +24,16 @@ class PlaylistDetailsActivity : AppCompatActivity() {
 
     private val mService:MusicService = MusicServiceConnection.musicService!!
 
+    private var selectionMode:Boolean = false
+    private val selectedItemList:ArrayList<Int> = ArrayList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlaylistDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        selectionMode = false
+        selectedItemList.clear()
 
         binding.playlistNamePD.text = PlaylistManager.playlists[exploringListPos].name
 
@@ -66,6 +74,10 @@ class PlaylistDetailsActivity : AppCompatActivity() {
 
             customDialog.show()
         }
+
+        binding.backBtnPD.setOnClickListener {
+            finish()
+        }
     }
 
     override fun onResume() {
@@ -75,27 +87,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         if(PlaylistManager.playlists[exploringListPos].musicList.size > 0){
             mService.getMusicMetadataList(PlaylistManager.playlists[exploringListPos].musicList) { musicList ->
                 if (musicList == null) return@getMusicMetadataList
-                val tagList = ArrayList<MusicTag>().apply {
-                    musicList.forEach { music ->
-                        val tag = PlayHistoryManager.getMusicTag(music.id)
-                        if (tag == null) add(MusicTag())
-                        else add(tag)
-                    }
-                }
-
-                adapter = MusicAdapter(this@PlaylistDetailsActivity, musicList.toCollection(ArrayList()), tagList,
-                    object: MusicAdapter.OnItemClickListener {
-                        override fun onItemClick(view: View, musicPos: Int) {
-                            if (musicPos == mService.currentMusicPos) {
-
-                            }
-                            else {
-                                mService.reloadPlayer(exploringListPos, musicPos)
-                            }
-                            startActivity(Intent(this@PlaylistDetailsActivity, PlayMusicActivity::class.java))
-                        }
-                    })
-                binding.playlistDetailsRV.adapter = adapter
+                else initMusicRV(musicList)
             }
             Glide.with(this)
                 .load("http://10.0.2.2:8080/img?id=" + (PlaylistManager.playlists[exploringListPos].musicList[0]))
@@ -104,5 +96,48 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         }
 
         ControlViewManager.displayControlView(binding.exoControlView)
+    }
+
+    private fun initMusicRV(musicList:List<Music>) {
+        val tagList = ArrayList<MusicTag>().apply {
+            musicList.forEach { music ->
+                val tag = PlayHistoryManager.getMusicTag(music.id)
+                if (tag == null) add(MusicTag())
+                else add(tag)
+            }
+        }
+
+        adapter = MusicAdapter(this@PlaylistDetailsActivity, musicList.toCollection(ArrayList()), tagList,
+            object: MusicAdapter.OnItemClickListener {
+                override fun onItemClick(view: View, musicPos: Int) {
+                    if (musicPos != mService.currentMusicPos) {
+                        mService.reloadPlayer(exploringListPos, musicPos)
+                    }
+                    startActivity(Intent(this@PlaylistDetailsActivity, PlayMusicActivity::class.java))
+                }
+            },
+            object:MusicAdapter.OnItemLongClickListener {
+                override fun onItemLongClick(view: View, pos: Int) {
+                    selectionMode = selectionMode.xor(true)
+                    if (selectionMode) binding.selectionCountTV.visibility = View.VISIBLE
+                    else binding.selectionCountTV.visibility = View.INVISIBLE
+                    initMusicRV(musicList)
+                    adapter.notifyDataSetChanged()
+                }
+            },
+            object:MusicAdapter.OnItemCheckedChangeListener {
+                override fun onItemCheckedChange(isChecked: Boolean, pos: Int) {
+                    if (isChecked) {
+                        selectedItemList.add(musicList[pos].id)
+                    }
+                    else {
+                        selectedItemList.remove(musicList[pos].id)
+                    }
+                    binding.selectionCountTV.text = selectedItemList.size.toString() + "개 선택"
+                }
+            },
+            selectionMode
+        )
+        binding.playlistDetailsRV.adapter = adapter
     }
 }

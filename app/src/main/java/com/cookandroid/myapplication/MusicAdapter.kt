@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView.OnItemLongClickListener
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -18,13 +19,24 @@ import com.tftf.util.MusicTag
 
 class MusicAdapter(private val context: Context,
                    private val musicList: ArrayList<Music>,
-                   private val tagList: ArrayList<MusicTag>?,
-                   private val itemClickListener: OnItemClickListener?
+                   private val tagList: ArrayList<MusicTag>? = null,
+                   private val itemClickListener: OnItemClickListener? = null,
+                   private val itemLongClickListener: OnItemLongClickListener? = null,
+                   private val itemCheckedChangeListener : OnItemCheckedChangeListener? = null,
+                   private val selectionMode:Boolean = false
 )
     : RecyclerView.Adapter<MusicHolder>() {
 
     interface OnItemClickListener {
         fun onItemClick(view:View, pos:Int)
+    }
+
+    interface OnItemLongClickListener {
+        fun onItemLongClick(view:View, pos:Int)
+    }
+
+    interface OnItemCheckedChangeListener {
+        fun onItemCheckedChange(isChecked:Boolean, pos:Int)
     }
 
     ///뮤직 뷰 binding
@@ -35,6 +47,7 @@ class MusicAdapter(private val context: Context,
         val duration = binding.songDuration
         val option = binding.optionMV
         val rv = binding.musicTagRV
+        val checkbox = binding.checkBox
         val root = binding.root
     }
 
@@ -92,6 +105,19 @@ class MusicAdapter(private val context: Context,
             itemClickListener?.onItemClick(it, pos)
         }
 
+        holder.root.setOnLongClickListener {
+            itemLongClickListener?.onItemLongClick(it, pos)
+            true
+        }
+
+        holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
+            itemCheckedChangeListener?.onItemCheckedChange(isChecked, pos)
+        }
+
+        holder.checkbox.visibility = when (selectionMode) {
+            true ->  View.VISIBLE
+            false -> View.GONE
+        }
 
         /*
         //페이지별 음악 클릭 동작

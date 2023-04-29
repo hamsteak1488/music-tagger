@@ -63,6 +63,7 @@
             android:layout_marginHorizontal="5dp"
             android:textColor="@color/white"
             android:textSize="16sp" />
+
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -129,5 +130,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:show_timeout="0"
         app:use_controller="true" />
+
+    <TextView
+        android:id="@+id/selectionCountTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:layout_weight="1"
+        android:text="TextView"
+        android:textSize="40sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/exoControlView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
