@@ -2,13 +2,10 @@ package com.cookandroid.myapplication.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
@@ -41,12 +38,6 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         binding.playlistDetailsRV.setHasFixedSize(true)
         binding.playlistDetailsRV.layoutManager = LinearLayoutManager(this)
 
-        binding.playlistDetailsRV.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-            }
-        })
-
         //음악 추가
         binding.addBtnPD.setOnClickListener{
             val addMusicIntent = Intent(this, SearchActivity::class.java)
@@ -58,6 +49,18 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         binding.backBtnPD.setOnClickListener {
             finish()
         }
+
+        // todo: movePlaylistBtn Visible 클릭 리스너 구현 필요
+        binding.movePlaylistBtn.setOnClickListener {
+
+        }
+
+        binding.removeBtn.setOnClickListener {
+            selectedItemList.forEach { musicId ->
+                PlaylistManager.playlists[exploringListPos].musicList.remove(musicId)
+            }
+            initView()
+        }
     }
 
 
@@ -65,9 +68,18 @@ class PlaylistDetailsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
+        initView()
+
+        ControlViewManager.displayControlView(binding.exoControlView)
+    }
+
+    private fun initView() {
+
         selectionMode = false
         selectedItemList.clear()
         binding.selectionCountTV.visibility = View.INVISIBLE
+        binding.movePlaylistBtn.visibility = View.INVISIBLE
+        binding.removeBtn.visibility = View.INVISIBLE
 
         binding.moreInfoPD.text = "Total ${PlaylistManager.playlists[exploringListPos].musicList.size} Songs.\n\n"
         if(PlaylistManager.playlists[exploringListPos].musicList.size > 0){
@@ -80,11 +92,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_video_24).centerCrop())
                 .into(binding.playlistImgPD)
         }
-
-        ControlViewManager.displayControlView(binding.exoControlView)
     }
-
-
 
     private fun initMusicAdapter(musicList:List<Music>) {
         val tagList = ArrayList<MusicTag>().apply {
@@ -107,8 +115,16 @@ class PlaylistDetailsActivity : AppCompatActivity() {
             object:MusicAdapter.OnItemLongClickListener {
                 override fun onItemLongClick(view: View, pos: Int) {
                     selectionMode = selectionMode.xor(true)
-                    if (selectionMode) binding.selectionCountTV.visibility = View.VISIBLE
-                    else binding.selectionCountTV.visibility = View.INVISIBLE
+                    if (selectionMode) {
+                        binding.selectionCountTV.visibility = View.VISIBLE
+                        binding.movePlaylistBtn.visibility = View.VISIBLE
+                        binding.removeBtn.visibility = View.VISIBLE
+                    }
+                    else {
+                        binding.selectionCountTV.visibility = View.INVISIBLE
+                        binding.movePlaylistBtn.visibility = View.INVISIBLE
+                        binding.removeBtn.visibility = View.INVISIBLE
+                    }
 
                     rvLastScrollPos = (binding.playlistDetailsRV.layoutManager!! as LinearLayoutManager).findFirstVisibleItemPosition()
 
