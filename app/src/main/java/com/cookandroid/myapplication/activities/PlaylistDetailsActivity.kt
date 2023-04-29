@@ -1,19 +1,19 @@
 package com.cookandroid.myapplication.activities
 
 import android.content.Intent
-import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.PlaylistManager.exploringListPos
 import com.cookandroid.myapplication.databinding.ActivityPlaylistDetailsBinding
-import com.cookandroid.myapplication.databinding.MusicSelectedBinding
-import com.google.android.material.color.MaterialColors
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tftf.util.Music
 import com.tftf.util.MusicTag
 
@@ -27,19 +27,25 @@ class PlaylistDetailsActivity : AppCompatActivity() {
     private var selectionMode:Boolean = false
     private val selectedItemList:ArrayList<Int> = ArrayList()
 
+    private var rvLastScrollPos:Int = 0
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlaylistDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        selectionMode = false
-        selectedItemList.clear()
 
         binding.playlistNamePD.text = PlaylistManager.playlists[exploringListPos].name
 
         binding.playlistDetailsRV.setItemViewCacheSize(10)
         binding.playlistDetailsRV.setHasFixedSize(true)
         binding.playlistDetailsRV.layoutManager = LinearLayoutManager(this)
+
+        binding.playlistDetailsRV.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+            }
+        })
 
         //음악 추가
         binding.addBtnPD.setOnClickListener{
@@ -48,46 +54,26 @@ class PlaylistDetailsActivity : AppCompatActivity() {
             addMusicIntent.putExtra("listPos", exploringListPos)
             startActivity(addMusicIntent)
         }
-        //음악 전체 삭제
-        binding.removeAllPD.setOnClickListener{
-            val builder = MaterialAlertDialogBuilder(this)
-            builder.setTitle("remove")
-                .setMessage("Remove all songs from playlist?")
-                .setPositiveButton("Yes"){dialog, _ ->
-                    PlaylistManager.playlists[exploringListPos].musicList.clear()
-                    mService.savePlaylistManager(mService.email){ }
-                    dialog.dismiss()
-                    finish()
-                    startActivity(intent)
-                }
-                .setNegativeButton("No"){dialog, _ ->
-                    dialog.dismiss()
-                }
-            val customDialog = builder.create()
-
-            customDialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.setBackgroundColor(
-                MaterialColors.getColor(this@PlaylistDetailsActivity, R.attr.dialogBtnBackground, Color.RED)
-            )
-            customDialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.setBackgroundColor(
-                MaterialColors.getColor(this@PlaylistDetailsActivity, R.attr.dialogBtnBackground, Color.RED)
-            )
-
-            customDialog.show()
-        }
 
         binding.backBtnPD.setOnClickListener {
             finish()
         }
     }
 
+
+
     override fun onResume() {
         super.onResume()
+
+        selectionMode = false
+        selectedItemList.clear()
+        binding.selectionCountTV.visibility = View.INVISIBLE
 
         binding.moreInfoPD.text = "Total ${PlaylistManager.playlists[exploringListPos].musicList.size} Songs.\n\n"
         if(PlaylistManager.playlists[exploringListPos].musicList.size > 0){
             mService.getMusicMetadataList(PlaylistManager.playlists[exploringListPos].musicList) { musicList ->
                 if (musicList == null) return@getMusicMetadataList
-                else initMusicRV(musicList)
+                else initMusicAdapter(musicList)
             }
             Glide.with(this)
                 .load("http://10.0.2.2:8080/img?id=" + (PlaylistManager.playlists[exploringListPos].musicList[0]))
@@ -98,7 +84,9 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         ControlViewManager.displayControlView(binding.exoControlView)
     }
 
-    private fun initMusicRV(musicList:List<Music>) {
+
+
+    private fun initMusicAdapter(musicList:List<Music>) {
         val tagList = ArrayList<MusicTag>().apply {
             musicList.forEach { music ->
                 val tag = PlayHistoryManager.getMusicTag(music.id)
@@ -121,8 +109,10 @@ class PlaylistDetailsActivity : AppCompatActivity() {
                     selectionMode = selectionMode.xor(true)
                     if (selectionMode) binding.selectionCountTV.visibility = View.VISIBLE
                     else binding.selectionCountTV.visibility = View.INVISIBLE
-                    initMusicRV(musicList)
-                    adapter.notifyDataSetChanged()
+
+                    rvLastScrollPos = (binding.playlistDetailsRV.layoutManager!! as LinearLayoutManager).findFirstVisibleItemPosition()
+
+                    initMusicAdapter(musicList)
                 }
             },
             object:MusicAdapter.OnItemCheckedChangeListener {
@@ -138,6 +128,21 @@ class PlaylistDetailsActivity : AppCompatActivity() {
             },
             selectionMode
         )
+
         binding.playlistDetailsRV.adapter = adapter
+        binding.playlistDetailsRV.scrollToPosition(rvLastScrollPos)
+
+        this.onBackPressedDispatcher.addCallback(this@PlaylistDetailsActivity, object:OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (selectionMode) {
+                    selectionMode = false
+                    rvLastScrollPos = (binding.playlistDetailsRV.layoutManager!! as LinearLayoutManager).findFirstVisibleItemPosition()
+                    initMusicAdapter(musicList)
+                }
+                else {
+                    finish()
+                }
+            }
+        })
     }
 }
