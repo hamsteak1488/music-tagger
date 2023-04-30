@@ -19,6 +19,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ShareDetails"
+            android:exported="false" />
+        <activity
+            android:name=".ShareActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.Loading"
             android:exported="true">
             <intent-filter>
