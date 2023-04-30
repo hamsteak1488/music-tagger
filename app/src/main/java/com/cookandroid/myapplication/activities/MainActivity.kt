@@ -61,21 +61,25 @@ class MainActivity : AppCompatActivity() {
         }
 
         //로그아웃 버튼
-        auth = FirebaseAuth.getInstance()
-        binding.logoutBtn.setOnClickListener{
-            auth.signOut()
-
-            //로그아웃시 자동로그인 안되게 수정
-            val pref: SharedPreferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
-            val editor: SharedPreferences.Editor = pref.edit();
-            editor.putBoolean("auto",false)
-            editor.putBoolean("ox",false)
-            editor.apply()
-            Intent(this, LoginActivity::class.java).also{
-                it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(it)
-                Toast.makeText(this, "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
-            }
+//        auth = FirebaseAuth.getInstance()
+//        binding.logoutBtn.setOnClickListener{
+//            auth.signOut()
+//
+//            //로그아웃시 자동로그인 안되게 수정
+//            val pref: SharedPreferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
+//            val editor: SharedPreferences.Editor = pref.edit();
+//            editor.putBoolean("auto",false)
+//            editor.putBoolean("ox",false)
+//            editor.apply()
+//            Intent(this, LoginActivity::class.java).also{
+//                it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//                startActivity(it)
+//                Toast.makeText(this, "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+        //공유 버튼
+        binding.shareBtn.setOnClickListener{
+            startActivity(Intent(this@MainActivity, ShareActivity::class.java))
         }
 
         //테마 RV 구현

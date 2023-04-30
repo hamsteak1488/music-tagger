@@ -12,7 +12,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.databinding.PlaylistViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
-class PlaylistViewAdapter(private val context: Context, private var playlists: ArrayList<Playlist>, private val listener:OnItemClickListener? = null)
+class PlaylistViewAdapter(
+    private val context: Context, private var playlists: ArrayList<Playlist>,
+    private val listener: OnItemClickListener? = null,
+    param: OnItemClickListener
+)
     : RecyclerView.Adapter<PlaylistViewAdapter.PlaylistHolder>() {
 
     class PlaylistHolder(binding: PlaylistViewBinding) : RecyclerView.ViewHolder(binding.root) {

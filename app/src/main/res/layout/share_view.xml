@@ -15,9 +15,9 @@
         android:layout_margin="3dp"
         android:src="@drawable/ic_baseline_music_video_24"
         app:layout_constraintStart_toStartof="parent"
-        app:layout_constraintEnd_toStartOf="@id/playlistNameSV"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:ignore="MissingConstraints" />
 
     <TextView
         android:id="@+id/playlistNameSV"
@@ -27,7 +27,7 @@
         android:gravity="center_vertical"
         android:singleLine="true"
         android:hint="Playlist Name"
-        android:textSize="25dp"
+        android:textSize="24dp"
         android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@+id/imageSV"
         app:layout_constraintTop_toTopOf="@+id/imageSV"/>
@@ -39,7 +39,18 @@
         android:layout_margin="5dp"
         android:singleLine="true"
         android:hint="User Name"
-        app:layout_constraintStart_toStartOf="@+id/playlistNameSV"
+        app:layout_constraintStart_toEndOf="@+id/imageSV"
+        app:layout_constraintTop_toBottomOf="@+id/playlistNameSV" />
+
+    <TextView
+        android:id="@+id/artistsSV"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_margin="5dp"
+        android:singleLine="true"
+        android:hint="artists"
+        app:layout_constraintStart_toEndOf="@+id/imageSV"
+        app:layout_constraintTop_toBottomOf="@+id/uploaderNameSV"
         app:layout_constraintBottom_toBottomOf="@+id/imageSV" />
 
 

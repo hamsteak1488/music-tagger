@@ -93,7 +93,18 @@ class PlaylistActivity : AppCompatActivity() {
                         playlistDetailIntent.putExtra("index", pos)
                         startActivity(playlistDetailIntent)
                     }
-                })
+                },
+                object: PlaylistViewAdapter.OnItemClickListener{
+                    override fun onItemClick(view: View, pos: Int) {
+//                        TODO ShareActivity에서 넘어왔을 경우 pos를 넘기고 SharedDetailsActivity로 이동
+                        val intent = Intent(this@PlaylistActivity, ShareDetails::class.java)
+                        intent.putExtra("index", pos)
+                        startActivity(intent)
+                    }
+                }
+
+            )
+
             binding.playlistRV.adapter = adapter
         }
     }

@@ -55,12 +55,12 @@
                     android:textAllCaps="false"/>
                 <!--로그아웃-->
                 <Button
-                    android:id="@+id/logoutBtn"
+                    android:id="@+id/shareBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/baseline_logout_24"
-                    android:text="Logout"
+                    android:drawableTop="@drawable/baseline_people_alt_24"
+                    android:text="Share"
                     android:textColor="@color/black"
                     android:textAllCaps="false"/>
             </LinearLayout>
