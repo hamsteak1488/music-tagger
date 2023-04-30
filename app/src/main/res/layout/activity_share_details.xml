@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.ShareDetails"
+    android:background="@color/black">
+
+    <ImageView
+        android:id="@+id/playlistImgSD"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:background="@drawable/border_gray"
+        android:layout_marginTop="50dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/titleSD"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:text="Title"
+        android:textColor="@color/gray"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/playlistImgSD"
+        app:layout_constraintStart_toStartOf="@id/editTitleSD"/>
+
+    <EditText
+        android:id="@+id/editTitleSD"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/border_gray"
+        app:layout_constraintTop_toBottomOf="@id/titleSD"
+        app:layout_constraintStart_toStartOf="@id/playlistImgSD"/>
+
+    <TextView
+        android:id="@+id/descriptionSD"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:text="Description"
+        android:textColor="@color/gray"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/editTitleSD"
+        app:layout_constraintStart_toStartOf="@id/editDescriptionSD"/>
+
+    <EditText
+        android:id="@+id/editDescriptionSD"
+        android:layout_width="250dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/border_gray"
+        app:layout_constraintTop_toBottomOf="@id/descriptionSD"
+        app:layout_constraintStart_toStartOf="@id/playlistImgSD"/>
+
+    <!--for buttons-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <!--Add Button-->
+        <Button
+            android:id="@+id/uploadBtnSD"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="Upload"
+            android:drawableLeft="@drawable/ic_baseline_add_24"
+            android:text="Upload"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            tools:ignore="RtlHardcoded" />
+
+        <!--Remove Button-->
+        <Button
+            android:id="@+id/cancelBtnSD"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="Cancel"
+            android:drawableLeft="@drawable/baseline_do_not_disturb_alt_24"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            tools:ignore="RtlHardcoded" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
