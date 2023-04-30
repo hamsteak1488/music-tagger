@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.*
@@ -62,9 +61,13 @@ class MainActivity : AppCompatActivity() {
             }
         }
         binding.playlistBtn.setOnClickListener{
-            startActivity(Intent(this@MainActivity, PlaylistActivity::class.java)) }
+            startActivity(Intent(this@MainActivity, ListOfPlaylistActivity::class.java).apply {
+                putExtra("operation", ActivityOperation.LIST_OF_PLAYLIST_EXPLORE.ordinal)
+            }) }
         binding.searchSongBtn.setOnClickListener {
-            startActivity((Intent(this@MainActivity, SearchActivity::class.java)))
+            startActivity((Intent(this@MainActivity, SearchActivity::class.java).apply {
+                putExtra("operation", ActivityOperation.SEARCH_EXPLORE.ordinal)
+            }))
         }
 
         //로그아웃 버튼

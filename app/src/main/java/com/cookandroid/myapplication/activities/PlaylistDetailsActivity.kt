@@ -11,6 +11,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.PlaylistManager.exploringListPos
 import com.cookandroid.myapplication.databinding.ActivityPlaylistDetailsBinding
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tftf.util.Music
 import com.tftf.util.MusicTag
 
@@ -41,8 +42,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         //음악 추가
         binding.addBtnPD.setOnClickListener{
             val addMusicIntent = Intent(this, SearchActivity::class.java)
-            addMusicIntent.putExtra("searchForAdd", true)
-            addMusicIntent.putExtra("listPos", exploringListPos)
+            addMusicIntent.putExtra("operation", ActivityOperation.SEARCH_ADD.ordinal)
             startActivity(addMusicIntent)
         }
 
@@ -50,14 +50,19 @@ class PlaylistDetailsActivity : AppCompatActivity() {
             finish()
         }
 
-        // todo: movePlaylistBtn Visible 클릭 리스너 구현 필요
+        // todo: movePlaylistBtn 클릭 리스너 구현 필요
         binding.movePlaylistBtn.setOnClickListener {
-
+            selectedItemList.sort()
+            startActivity(Intent(this@PlaylistDetailsActivity, ListOfPlaylistActivity::class.java).apply {
+                putExtra("operation", ActivityOperation.LIST_OF_PLAYLIST_MOVE.ordinal)
+                putIntegerArrayListExtra("selectedItemList", selectedItemList)
+            })
         }
 
         binding.removeBtn.setOnClickListener {
-            selectedItemList.forEach { musicId ->
-                PlaylistManager.playlists[exploringListPos].musicList.remove(musicId)
+            val musicList = PlaylistManager.playlists[exploringListPos].musicList
+            selectedItemList.forEach { pos ->
+                musicList.removeAt(pos)
             }
             initView()
         }
@@ -91,6 +96,11 @@ class PlaylistDetailsActivity : AppCompatActivity() {
                 .load("http://10.0.2.2:8080/img?id=" + (PlaylistManager.playlists[exploringListPos].musicList[0]))
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_video_24).centerCrop())
                 .into(binding.playlistImgPD)
+            binding.playlistImgPD.visibility = View.VISIBLE
+        }
+        else {
+            binding.playlistDetailsRV.adapter = null
+            binding.playlistImgPD.visibility = View.INVISIBLE
         }
     }
 
@@ -110,6 +120,29 @@ class PlaylistDetailsActivity : AppCompatActivity() {
                         mService.reloadPlayer(exploringListPos, musicPos)
                     }
                     startActivity(Intent(this@PlaylistDetailsActivity, PlayMusicActivity::class.java))
+                }
+            },
+            object:MusicAdapter.OnItemClickListener {
+                override fun onItemClick(view: View, pos: Int) {
+                    val customDialog = MaterialAlertDialogBuilder(this@PlaylistDetailsActivity)
+                        .setTitle("option")
+                        .setItems(arrayOf("다른 플레이리스트로 이동", "삭제")) { dialog, action ->
+                            when(action) {
+                                0 -> {
+                                    startActivity(Intent(this@PlaylistDetailsActivity, ListOfPlaylistActivity::class.java).apply {
+                                        putExtra("operation", ActivityOperation.LIST_OF_PLAYLIST_MOVE.ordinal)
+                                        putExtra("selectedItemList", arrayListOf(pos))
+                                    })
+                                }
+                                1 -> {
+                                    PlaylistManager.playlists[exploringListPos].musicList.removeAt(pos)
+                                    initView()
+                                    MusicServiceConnection.musicService!!.savePlaylistManager("1234@naver.com") { }
+                                }
+                            }
+                        }
+                        .create()
+                    customDialog.show()
                 }
             },
             object:MusicAdapter.OnItemLongClickListener {
@@ -134,10 +167,10 @@ class PlaylistDetailsActivity : AppCompatActivity() {
             object:MusicAdapter.OnItemCheckedChangeListener {
                 override fun onItemCheckedChange(isChecked: Boolean, pos: Int) {
                     if (isChecked) {
-                        selectedItemList.add(musicList[pos].id)
+                        selectedItemList.add(pos)
                     }
                     else {
-                        selectedItemList.remove(musicList[pos].id)
+                        selectedItemList.remove(pos)
                     }
                     binding.selectionCountTV.text = selectedItemList.size.toString() + "개 선택"
                 }

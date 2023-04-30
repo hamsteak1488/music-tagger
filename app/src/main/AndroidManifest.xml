@@ -55,7 +55,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.PlaylistActivity"
+            android:name=".activities.ListOfPlaylistActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

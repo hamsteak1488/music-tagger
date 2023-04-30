@@ -21,6 +21,7 @@ class MusicAdapter(private val context: Context,
                    private val musicList: ArrayList<Music>,
                    private val tagList: ArrayList<MusicTag>? = null,
                    private val itemClickListener: OnItemClickListener? = null,
+                   private val itemOptionClickListener: OnItemClickListener? = null,
                    private val itemLongClickListener: OnItemLongClickListener? = null,
                    private val itemCheckedChangeListener : OnItemCheckedChangeListener? = null,
                    private val selectionMode:Boolean = false
@@ -78,31 +79,12 @@ class MusicAdapter(private val context: Context,
             holder.rv.adapter = TagAdapter(tagList[pos])
         }
 
-        //롱클릭으로 음악 추가 수행
-        holder.root.setOnLongClickListener{
-            return@setOnLongClickListener true
+        holder.root.setOnClickListener {
+            itemClickListener?.onItemClick(it, pos)
         }
 
         holder.option.setOnClickListener {
-            val customDialog = MaterialAlertDialogBuilder(context)
-                .setTitle("option")
-                .setItems(arrayOf("삭제", "다른 플레이리스트로 이동")) { dialog, action ->
-                    when(action) {
-                        0 -> {
-                            PlaylistManager.playlists[exploringListPos].musicList.removeAt(pos)
-                            notifyItemRemoved(pos)
-                            notifyItemRangeChanged(pos, itemCount - pos)
-                            MusicServiceConnection.musicService!!.savePlaylistManager("1234@naver.com") { }
-                        }
-                        1 -> 1 //todo : 다른 플레이리스트로 이동 기능 구현 필요
-                    }
-                }
-                .create()
-            customDialog.show()
-        }
-
-        holder.root.setOnClickListener {
-            itemClickListener?.onItemClick(it, pos)
+            itemOptionClickListener?.onItemClick(it, pos)
         }
 
         holder.root.setOnLongClickListener {

@@ -10,6 +10,8 @@ object PlaylistManager {
 
     var playlists: ArrayList<Playlist> = ArrayList() //플레이리스트의 리스트
 
+
+
     init {
         playlists.add(Playlist("tempPlaylist", ArrayList()))
     }
