@@ -100,10 +100,9 @@ class ListOfPlaylistActivity : AppCompatActivity() {
                         when(operationOrdinal) {
                             ActivityOperation.LIST_OF_PLAYLIST_EXPLORE.ordinal -> {
                                 exploringListPos = pos
-                                startActivity(Intent(
-                                    this@ListOfPlaylistActivity,
-                                    PlaylistDetailsActivity::class.java
-                                ))
+                                startActivity(Intent(this@ListOfPlaylistActivity, PlaylistDetailsActivity::class.java).apply {
+                                    putExtra("operation", ActivityOperation.PLAYLIST_DETAILS_PERSONAL_TAG.ordinal)
+                                })
                             }
                             ActivityOperation.LIST_OF_PLAYLIST_MOVE.ordinal -> {
                                 val exploringMusicList = PlaylistManager.playlists[exploringListPos].musicList

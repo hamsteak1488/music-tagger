@@ -78,7 +78,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="260dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -99,7 +99,7 @@
                     android:layout_marginBottom="20dp"
                     android:orientation="horizontal"
                     android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
-                    android:scrollbars="vertical"
+                    android:scrollbars="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

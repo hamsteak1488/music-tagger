@@ -27,11 +27,16 @@ class PlaylistDetailsActivity : AppCompatActivity() {
 
     private var rvLastScrollPos:Int = 0
 
+    private var operationOrdinal:Int = -1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlaylistDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        operationOrdinal = intent.getIntExtra("operation", -1)
+
 
         binding.playlistNamePD.text = PlaylistManager.playlists[exploringListPos].name
 
@@ -115,13 +120,21 @@ class PlaylistDetailsActivity : AppCompatActivity() {
     }
 
     private fun initMusicAdapter(musicList:List<Music>) {
-        val tagList = ArrayList<MusicTag>().apply {
-            musicList.forEach { music ->
-                val tag = PlayHistoryManager.getMusicTag(music.id)
-                if (tag == null) add(MusicTag())
-                else add(tag)
+
+        val tagList = when (operationOrdinal) {
+            ActivityOperation.PLAYLIST_DETAILS_PERSONAL_TAG.ordinal -> {
+                ArrayList<MusicTag>().apply {
+
+                    musicList.forEach { music ->
+                        val tag = PlayHistoryManager.getMusicTag(music.id)
+                        if (tag == null) add(MusicTag())
+                        else add(tag)
+                    }
+                }
             }
+            else -> null
         }
+
 
         adapter = MusicAdapter(this@PlaylistDetailsActivity, musicList.toCollection(ArrayList()), tagList,
             object: MusicAdapter.OnItemClickListener {

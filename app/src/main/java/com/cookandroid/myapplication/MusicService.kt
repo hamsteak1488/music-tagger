@@ -100,11 +100,8 @@ class MusicService : Service() {
         exoPlayer?.release()
     }
 
-    /** 서비스 시작시 진행되는 초기화 과정 */
-    private fun initPlayer() {
-        /** exoPlayer 초기화 */
-        exoPlayer = ExoPlayer.Builder(applicationContext).build()
 
+    fun loadData() {
         loadPlaytimeHistoryList() { dtoList ->
             if (dtoList != null) {
                 for (dto in dtoList) {
@@ -120,6 +117,12 @@ class MusicService : Service() {
                 PlaylistManager.initTempPlaylist()
             }
         }
+    }
+
+    /** 서비스 시작시 진행되는 초기화 과정 */
+    private fun initPlayer() {
+        /** exoPlayer 초기화 */
+        exoPlayer = ExoPlayer.Builder(applicationContext).build()
 
         /** 이벤트 리스너 지정 */
         exoPlayer!!.addListener(PlayerStateListener())
