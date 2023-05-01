@@ -86,7 +86,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         binding.movePlaylistBtn.visibility = View.INVISIBLE
         binding.removeBtn.visibility = View.INVISIBLE
 
-        binding.moreInfoPD.text = "Total ${PlaylistManager.playlists[exploringListPos].musicList.size} Songs.\n\n"
+        //binding.moreInfoPD.text = "Total ${PlaylistManager.playlists[exploringListPos].musicList.size} Songs.\n\n"
         if(PlaylistManager.playlists[exploringListPos].musicList.size > 0){
             mService.getMusicMetadataList(PlaylistManager.playlists[exploringListPos].musicList) { musicList ->
                 if (musicList == null) return@getMusicMetadataList

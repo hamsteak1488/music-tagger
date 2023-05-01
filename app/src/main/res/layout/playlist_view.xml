@@ -2,13 +2,11 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="65dp"
+    android:background="@drawable/border_horizon"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="15dp"
-    app:strokeWidth="2dp"
-    app:strokeColor="@color/customBlue"
     android:layout_margin="10dp">
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <ImageView
         android:id="@+id/playlistImg"
         android:layout_width="60dp"
         android:layout_height="55dp"

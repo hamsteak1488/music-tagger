@@ -7,7 +7,7 @@
     android:layout_marginBottom="5dp"
     android:padding="2dp">
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <ImageView
         android:id="@+id/imageMV"
         android:layout_width="64dp"
         android:layout_height="64dp"
@@ -16,11 +16,11 @@
         android:layout_marginTop="8dp"
         android:src="@drawable/ic_baseline_music_video_24"
         app:layout_constraintStart_toEndOf="@+id/checkBox"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/songNameMV"
-        android:layout_width="wrap_content"
+        android:layout_width="160dp"
         android:layout_height="36dp"
         android:layout_marginStart="8dp"
         android:gravity="center_vertical"
@@ -32,13 +32,12 @@
 
     <TextView
         android:id="@+id/songArtistMV"
-        android:layout_width="75dp"
+        android:layout_width="wrap_content"
         android:layout_height="24dp"
         android:layout_marginTop="8dp"
         android:gravity="center_vertical"
         android:singleLine="true"
         android:text="Song Artist"
-        app:layout_constraintEnd_toEndOf="@+id/songNameMV"
         app:layout_constraintStart_toStartOf="@+id/songNameMV"
         app:layout_constraintTop_toBottomOf="@+id/songNameMV" />
 
@@ -69,12 +68,12 @@
         android:id="@+id/musicTagRV"
         android:layout_width="0dp"
         android:layout_height="24dp"
-        android:layout_marginTop="16dp"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintEnd_toStartOf="@+id/songDuration"
-        app:layout_constraintStart_toEndOf="@+id/songArtistMV"
-        app:layout_constraintBottom_toBottomOf="@+id/songArtistMV" />
+        app:layout_constraintStart_toEndOf="@+id/songNameMV"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <CheckBox
         android:id="@+id/checkBox"
