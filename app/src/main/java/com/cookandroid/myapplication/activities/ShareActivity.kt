@@ -11,6 +11,7 @@ class ShareActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityShareBinding
     private lateinit var adapter: ShareAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShareBinding.inflate(layoutInflater)

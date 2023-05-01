@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.cookandroid.myapplication.MusicService
+import com.cookandroid.myapplication.MusicServiceConnection
 import android.view.animation.AnimationUtils
 import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityLoadingBinding
@@ -26,6 +28,14 @@ class Loading : AppCompatActivity() {
 
         //ImageView에 animation 적용하기
         binding.Logo.startAnimation(ROTATION_ANIM)
+        val serviceIntent = Intent(this, MusicService::class.java)
+        MusicServiceConnection.setCallbackFunc() { startLoading() }
+        startService(serviceIntent)
+        bindService(serviceIntent, MusicServiceConnection.getInstance(applicationContext), BIND_AUTO_CREATE)
+
+    }
+
+    fun startLoading() {
         FirebaseApp.initializeApp(this)
         auth = FirebaseAuth.getInstance()
 
@@ -40,11 +50,11 @@ class Loading : AppCompatActivity() {
                     .addOnCompleteListener(this) { login ->
                         if (login.isSuccessful) {
                             val mainIntent = Intent(this, MainActivity::class.java)
-                            mainIntent.putExtra("email", ID)
+                            MusicServiceConnection.musicService!!.email = ID
                             mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             startActivity(mainIntent)
                         }
-                }
+                    }
             }
         } else {
             Intent(this, LoginActivity::class.java).also {

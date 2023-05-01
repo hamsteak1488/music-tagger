@@ -3,11 +3,10 @@ package com.cookandroid.myapplication
 import android.util.Log
 import com.google.gson.JsonObject
 import com.tftf.util.MusicTag
+import com.tftf.util.MusicTagger
 import com.tftf.util.PlayHistory
 
 object PlayHistoryManager {
-
-    // todo : 특정 태그들만 선별해서 서버에 추천리스트 요청
 
     private var musicPlayHistory = HashMap<Int, PlayHistory>()
 
@@ -27,7 +26,10 @@ object PlayHistoryManager {
 
 
     fun getMusicTag(id:Int) : MusicTag? {
-        return musicPlayHistory[id]?.musicTag
+        return when (musicPlayHistory.containsKey(id)) {
+            true -> MusicTagger.getMusicTag(musicPlayHistory[id])
+            false -> null
+        }
     }
 
 

@@ -27,11 +27,16 @@ class PlaylistDetailsActivity : AppCompatActivity() {
 
     private var rvLastScrollPos:Int = 0
 
+    private var operationOrdinal:Int = -1
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlaylistDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        operationOrdinal = intent.getIntExtra("operation", -1)
+
 
         binding.playlistNamePD.text = PlaylistManager.playlists[exploringListPos].name
 
@@ -50,7 +55,6 @@ class PlaylistDetailsActivity : AppCompatActivity() {
             finish()
         }
 
-        // todo: movePlaylistBtn 클릭 리스너 구현 필요
         binding.movePlaylistBtn.setOnClickListener {
             selectedItemList.sort()
             startActivity(Intent(this@PlaylistDetailsActivity, ListOfPlaylistActivity::class.java).apply {
@@ -60,11 +64,22 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         }
 
         binding.removeBtn.setOnClickListener {
-            val musicList = PlaylistManager.playlists[exploringListPos].musicList
-            selectedItemList.forEach { pos ->
-                musicList.removeAt(pos)
+            val exploringMusicList = PlaylistManager.playlists[exploringListPos].musicList
+            val selectedMusicIDList = java.util.ArrayList<Int>().apply {
+                selectedItemList.forEach {
+                    add(exploringMusicList[it])
+                }
             }
+            selectedMusicIDList.forEach {
+                exploringMusicList.remove(it)
+                if (mService.currentListPos == exploringListPos && exploringMusicList[mService.currentMusicPos] == it) {
+                    mService.currentListPos = -1
+                    mService.currentMusicPos = -1
+                }
+            }
+
             initView()
+            MusicServiceConnection.musicService!!.savePlaylistManager {  }
         }
     }
 
@@ -105,13 +120,21 @@ class PlaylistDetailsActivity : AppCompatActivity() {
     }
 
     private fun initMusicAdapter(musicList:List<Music>) {
-        val tagList = ArrayList<MusicTag>().apply {
-            musicList.forEach { music ->
-                val tag = PlayHistoryManager.getMusicTag(music.id)
-                if (tag == null) add(MusicTag())
-                else add(tag)
+
+        val tagList = when (operationOrdinal) {
+            ActivityOperation.PLAYLIST_DETAILS_PERSONAL_TAG.ordinal -> {
+                ArrayList<MusicTag>().apply {
+
+                    musicList.forEach { music ->
+                        val tag = PlayHistoryManager.getMusicTag(music.id)
+                        if (tag == null) add(MusicTag())
+                        else add(tag)
+                    }
+                }
             }
+            else -> null
         }
+
 
         adapter = MusicAdapter(this@PlaylistDetailsActivity, musicList.toCollection(ArrayList()), tagList,
             object: MusicAdapter.OnItemClickListener {
@@ -137,7 +160,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
                                 1 -> {
                                     PlaylistManager.playlists[exploringListPos].musicList.removeAt(pos)
                                     initView()
-                                    MusicServiceConnection.musicService!!.savePlaylistManager("1234@naver.com") { }
+                                    MusicServiceConnection.musicService!!.savePlaylistManager() { }
                                 }
                             }
                         }

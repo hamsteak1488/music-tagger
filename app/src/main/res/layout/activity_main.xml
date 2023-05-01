@@ -92,7 +92,7 @@
                     android:layout_marginBottom="20dp"
                     android:orientation="horizontal"
                     android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
-                    android:scrollbars="vertical"
+                    android:scrollbars="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"

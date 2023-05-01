@@ -2,6 +2,7 @@ package com.cookandroid.myapplication
 
 import com.google.gson.Gson
 import com.google.gson.JsonArray
+import com.tftf.util.Playlist
 import com.tftf.util.PlaylistManagerDTO
 
 object PlaylistManager {
@@ -13,7 +14,19 @@ object PlaylistManager {
 
 
     init {
-        playlists.add(Playlist("tempPlaylist", ArrayList()))
+        initTempPlaylist()
+    }
+
+    fun initTempPlaylist() {
+        if (playlists.size == 0) {
+            playlists.add(Playlist("tempPlaylist", ArrayList()))
+        }
+        else if (playlists[0].name.compareTo("tempPlaylist") != 0) {
+            playlists.add(0, Playlist("tempPlaylist", ArrayList()))
+        }
+        else {
+            playlists[0].musicList.clear()
+        }
     }
 
     fun toDto(email:String) : PlaylistManagerDTO {

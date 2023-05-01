@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.databinding.PlaylistViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.tftf.util.Playlist
 
 class PlaylistViewAdapter(
     private val context: Context, private var playlists: ArrayList<Playlist>,
@@ -40,8 +41,17 @@ class PlaylistViewAdapter(
             builder.setTitle(playlists[position].name)
                 .setMessage("delete playlist?")
                 .setPositiveButton("Yes") { dialog, _ ->
-                    PlaylistManager.playlists.removeAt(position)
-                    MusicServiceConnection.musicService!!.savePlaylistManager(MusicServiceConnection.musicService!!.email) { }
+                    if (position == 0) {
+                        PlaylistManager.playlists[position].musicList.clear()
+                    }
+                    else {
+                        PlaylistManager.playlists.removeAt(position)
+                    }
+                    if (MusicServiceConnection.musicService!!.currentListPos == position) {
+                        MusicServiceConnection.musicService!!.currentListPos = -1
+                        MusicServiceConnection.musicService!!.currentMusicPos = -1
+                    }
+                    MusicServiceConnection.musicService!!.savePlaylistManager() { }
                     refreshPlaylist()
                     dialog.dismiss()
                 }
@@ -54,9 +64,7 @@ class PlaylistViewAdapter(
             customDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
         }
         holder.root.setOnClickListener{
-            if (listener != null) {
-                listener.onItemClick(it, position)
-            }
+            listener?.onItemClick(it, position)
 
         }
         if(PlaylistManager.playlists[position].musicList.isNotEmpty()){

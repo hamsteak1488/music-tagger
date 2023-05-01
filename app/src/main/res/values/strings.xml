@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">My Application</string>
+    <string name="app_name">Music Tagger</string>
     <string name="start_tv">00:00</string>
     <string name="end_tv">Loading..</string>
     <string name="title_activity_login2">LoginActivity2</string>

@@ -9,7 +9,7 @@ import com.cookandroid.myapplication.PlaylistManager
 import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityShareDetailsBinding
 
-class ShareDetails : AppCompatActivity() {
+class ShareDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityShareDetailsBinding
     private var sharingPlaylistPos: Int = -1
@@ -25,7 +25,7 @@ class ShareDetails : AppCompatActivity() {
         binding.uploadBtnSD.setOnClickListener{
 //            TODO(공유 리스트 서버에 전송, ShareActivity로 이동)
             val description = binding.editDescriptionSD.text.toString()
-            startActivity(Intent(this@ShareDetails, ShareActivity::class.java))
+            startActivity(Intent(this@ShareDetailsActivity, ShareActivity::class.java))
         }
         binding.cancelBtnSD.setOnClickListener { finish() }
 
