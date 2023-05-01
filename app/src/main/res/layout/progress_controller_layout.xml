@@ -5,13 +5,13 @@
     android:id="@+id/controller_layout"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/black">
 
     <com.google.android.exoplayer2.ui.DefaultTimeBar
         android:id="@id/exo_progress"
         android:layout_width="0dp"
         android:layout_height="36dp"
-        android:background="@color/grey"
+        android:background="@color/black"
         app:layout_constraintEnd_toStartOf="@id/exo_duration"
         app:layout_constraintStart_toEndOf="@id/exo_position"
         app:layout_constraintTop_toTopOf="parent" />

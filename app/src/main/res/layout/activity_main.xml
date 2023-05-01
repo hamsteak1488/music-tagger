@@ -25,14 +25,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:orientation="horizontal"
-                android:background="@drawable/border_gray">
+                android:background="@color/black">
                 <!--추천 재생 버튼-->
                 <ImageButton
                     android:id="@+id/recommend_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@color/white"
+                    android:background="@color/black"
                     android:src="@drawable/ic_baseline_shuffle_24"/>
                 <!--플레이리스트 버튼-->
                 <ImageButton
@@ -40,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@color/white"
+                    android:background="@color/black"
                     android:src="@drawable/ic_baseline_view_playlist_24"/>
                 <!--검색 버튼-->
                 <ImageButton
@@ -48,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@color/white"
+                    android:background="@color/black"
                     android:src="@drawable/baseline_search_24"/>
                 <!--공유 버튼-->
                 <ImageButton
@@ -56,7 +56,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@color/white"
+                    android:background="@color/black"
                     android:src="@drawable/baseline_people_alt_24"/>
                 <!--로그아웃 버튼-->
                 <ImageButton
@@ -64,7 +64,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@color/white"
+                    android:background="@color/black"
                     android:src="@drawable/baseline_logout_24"/>
             </LinearLayout>
 
@@ -96,8 +96,7 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/linearLayoutDetails"
-                    android:background="@drawable/btn_grey"/>
+                    app:layout_constraintTop_toBottomOf="@id/linearLayoutDetails" />
             </LinearLayout>
 
 
@@ -120,8 +119,7 @@
                 android:scrollbars="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/linearLayoutDetails"
-                android:background="@drawable/btn_grey"/>
+                app:layout_constraintTop_toBottomOf="@id/linearLayoutDetails" />
 
         </LinearLayout>
 
@@ -133,7 +131,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
-        android:padding="10dp"
+        android:background="@drawable/border_top"
+        android:padding="20dp"
         app:controller_layout_id="@layout/controller_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

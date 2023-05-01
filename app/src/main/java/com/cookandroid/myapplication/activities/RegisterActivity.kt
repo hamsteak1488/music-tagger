@@ -96,8 +96,7 @@ class RegisterActivity : AppCompatActivity() {
         }
         ///버튼 초기 상태 = 이용불가, 회색
         binding.registerSubmitBtn.isEnabled = false
-        binding.registerSubmitBtn.backgroundTintList =
-            ContextCompat.getColorStateList(this, R.color.grey)
+        binding.registerSubmitBtn.setBackgroundResource(R.drawable.btn_grey)
 
 ///레지스터 버튼 제어
 

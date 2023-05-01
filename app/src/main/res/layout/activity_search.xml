@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_margin="5dp"
-            android:backgroundTint="?colorOnPrimary"
+            android:background="@color/black"
             android:contentDescription="Go Back"
             android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
             app:tint="@color/black" />

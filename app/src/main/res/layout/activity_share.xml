@@ -22,21 +22,20 @@
             android:id="@+id/backBtnSA"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
-            android:backgroundTint="@android:color/transparent"
-            android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
-            app:tint="@color/white"
-            tools:ignore="SpeakableTextPresentCheck" />
+            android:background="@color/black"
+            android:src="@drawable/ic_baseline_arrow_back_ios_new_24"/>
 
         <TextView
-            android:layout_width="306dp"
-            android:layout_height="match_parent"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_marginRight="50dp"
+            android:layout_marginStart="55dp"
             android:text="Share Playlist"
             android:textColor="@color/white"
-            android:textSize="25dp"
+            android:textSize="30dp"
             android:textStyle="bold" />
     </LinearLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/sharelistRV"
@@ -48,8 +47,7 @@
         android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
         android:scrollbars="vertical"
         android:paddingBottom="40dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/btn_grey"/>
+        android:layout_marginTop="10dp"/>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/uploadShareBtn"
@@ -66,5 +64,20 @@
         constraintVertical_bias="0.9"
         app:strokeWidth="2dp"
         app:strokeColor="@color/customBlue"/>
+
+
+    <com.google.android.exoplayer2.ui.PlayerControlView
+        android:id="@+id/exoControlView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        app:controller_layout_id="@layout/controller_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:show_timeout="0"
+        app:use_controller="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
