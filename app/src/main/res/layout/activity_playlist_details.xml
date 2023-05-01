@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.PlaylistDetailsActivity">
+    tools:context=".activities.PlaylistDetailsActivity"
+    android:background="@color/black">
 
     <ImageButton
         android:id="@+id/backBtnPD"
@@ -47,7 +48,8 @@
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/playlistImgPD"
             android:layout_width="250dp"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@drawable/btn_grey"/>
 
         <TextView
             android:id="@+id/moreInfoPD"
@@ -71,7 +73,8 @@
         app:layout_constraintBottom_toTopOf="@+id/addBtnPD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearLayoutDetails" />
+        app:layout_constraintTop_toBottomOf="@id/linearLayoutDetails"
+        android:background="@drawable/btn_grey"/>
 
     <!--for buttons-->
 

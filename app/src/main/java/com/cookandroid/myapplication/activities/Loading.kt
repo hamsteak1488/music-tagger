@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.animation.AnimationUtils
+import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityLoadingBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -19,6 +21,11 @@ class Loading : AppCompatActivity() {
         binding = ActivityLoadingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        val ROTATION_ANIM = AnimationUtils.loadAnimation(this, R.anim.loading_anim)
+
+        //ImageView에 animation 적용하기
+        binding.Logo.startAnimation(ROTATION_ANIM)
         FirebaseApp.initializeApp(this)
         auth = FirebaseAuth.getInstance()
 
