@@ -3,6 +3,7 @@ package com.cookandroid.myapplication
 import android.util.Log
 import com.google.gson.JsonObject
 import com.tftf.util.MusicTag
+import com.tftf.util.MusicTagger
 import com.tftf.util.PlayHistory
 
 object PlayHistoryManager {
@@ -27,7 +28,7 @@ object PlayHistoryManager {
 
 
     fun getMusicTag(id:Int) : MusicTag? {
-        return musicPlayHistory[id]?.musicTag
+        return MusicTagger.getMusicTag(musicPlayHistory[id])
     }
 
 

@@ -17,6 +17,7 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
 import com.google.gson.JsonObject
 import com.tftf.util.Music
+import com.tftf.util.Playlist
 import com.tftf.util.PlaylistManagerDTO
 import com.tftf.util.PlaytimeHistoryDTO
 import com.tftf.util.Surroundings
@@ -29,6 +30,7 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 import java.lang.reflect.Type
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MusicService : Service() {
@@ -50,9 +52,6 @@ class MusicService : Service() {
     /** 현재 재생중인 음악 플레이리스트 인덱스 */
     var currentListPos:Int = -1
 
-    /** 현재 재생중인 음악 메타데이터 정보 */
-    // lateinit var currentMusic:Music
-
     var currentMusicPos:Int = -1
 
     /** 음악 청취 기록을 위한 음악 재생시작 시간 정보 */
@@ -63,7 +62,7 @@ class MusicService : Service() {
     }
     private var mediaItemChangeListenerForPlayMusicActivity : OnMediaItemChangeListener? = null
 
-    lateinit var email:String
+    var email:String = ""
 
     /** MusicTagger의 서버 baseUrl */
     private val baseUrlStr = "http://10.0.2.2:8080/"
@@ -78,7 +77,7 @@ class MusicService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        email = intent!!.getStringExtra("email")!!
+        //todo:email = intent!!.getStringExtra("email")!!
         initPlayer()
         return super.onStartCommand(intent, flags, startId)
     }
@@ -106,7 +105,7 @@ class MusicService : Service() {
         /** exoPlayer 초기화 */
         exoPlayer = ExoPlayer.Builder(applicationContext).build()
 
-        loadPlaytimeHistoryList(email) { dtoList ->
+        loadPlaytimeHistoryList() { dtoList ->
             if (dtoList != null) {
                 for (dto in dtoList) {
                     PlayHistoryManager.importFromJson(dto.musicId, dto.historyJO)
@@ -114,9 +113,11 @@ class MusicService : Service() {
             }
         }
 
-        loadPlaylistManager(email) {
+        loadPlaylistManager() {
             if (it != null) {
                 PlaylistManager.set(it)
+
+                PlaylistManager.initTempPlaylist()
             }
         }
 
@@ -147,6 +148,8 @@ class MusicService : Service() {
     inner class PlayerStateListener : Player.Listener {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             super.onIsPlayingChanged(isPlaying)
+
+            if (currentListPos == -1 || currentMusicPos == -1) return
 
             /** 재생이 시작될 때 */
             if (isPlaying) {
@@ -300,6 +303,9 @@ class MusicService : Service() {
         fun getPersonalizedList(@Query("email") email: String,
                                 @Body surroundings: Surroundings,
                                 @Query("listSize") listSize: Int) : Call<List<Int>>
+
+        @POST("/recommend/theme")
+        fun getThemeList(@Body surroundings: Surroundings, @Query("listSize") listSize:Int) : Call<List<Playlist>>
     }
 
     /** 호출 시 id를 통해 메타데이터를 서버에 요청, response가 오면 호출될 함수 operation을 인자로 넘겨주어야 함 */
@@ -390,7 +396,7 @@ class MusicService : Service() {
         })
     }
 
-    fun loadPlaytimeHistory(email: String, musicId: Int, operation:(PlaytimeHistoryDTO?)->Unit) {
+    fun loadPlaytimeHistory(musicId: Int, operation:(PlaytimeHistoryDTO?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
             .addConverterFactory(NullOnEmptyConverterFactory())
@@ -411,7 +417,7 @@ class MusicService : Service() {
         })
     }
 
-    fun loadPlaytimeHistoryList(email:String, operation:(List<PlaytimeHistoryDTO>?)->Unit) {
+    fun loadPlaytimeHistoryList(operation:(List<PlaytimeHistoryDTO>?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
             .addConverterFactory(NullOnEmptyConverterFactory())
@@ -455,7 +461,7 @@ class MusicService : Service() {
 
 
 
-    fun loadPlaylistManager(email: String, operation:(PlaylistManagerDTO?)->Unit) {
+    fun loadPlaylistManager(operation:(PlaylistManagerDTO?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
             .addConverterFactory(NullOnEmptyConverterFactory())
@@ -476,7 +482,7 @@ class MusicService : Service() {
         })
     }
 
-    fun savePlaylistManager(email: String, operation:(Boolean?)->Unit) {
+    fun savePlaylistManager(operation:(Boolean?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
             .addConverterFactory(GsonConverterFactory.create())
@@ -498,7 +504,7 @@ class MusicService : Service() {
     }
 
 
-    fun getPersonalizedList(email: String, surroundings: Surroundings, listSize: Int = 20, operation:(List<Int>?)->Unit) {
+    fun getPersonalizedList(surroundings: Surroundings, listSize: Int = 20, operation:(List<Int>?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
             .addConverterFactory(GsonConverterFactory.create())
@@ -517,6 +523,27 @@ class MusicService : Service() {
             }
         })
     }
+
+    fun getThemeList(surroundings: Surroundings, listSize: Int = 20, operation:(List<Playlist>?)->Unit) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrlStr)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(RetrofitAPI::class.java)
+        val callGetMetadata = api.getThemeList(surroundings, listSize)
+        callGetMetadata.enqueue(object:Callback<List<Playlist>> {
+            override fun onResponse(call: Call<List<Playlist>>, response: Response<List<Playlist>>) {
+                Log.d("myTag", "success : ${response.raw()}")
+                val result = response.body()
+                Log.d("myTag", result.toString())
+                operation(response.body())
+            }
+            override fun onFailure(call: Call<List<Playlist>>, t: Throwable) {
+                Log.d("myTag", "failure : $t")
+            }
+        })
+    }
+
 
 
     // 알림창을 띄우기 위해 채널 생성

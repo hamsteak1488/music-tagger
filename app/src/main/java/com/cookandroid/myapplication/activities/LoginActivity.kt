@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.cookandroid.myapplication.MusicServiceConnection
 import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityLoginBinding
 import com.google.firebase.FirebaseApp
@@ -27,15 +28,12 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
 
 
-
         setContentView(binding.root)
 //Auth part
         FirebaseApp.initializeApp(this)
         auth = FirebaseAuth.getInstance()
 
 //자동로그인
-
-
         // id pw 저장
         //구현 : SharedPreferences 앱의 임시 저장소에 id,pw ox(이메일,pw저장), auto(자동로그인)
         /*val pref: SharedPreferences = getSharedPreferences("pref", Activity.MODE_PRIVATE);
@@ -47,19 +45,13 @@ class LoginActivity : AppCompatActivity() {
         val OX = pref.getBoolean("ox",false)
         var AUTO = pref.getBoolean("auto",false)
 
-
         if(OX){
             binding.autoCheckBox.isChecked=true
             binding.userEmail.setText(ID)
-
         }
 
 
-
-
-
 //stream part
-
         //ID란 공백 시 공백 알림 호출
         val emailStream = RxTextView.textChanges(binding.userEmail)
             .skipInitialValue()
@@ -81,7 +73,6 @@ class LoginActivity : AppCompatActivity() {
         }
 
 //Button bindings
-
         //로그인 버튼 -> MainActivity
         binding.loginBtn.setOnClickListener{
             val email = binding.userEmail.text.toString().trim()
@@ -144,9 +135,6 @@ class LoginActivity : AppCompatActivity() {
 
     }
 
-
-
-
     //Alert part
     private fun showTextExistAlert(isNotValid: Boolean, text: String){
         if(text=="Email")
@@ -155,16 +143,13 @@ class LoginActivity : AppCompatActivity() {
             binding.userPW.error = if(isNotValid) "비밀번호를 입력하세요" else null
     }
 
-
-
-
     private fun loginUser(email: String, pw: String) {
 
         auth.signInWithEmailAndPassword(email, pw)
             .addOnCompleteListener(this) { login ->
                 if (login.isSuccessful) {
+                    MusicServiceConnection.musicService!!.email =binding.userEmail.text.toString()
                     Intent(this, MainActivity::class.java).also {
-                        it.putExtra("email", binding.userEmail.text.toString())
                         it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(it)
                     }

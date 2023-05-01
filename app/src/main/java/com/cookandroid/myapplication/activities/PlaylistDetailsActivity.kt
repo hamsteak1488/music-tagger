@@ -50,7 +50,6 @@ class PlaylistDetailsActivity : AppCompatActivity() {
             finish()
         }
 
-        // todo: movePlaylistBtn 클릭 리스너 구현 필요
         binding.movePlaylistBtn.setOnClickListener {
             selectedItemList.sort()
             startActivity(Intent(this@PlaylistDetailsActivity, ListOfPlaylistActivity::class.java).apply {
@@ -60,11 +59,22 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         }
 
         binding.removeBtn.setOnClickListener {
-            val musicList = PlaylistManager.playlists[exploringListPos].musicList
-            selectedItemList.forEach { pos ->
-                musicList.removeAt(pos)
+            val exploringMusicList = PlaylistManager.playlists[exploringListPos].musicList
+            val selectedMusicIDList = java.util.ArrayList<Int>().apply {
+                selectedItemList.forEach {
+                    add(exploringMusicList[it])
+                }
             }
+            selectedMusicIDList.forEach {
+                exploringMusicList.remove(it)
+                if (mService.currentListPos == exploringListPos && exploringMusicList[mService.currentMusicPos] == it) {
+                    mService.currentListPos = -1
+                    mService.currentMusicPos = -1
+                }
+            }
+
             initView()
+            MusicServiceConnection.musicService!!.savePlaylistManager {  }
         }
     }
 
@@ -137,7 +147,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
                                 1 -> {
                                     PlaylistManager.playlists[exploringListPos].musicList.removeAt(pos)
                                     initView()
-                                    MusicServiceConnection.musicService!!.savePlaylistManager("1234@naver.com") { }
+                                    MusicServiceConnection.musicService!!.savePlaylistManager() { }
                                 }
                             }
                         }

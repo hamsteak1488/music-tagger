@@ -12,7 +12,6 @@ import com.tftf.util.Music
 
 class SearchActivity : AppCompatActivity() {
 
-    // TODO: 음악 클릭 시, 플레이리스트들 나열할 액티비티 생성하고 동작 구현할 것
     private lateinit var binding: ActivitySearchBinding
     private lateinit var adapter: MusicAdapter
     private lateinit var mService:MusicService
@@ -46,7 +45,7 @@ class SearchActivity : AppCompatActivity() {
                                 ActivityOperation.SEARCH_ADD.ordinal -> {
                                     PlaylistManager.playlists[PlaylistManager.exploringListPos].musicList.add(it[pos].id)
                                     finish()
-                                    mService.savePlaylistManager(mService.email) { }
+                                    mService.savePlaylistManager() { }
                                 }
                                 ActivityOperation.SEARCH_EXPLORE.ordinal -> {
                                     val playMusicIntent = Intent(this@SearchActivity, PlayMusicActivity::class.java)

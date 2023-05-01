@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.databinding.ShareViewBinding
+import com.tftf.util.Playlist
 
 class ShareAdapter(private val context: Context, private var sharedlists: ArrayList<Playlist>): RecyclerView.Adapter<ShareAdapter.SharedlistHolder>() {
 

@@ -13,23 +13,23 @@ import com.cookandroid.myapplication.ControlViewManager.displayControlView
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.tftf.util.Music
+import com.tftf.util.Playlist
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
-    private lateinit var adapterTheme: ThemeViewAdapter
+    private lateinit var themeAdapter: ThemeViewAdapter
     private lateinit var adapterMain: MusicAdapter
+
+
+    companion object {
+        var instance: MainActivity? = null
+        fun applicationContext(): Context { return instance!!.applicationContext}
+    }
 
     init{
         instance = this
-    }
-
-    companion object{
-        var allThemePlaylist = ArrayList<Playlist>() //모든 테마 리스트
-        var mainPlaylist = ArrayList<Music>() //메인 리스트(TOP 20)
-        var instance: MainActivity? = null
-        fun applicationContext(): Context { return instance!!.applicationContext}
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,22 +37,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Service 연결
-        if (MusicServiceConnection.musicService == null) {
-            val serviceIntent = Intent(this, MusicService::class.java)
-            serviceIntent.putExtra("email", intent.getStringExtra("email")!!)
-            startService(serviceIntent)
-            bindService(serviceIntent,
-                MusicServiceConnection.getInstance(applicationContext), BIND_AUTO_CREATE)
-        }
+
 
         ///랜덤, 플레이리스트, 검색 버튼
         binding.recommendBtn.setOnClickListener{
             SurroundingsManager.getCurrentSurroundings { surroundings ->
                 val mService = MusicServiceConnection.musicService!!
-                mService.getPersonalizedList(mService.email, surroundings, 20) { musicList ->
+                mService.getPersonalizedList(surroundings, 20) { musicList ->
                     if (musicList == null) return@getPersonalizedList
-                    PlaylistManager.playlists[0] = Playlist("playlist from server",
+                    PlaylistManager.playlists[0] = Playlist("tempPlaylist",
                         musicList as ArrayList<Int>
                     )
                     mService.reloadPlayer(0, 0)
@@ -88,18 +81,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+
         //테마 RV 구현
-        allThemePlaylist = getThemeLists()
+        //allThemePlaylist = getThemeLists()
 
         binding.themeListRV.setItemViewCacheSize(5)
         binding.themeListRV.setHasFixedSize(true)
         binding.themeListRV.layoutManager = LinearLayoutManager(this@MainActivity)
 
-        adapterTheme = ThemeViewAdapter(this, themelistList = allThemePlaylist)
-        binding.themeListRV.adapter = adapterTheme
+        //themeAdapter = ThemeViewAdapter(this, themelistList = allThemePlaylist)
+        //binding.themeListRV.adapter = themeAdapter
 
         //메인 RV 구현
-        mainPlaylist = getMainList()
+        // mainPlaylist = getMainList()
 
         binding.mainRV.setItemViewCacheSize(5)
         binding.mainRV.setHasFixedSize(true)
@@ -117,6 +111,7 @@ class MainActivity : AppCompatActivity() {
 
     //테마 리스트 받아오기
     private fun getThemeLists(): ArrayList<Playlist> {
+        //return MusicServiceConnection!!
         return ArrayList<Playlist>()
     }
 

@@ -11,6 +11,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.activities.MainActivity
 import com.cookandroid.myapplication.activities.ThemePlaylistActivity
 import com.cookandroid.myapplication.databinding.ThemeViewBinding
+import com.tftf.util.Playlist
 
 class ThemeViewAdapter (private val context: Context, private var themelistList: ArrayList<Playlist>)
     : RecyclerView.Adapter<ThemeViewAdapter.MyHolder>(){

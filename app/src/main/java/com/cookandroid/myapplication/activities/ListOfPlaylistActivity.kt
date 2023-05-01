@@ -14,6 +14,7 @@ import com.cookandroid.myapplication.databinding.ActivityListOfPlaylistBinding
 import com.cookandroid.myapplication.databinding.AddPlaylistBinding
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.tftf.util.Playlist
 import java.util.*
 
 class ListOfPlaylistActivity : AppCompatActivity() {
@@ -84,7 +85,7 @@ class ListOfPlaylistActivity : AppCompatActivity() {
         else {
             PlaylistManager.playlists.add(Playlist(name, ArrayList()))
             val mService = MusicServiceConnection.musicService!!
-            mService.savePlaylistManager(mService.email) { }
+            mService.savePlaylistManager() { }
             adapter.refreshPlaylist()
         }
     }
@@ -115,6 +116,7 @@ class ListOfPlaylistActivity : AppCompatActivity() {
                                     PlaylistManager.playlists[pos].musicList.add(it)
                                     exploringMusicList.remove(it)
                                 }
+                                MusicServiceConnection.musicService!!.savePlaylistManager {  }
                                 finish()
                             }
                         }
@@ -123,7 +125,7 @@ class ListOfPlaylistActivity : AppCompatActivity() {
                 object: PlaylistViewAdapter.OnItemClickListener{
                     override fun onItemClick(view: View, pos: Int) {
 //                        TODO ShareActivity에서 넘어왔을 경우 pos를 넘기고 SharedDetailsActivity로 이동
-                        val intent = Intent(this@ListOfPlaylistActivity, ShareDetails::class.java)
+                        val intent = Intent(this@ListOfPlaylistActivity, ShareDetailsActivity::class.java)
                         intent.putExtra("index", pos)
                         startActivity(intent)
                     }

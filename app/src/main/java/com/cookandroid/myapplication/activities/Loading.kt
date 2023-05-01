@@ -5,6 +5,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.cookandroid.myapplication.MusicService
+import com.cookandroid.myapplication.MusicServiceConnection
 import com.cookandroid.myapplication.databinding.ActivityLoadingBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -19,6 +21,14 @@ class Loading : AppCompatActivity() {
         binding = ActivityLoadingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val serviceIntent = Intent(this, MusicService::class.java)
+        MusicServiceConnection.setCallbackFunc() { startLoading() }
+        startService(serviceIntent)
+        bindService(serviceIntent, MusicServiceConnection.getInstance(applicationContext), BIND_AUTO_CREATE)
+
+    }
+
+    fun startLoading() {
         FirebaseApp.initializeApp(this)
         auth = FirebaseAuth.getInstance()
 
@@ -33,11 +43,11 @@ class Loading : AppCompatActivity() {
                     .addOnCompleteListener(this) { login ->
                         if (login.isSuccessful) {
                             val mainIntent = Intent(this, MainActivity::class.java)
-                            mainIntent.putExtra("email", ID)
+                            MusicServiceConnection.musicService!!.email = ID
                             mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             startActivity(mainIntent)
                         }
-                }
+                    }
             }
         } else {
             Intent(this, LoginActivity::class.java).also {

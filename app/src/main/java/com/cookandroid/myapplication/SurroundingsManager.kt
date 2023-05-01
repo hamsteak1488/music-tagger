@@ -77,8 +77,7 @@ object SurroundingsManager {
     }
 
     private fun currentWeatherCall(operation:(String)->Unit){
-        if (requestQueue == null) requestQueue = Volley.newRequestQueue(
-            MainActivity.applicationContext())
+        if (requestQueue == null) requestQueue = Volley.newRequestQueue(MainActivity.applicationContext())
         val url = "https://api.openweathermap.org/data/2.5/weather?q=Incheon&appid=ef84cf6df878d02ffc040001775a3d1f"
         //I18 국제화
         val request: StringRequest =
