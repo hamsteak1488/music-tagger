@@ -39,26 +39,26 @@
             android:maxLength="40"
             android:background="@color/white"/>
     </com.google.android.material.textfield.TextInputLayout>
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/loginBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
         android:layout_marginHorizontal="85dp"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/btn_login_ripple"
         android:text="Login"
-        android:textSize="24dp"
         android:textColor="@color/white"
-        android:backgroundTint="@color/deepBlue"/>
-    <Button
+        android:textSize="24dp" />
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/registerBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginHorizontal="85dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_register_blue"
         android:text="Register"
-        android:textSize="24dp"
         android:textColor="@color/white"
-        android:backgroundTint="#273A8E"/>
+        android:textSize="24dp" />
 
     <CheckBox
         android:id="@+id/autoCheckBox"
