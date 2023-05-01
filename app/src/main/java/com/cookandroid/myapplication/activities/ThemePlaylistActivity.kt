@@ -35,9 +35,12 @@ class ThemePlaylistActivity : AppCompatActivity() {
     override fun onResume(){
         super.onResume()
         binding.playlistNameTP.text = MainActivity.allThemePlaylist[currentThemePos].name
+        /*
         Glide.with(this)
             .load(MainActivity.allThemePlaylist[currentThemePos].artUri)
             .apply(RequestOptions().placeholder(R.drawable.spring).centerCrop())
             .into(binding.playlistImgPD)
+
+         */
     }
 }

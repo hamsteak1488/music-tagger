@@ -1,23 +1,43 @@
 package com.cookandroid.myapplication
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView.OnItemLongClickListener
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.MusicAdapter.MusicHolder
+import com.cookandroid.myapplication.PlaylistManager.exploringListPos
 import com.cookandroid.myapplication.databinding.MusicViewBinding
+import com.google.android.material.color.MaterialColors
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.tftf.util.Music
+import com.tftf.util.MusicTag
 
-class MusicAdapter(private val context: Context, private val musicList: ArrayList<Music>,
-                   private var itemClickListner: OnItemClickListener? = null)
+class MusicAdapter(private val context: Context,
+                   private val musicList: ArrayList<Music>,
+                   private val tagList: ArrayList<MusicTag>? = null,
+                   private val itemClickListener: OnItemClickListener? = null,
+                   private val itemOptionClickListener: OnItemClickListener? = null,
+                   private val itemLongClickListener: OnItemLongClickListener? = null,
+                   private val itemCheckedChangeListener : OnItemCheckedChangeListener? = null,
+                   private val selectionMode:Boolean = false
+)
     : RecyclerView.Adapter<MusicHolder>() {
-    
-    // TODO : Adapter 내에서 searchActivity 동작 설계해볼것
 
     interface OnItemClickListener {
         fun onItemClick(view:View, pos:Int)
+    }
+
+    interface OnItemLongClickListener {
+        fun onItemLongClick(view:View, pos:Int)
+    }
+
+    interface OnItemCheckedChangeListener {
+        fun onItemCheckedChange(isChecked:Boolean, pos:Int)
     }
 
     ///뮤직 뷰 binding
@@ -26,6 +46,9 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
         val artist = binding.songArtistMV
         val image = binding.imageMV
         val duration = binding.songDuration
+        val option = binding.optionMV
+        val rv = binding.musicTagRV
+        val checkbox = binding.checkBox
         val root = binding.root
     }
 
@@ -43,7 +66,8 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
 
         holder.title.text = musicList[pos].title
         holder.artist.text = musicList[pos].artist
-        holder.duration.text = formatDuration(musicList[pos].duration)
+        //holder.duration.text = formatDuration(musicList[pos].duration)
+        holder.duration.text = "holder.duration.text"
 
         //glide = uri로 이미지 적용
         Glide.with(context)
@@ -51,18 +75,31 @@ class MusicAdapter(private val context: Context, private val musicList: ArrayLis
             .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
             .into(holder.image)
 
-        //롱클릭으로 음악 추가 수행
-        holder.root.setOnLongClickListener{
-            return@setOnLongClickListener true
+        if (tagList != null) {
+            holder.rv.adapter = TagAdapter(tagList[pos])
         }
 
         holder.root.setOnClickListener {
-            try {
-                itemClickListner!!.onItemClick(it, pos)
-            } catch (e:NullPointerException) {
-            }
+            itemClickListener?.onItemClick(it, pos)
         }
 
+        holder.option.setOnClickListener {
+            itemOptionClickListener?.onItemClick(it, pos)
+        }
+
+        holder.root.setOnLongClickListener {
+            itemLongClickListener?.onItemLongClick(it, pos)
+            true
+        }
+
+        holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
+            itemCheckedChangeListener?.onItemCheckedChange(isChecked, pos)
+        }
+
+        holder.checkbox.visibility = when (selectionMode) {
+            true ->  View.VISIBLE
+            false -> View.GONE
+        }
 
         /*
         //페이지별 음악 클릭 동작

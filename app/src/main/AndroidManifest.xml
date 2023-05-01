@@ -44,7 +44,7 @@
             android:name=".activities.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.PlaylistDetails"
+            android:name=".activities.PlaylistDetailsActivity"
             android:exported="false" />
         <activity
             android:name=".activities.RegisterActivity"
@@ -61,7 +61,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".activities.PlaylistActivity"
+            android:name=".activities.ListOfPlaylistActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -70,6 +70,7 @@
         <activity
             android:name=".activities.PlayMusicActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             tools:ignore="LockedOrientationActivity">
             <meta-data
                 android:name="android.app.lib_name"

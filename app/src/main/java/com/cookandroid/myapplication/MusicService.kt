@@ -9,16 +9,17 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.cookandroid.myapplication.activities.MainActivity
-import com.cookandroid.myapplication.dto.PlaylistManagerDTO
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.MediaItem.fromUri
 import com.google.android.exoplayer2.ui.PlayerControlView
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
 import com.google.gson.JsonObject
+import com.tftf.util.Music
+import com.tftf.util.PlaylistManagerDTO
+import com.tftf.util.PlaytimeHistoryDTO
+import com.tftf.util.Surroundings
 import okhttp3.ResponseBody
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
@@ -57,8 +58,10 @@ class MusicService : Service() {
     /** 음악 청취 기록을 위한 음악 재생시작 시간 정보 */
     private var musicStartTime:Long = -1
 
-    /** 음악 청취 기록을 관리하는 객체 */
-    private lateinit var playtimeHistory:PlaytimeHistory
+    interface OnMediaItemChangeListener {
+        fun onMediaItemChange()
+    }
+    private var mediaItemChangeListenerForPlayMusicActivity : OnMediaItemChangeListener? = null
 
     lateinit var email:String
 
@@ -102,16 +105,11 @@ class MusicService : Service() {
     private fun initPlayer() {
         /** exoPlayer 초기화 */
         exoPlayer = ExoPlayer.Builder(applicationContext).build()
-        /** 청취기록객체 초기화 */
-        playtimeHistory = PlaytimeHistory()
 
-        loadPlaytimeHistoryList(email) {
-            if (it != null) {
-                val idKeys = it.keySet().iterator()
-                while (idKeys.hasNext()) {
-                    val idKey = idKeys.next()
-                    val tagInfo = it.get(idKey) as JsonObject
-                    playtimeHistory.set(idKey.toInt(), tagInfo)
+        loadPlaytimeHistoryList(email) { dtoList ->
+            if (dtoList != null) {
+                for (dto in dtoList) {
+                    PlayHistoryManager.importFromJson(dto.musicId, dto.historyJO)
                 }
             }
         }
@@ -158,13 +156,6 @@ class MusicService : Service() {
                 musicStartTime = System.currentTimeMillis()
 
                 currentMusicPos = exoPlayer!!.currentMediaItemIndex
-
-                /** currentMediaItemIndex를 통해 현재 재생중인 음악의 인덱스를 얻은 후, id를 통해 메타데이터 받아와서 currentMusic에 저장 */
-                /*
-                getMusicMetadata(PlaylistManager.playlists[currentListPos].musicList[exoPlayer!!.currentMediaItemIndex]) {
-                    currentMusic = it!!;
-                }
-                */
             }
                 
             /** 재생이 멈췄을 때 */
@@ -176,15 +167,36 @@ class MusicService : Service() {
                 /** 재생시작시간 정보를 통해 재생된시간 계산 후 기록 */
                 if (musicStartTime != (-1).toLong()) {
                     val playedTime = System.currentTimeMillis() - musicStartTime
-                    playtimeHistory.addPlaytime(curMusicId, playedTime)
+                    PlayHistoryManager.addPlaytime(curMusicId, playedTime) {
+                        savePlaytimeHistory(PlaytimeHistoryDTO(email, curMusicId, PlayHistoryManager.exportToJson(curMusicId))) { }
+                    }
                     musicStartTime = -1
-                }
-
-                savePlaytimeHistory(email, curMusicId, playtimeHistory.toJson(curMusicId)) {
-
                 }
             }
         }
+
+        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            super.onMediaItemTransition(mediaItem, reason)
+
+            mediaItem?.apply {
+                currentMusicPos = mediaId.toInt()
+            }
+
+            mediaItemChangeListenerForPlayMusicActivity?.onMediaItemChange()
+        }
+    }
+
+    fun setMediaItemChangeListenerForPlayMusicActivity(listener:OnMediaItemChangeListener) {
+        mediaItemChangeListenerForPlayMusicActivity = listener
+    }
+
+    fun removeMediaItemChangeListenerForPlayMusicActivity() {
+        mediaItemChangeListenerForPlayMusicActivity = null
+    }
+
+    fun prepareAndPlay() {
+        exoPlayer!!.prepare()
+        exoPlayer!!.play()
     }
 
     fun setMusicPos(pos:Int) {
@@ -198,31 +210,36 @@ class MusicService : Service() {
             }
         }
         exoPlayer!!.setMediaItems(playListMediaItem!!)
+    }
 
-        /*
-        getMusicMetadata(idList[0]) {
-            currentMusic = it!!
-        }
-        */
+    fun hasCurrentMediaItem() : Boolean {
+        return exoPlayer!!.currentMediaItem != null
     }
 
     /** exoPlayer 플레이리스트 리로드 */
-    fun reloadPlayer() {
+    fun reloadPlaylist() {
         /** 음악 id를 통해 MediaItem 리스트를 생성한 후, exoPlayer의 리스트로 설정 */
         playListMediaItem = ArrayList<MediaItem>().apply {
-            PlaylistManager.playlists[currentListPos].musicList.forEach { music ->
-                this.add(MediaItem.fromUri(baseUrlStr + "media?id=" + music))
+            PlaylistManager.playlists[currentListPos].musicList.forEachIndexed { pos, musicId ->
+                this.add(MediaItem.Builder()
+                    .setUri(baseUrlStr + "media?id=" + musicId)
+                    .setMediaId(pos.toString())
+                    .build())
             }
         }
+    }
+
+    fun reloadPlayer(listPos:Int, musicPos:Int) {
+        currentListPos = listPos
+        reloadPlaylist()
         exoPlayer!!.setMediaItems(playListMediaItem!!)
 
-        //currentMusic = PlaylistManager.playlists[currentListPos].musicList[currentMusicPos]
-
+        currentMusicPos = musicPos
         exoPlayer!!.seekTo(currentMusicPos, C.TIME_UNSET)
     }
 
     /** 플레이어뷰의 플레이어를 exoPlayer로 지정 */
-    fun setPlayerView(view:PlayerControlView) {
+    fun setViewPlayer(view:PlayerControlView) {
         view.player = exoPlayer
     }
 
@@ -255,33 +272,34 @@ class MusicService : Service() {
         @GET("/metadatalist")
         fun getMetadataList(@Query("items") item:List<String>, @Query("name") name:String) : Call<List<Music>>
 
+
         /** id를 통해 ArtImage 요청 */
         @GET("/img")
         fun getArtImg(@Query("id") id:Int) : Call<Array<Byte>>
 
-        /** 태그데이터 삽입 */
-        @POST("/playtimehistory/insert")
-        fun insertPlaytimeHistory(@Query("email") email:String, @Query("musicId") musicId:Int, @Body tagInfo:JsonObject) : Call<String>
-        
-        /** 태그데이터 업데이트 */
-        @POST("/playtimehistory/update")
-        fun updatePlaytimeHistory(@Query("email") email:String, @Query("musicId") musicId:Int, @Body tagInfo:JsonObject) : Call<String>
 
+        /** 태그데이터 저장 */
+        @POST("/playtimehistory/save")
+        fun savePlaytimeHistory(@Body historyDTO: PlaytimeHistoryDTO) : Call<String>
         /** 태그데이터 불러오기 */
         @POST("/playtimehistory/select")
-        fun selectPlaytimeHistory(@Query("email") email:String, @Query("musicId") musicId:Int) : Call<JsonObject>
+        fun selectPlaytimeHistory(@Query("email") email:String, @Query("musicId") musicId:Int) : Call<PlaytimeHistoryDTO>
 
         @POST("/playtimehistory/select")
-        fun selectPlaytimeHistoryList(@Query("email") email: String) : Call<JsonObject>
+        fun selectPlaytimeHistoryList(@Query("email") email: String) : Call<List<PlaytimeHistoryDTO>>
 
-        @POST("/playlist/insert")
-        fun insertPlaylistManager(@Body playlistManagerDTO: PlaylistManagerDTO) : Call<String>
 
-        @POST("/playlist/update")
-        fun updatePlaylistManager(@Body playlistManagerDTO: PlaylistManagerDTO) : Call<String>
+        @POST("/playlist/save")
+        fun savePlaylistManager(@Body playlistManagerDTO: PlaylistManagerDTO) : Call<String>
 
         @POST("/playlist/select")
         fun selectPlaylistManager(@Query("email") email: String) : Call<PlaylistManagerDTO>
+
+
+        @POST("/recommend/personalized")
+        fun getPersonalizedList(@Query("email") email: String,
+                                @Body surroundings: Surroundings,
+                                @Query("listSize") listSize: Int) : Call<List<Int>>
     }
 
     /** 호출 시 id를 통해 메타데이터를 서버에 요청, response가 오면 호출될 함수 operation을 인자로 넘겨주어야 함 */
@@ -372,7 +390,7 @@ class MusicService : Service() {
         })
     }
 
-    fun loadPlaytimeHistory(email: String, musicId: Int, operation:(JsonObject?)->Unit) {
+    fun loadPlaytimeHistory(email: String, musicId: Int, operation:(PlaytimeHistoryDTO?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
             .addConverterFactory(NullOnEmptyConverterFactory())
@@ -381,18 +399,19 @@ class MusicService : Service() {
         val api = retrofit.create(RetrofitAPI::class.java)
 
         val callGetMetadata = api.selectPlaytimeHistory(email, musicId)
-        callGetMetadata.enqueue(object:Callback<JsonObject> {
-            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+        callGetMetadata.enqueue(object:Callback<PlaytimeHistoryDTO> {
+            override fun onResponse(call: Call<PlaytimeHistoryDTO>, response: Response<PlaytimeHistoryDTO>) {
                 Log.d("myTag", "success : ${response.raw()}")
                 Log.d("myTag", response.body().toString())
                 operation(response.body())
             }
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+            override fun onFailure(call: Call<PlaytimeHistoryDTO>, t: Throwable) {
                 Log.d("myTag", "failure : $t")
             }
         })
     }
-    fun loadPlaytimeHistoryList(email:String, operation:(JsonObject?)->Unit) {
+
+    fun loadPlaytimeHistoryList(email:String, operation:(List<PlaytimeHistoryDTO>?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
             .addConverterFactory(NullOnEmptyConverterFactory())
@@ -401,55 +420,39 @@ class MusicService : Service() {
         val api = retrofit.create(RetrofitAPI::class.java)
 
         val callGetMetadata = api.selectPlaytimeHistoryList(email)
-        callGetMetadata.enqueue(object:Callback<JsonObject> {
-            override fun onResponse(call: Call<JsonObject>, response: Response<JsonObject>) {
+        callGetMetadata.enqueue(object:Callback<List<PlaytimeHistoryDTO>> {
+            override fun onResponse(call: Call<List<PlaytimeHistoryDTO>>, response: Response<List<PlaytimeHistoryDTO>>) {
                 Log.d("myTag", "success : ${response.raw()}")
                 Log.d("myTag", response.body().toString())
                 operation(response.body())
             }
-            override fun onFailure(call: Call<JsonObject>, t: Throwable) {
+            override fun onFailure(call: Call<List<PlaytimeHistoryDTO>>, t: Throwable) {
                 Log.d("myTag", "failure : $t")
             }
         })
     }
-    fun savePlaytimeHistory(email: String, musicId: Int, tagInfo: JsonObject, operation:(Boolean?)->Unit) {
+
+    fun savePlaytimeHistory(dto:PlaytimeHistoryDTO, operation:(Boolean?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
 
-        loadPlaytimeHistory(email, musicId) {
-            if (it != null) {
-                val callGetMetadata = api.updatePlaytimeHistory(email, musicId, tagInfo)
-                callGetMetadata.enqueue(object:Callback<String> {
-                    override fun onResponse(call: Call<String>, response: Response<String>) {
-                        Log.d("myTag", "success : ${response.raw()}")
-                        val result = response.body()
-                        Log.d("myTag", result.toString())
-                        operation(true)
-                    }
-                    override fun onFailure(call: Call<String>, t: Throwable) {
-                        Log.d("myTag", "failure : $t")
-                    }
-                })
+        val callGetMetadata = api.savePlaytimeHistory(dto)
+        callGetMetadata.enqueue(object:Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.d("myTag", "success : ${response.raw()}")
+                val result = response.body()
+                Log.d("myTag", result.toString())
+                operation(true)
             }
-            else {
-                val callGetMetadata = api.insertPlaytimeHistory(email, musicId, tagInfo)
-                callGetMetadata.enqueue(object:Callback<String> {
-                    override fun onResponse(call: Call<String>, response: Response<String>) {
-                        Log.d("myTag", "success : ${response.raw()}")
-                        val result = response.body()
-                        Log.d("myTag", result.toString())
-                        operation(false)
-                    }
-                    override fun onFailure(call: Call<String>, t: Throwable) {
-                        Log.d("myTag", "failure : $t")
-                    }
-                })
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.d("myTag", "failure : $t")
             }
-        }
+        })
     }
+
 
 
     fun loadPlaylistManager(email: String, operation:(PlaylistManagerDTO?)->Unit) {
@@ -472,6 +475,7 @@ class MusicService : Service() {
             }
         })
     }
+
     fun savePlaylistManager(email: String, operation:(Boolean?)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrlStr)
@@ -479,26 +483,39 @@ class MusicService : Service() {
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
 
-        loadPlaylistManager(email) {
-            val callGetMetadata : Call<String>
-            if (it != null) {
-                callGetMetadata = api.updatePlaylistManager(PlaylistManager.toDto(email))
+        val callGetMetadata = api.savePlaylistManager(PlaylistManager.toDto(email))
+        callGetMetadata.enqueue(object:Callback<String> {
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                Log.d("myTag", "success : ${response.raw()}")
+                val result = response.body()
+                Log.d("myTag", result.toString())
+                operation(true)
             }
-            else {
-                callGetMetadata = api.insertPlaylistManager(PlaylistManager.toDto(email))
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.d("myTag", "failure : $t")
             }
-            callGetMetadata.enqueue(object:Callback<String> {
-                override fun onResponse(call: Call<String>, response: Response<String>) {
-                    Log.d("myTag", "success : ${response.raw()}")
-                    val result = response.body()
-                    Log.d("myTag", result.toString())
-                    operation(true)
-                }
-                override fun onFailure(call: Call<String>, t: Throwable) {
-                    Log.d("myTag", "failure : $t")
-                }
-            })
-        }
+        })
+    }
+
+
+    fun getPersonalizedList(email: String, surroundings: Surroundings, listSize: Int = 20, operation:(List<Int>?)->Unit) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrlStr)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(RetrofitAPI::class.java)
+        val callGetMetadata = api.getPersonalizedList(email, surroundings, listSize)
+        callGetMetadata.enqueue(object:Callback<List<Int>> {
+            override fun onResponse(call: Call<List<Int>>, response: Response<List<Int>>) {
+                Log.d("myTag", "success : ${response.raw()}")
+                val result = response.body()
+                Log.d("myTag", result.toString())
+                operation(response.body())
+            }
+            override fun onFailure(call: Call<List<Int>>, t: Throwable) {
+                Log.d("myTag", "failure : $t")
+            }
+        })
     }
 
 

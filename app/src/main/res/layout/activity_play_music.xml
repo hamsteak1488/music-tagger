@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:gravity="center"
     android:animateLayoutChanges="true"
-    tools:context=".PlayMusicActivity">
+    tools:context=".activities.PlayMusicActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -113,7 +113,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:padding="10dp"
-        app:controller_layout_id="@layout/controller_layout"
+        app:controller_layout_id="@layout/progress_controller_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

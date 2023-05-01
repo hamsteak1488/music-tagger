@@ -48,4 +48,18 @@
         android:paddingBottom="50dp"
         android:layout_marginTop="10dp"/>
 
+    <com.google.android.exoplayer2.ui.PlayerControlView
+        android:id="@+id/exoControlView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        app:controller_layout_id="@layout/controller_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:show_timeout="0"
+        app:use_controller="true" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

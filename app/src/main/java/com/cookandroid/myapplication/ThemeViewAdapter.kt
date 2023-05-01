@@ -33,11 +33,13 @@ class ThemeViewAdapter (private val context: Context, private var themelistList:
             intent.putExtra("index", position)
             ContextCompat.startActivity(context, intent, null)
         }
+        /*
         Glide.with(context)
-            .load(MainActivity.allThemePlaylist[position].artUri)
+            .load(MainActivity.allThemePlaylist[position].musicList)
             .apply(RequestOptions().placeholder(R.drawable.spring).centerCrop())
             .into(holder.image)
 
+        */
     }
 
     override fun getItemCount(): Int {
