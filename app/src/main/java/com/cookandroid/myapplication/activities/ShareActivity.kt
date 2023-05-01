@@ -20,7 +20,7 @@ class ShareActivity : AppCompatActivity() {
         binding.sharelistRV.setItemViewCacheSize(13)
         binding.sharelistRV.layoutManager = LinearLayoutManager(this)
         binding.uploadShareBtn.setOnClickListener{
-            val intent = Intent(this@ShareActivity, PlaylistActivity::class.java)
+            val intent = Intent(this@ShareActivity, ListOfPlaylistActivity::class.java)
             intent.putExtra("isSharing", true)
             startActivity(intent) }
     }

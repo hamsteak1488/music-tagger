@@ -14,10 +14,9 @@
         android:layout_height="100dp"
         android:layout_margin="3dp"
         android:src="@drawable/ic_baseline_music_video_24"
-        app:layout_constraintStart_toStartof="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:ignore="MissingConstraints" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/playlistNameSV"

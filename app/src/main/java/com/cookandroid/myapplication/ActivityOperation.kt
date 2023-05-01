@@ -5,5 +5,6 @@ enum class ActivityOperation {
     SEARCH_ADD,
 
     LIST_OF_PLAYLIST_EXPLORE,
-    LIST_OF_PLAYLIST_MOVE
+    LIST_OF_PLAYLIST_MOVE,
+    LIST_OF_PLAYLIST_SHARE
 }
