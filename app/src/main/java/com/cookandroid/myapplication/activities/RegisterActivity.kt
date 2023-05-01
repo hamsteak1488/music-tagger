@@ -1,12 +1,19 @@
 package com.cookandroid.myapplication.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.text.set
+import androidx.core.text.toSpannable
+import com.cookandroid.myapplication.LinearGradientSpan
 import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityRegisterBinding
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -18,10 +25,28 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var binding:ActivityRegisterBinding
     private lateinit var auth: FirebaseAuth
 
+    @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        // 계정 생성 글자 그라데이션
+        val txtHello: TextView =binding.text
+        val text = " Create \n New Account"
+        val start = ContextCompat.getColor(this, R.color.start)
+        val end = ContextCompat.getColor(this, R.color.end)
+        val spannable = text.toSpannable()
+        spannable[0..text.length] = LinearGradientSpan(text, text, start, end)
+        txtHello.text = spannable
+        // 반짝임 효과
+        YoYo.with(Techniques.FadeIn)
+            .duration(600)
+            .repeat(1)
+            .playOn(binding.text)
+
+
 //Auth part
         FirebaseApp.initializeApp(this)
         auth = FirebaseAuth.getInstance()
@@ -88,8 +113,7 @@ class RegisterActivity : AppCompatActivity() {
         invalidFieldsStream.subscribe { isValid ->
             if (isValid) {
                 binding.registerSubmitBtn.isEnabled = true
-                binding.registerSubmitBtn.backgroundTintList =
-                    ContextCompat.getColorStateList(this, R.color.deepBlue)
+                binding.registerSubmitBtn.setBackgroundResource(R.drawable.btn_login_ripple)
             }
         }
 

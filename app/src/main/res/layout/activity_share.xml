@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.ShareActivity">
+    tools:context=".activities.ShareActivity"
+    android:background="@color/black">
 
 
     <LinearLayout
@@ -15,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="#3D58CD">
+        android:background="@color/black">
 
         <ImageButton
             android:id="@+id/backBtnSA"
@@ -47,7 +48,8 @@
         android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
         android:scrollbars="vertical"
         android:paddingBottom="40dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_grey"/>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/uploadShareBtn"

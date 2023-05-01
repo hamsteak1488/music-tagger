@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.ListOfPlaylistActivity">
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.ListOfPlaylistActivity"
+    android:background="@color/black">
 
 
     <LinearLayout
@@ -15,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="#3D58CD">
+        android:background="@color/black">
 
         <ImageButton
             android:id="@+id/backBtnPLA"
@@ -33,7 +35,7 @@
             android:layout_marginRight="50dp"
             android:text="Playlist"
             android:textColor="@color/white"
-            android:textSize="25dp"
+            android:textSize="25sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -41,29 +43,32 @@
         android:id="@+id/playlistRV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="40dp"
         android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
         android:scrollbars="vertical"
-        android:paddingBottom="40dp"
-        android:layout_marginTop="10dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout"
+        android:background="@drawable/btn_grey"/>
 
-    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+    <com.melnykov.fab.FloatingActionButton
         android:id="@+id/addPlaylistBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:icon="@drawable/ic_baseline_add_24"
         app:iconSize="35dp"
-        app:iconTint="@color/customBlue"
+        fab:fab_colorNormal="@color/start"
+        fab:fab_colorPressed="@color/end"
+        fab:fab_colorRipple="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         constraintVertical_bias="0.9"
-        app:strokeWidth="2dp"
-        app:strokeColor="@color/customBlue"/>
+        app:strokeWidth="2dp" />
 
     <TextView
         android:id="@+id/instructionPA"

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SearchActivity">
+    tools:context=".activities.SearchActivity"
+    android:background="@color/black">
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -46,7 +47,8 @@
         android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
         android:scrollbars="vertical"
         android:paddingBottom="50dp"
-        android:layout_marginTop="10dp"/>
+        android:layout_marginTop="10dp"
+        android:background="@drawable/btn_grey"/>
 
     <com.google.android.exoplayer2.ui.PlayerControlView
         android:id="@+id/exoControlView"

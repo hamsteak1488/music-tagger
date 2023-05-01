@@ -3,18 +3,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:background="@color/customBlue">
+    android:background="@color/black">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/text"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Create New Account"
-        android:textColor="@color/white"
-        android:textSize="40dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="100dp"
-        android:padding="10dp"/>
+        android:layout_marginTop="50dp"
+        android:padding="10dp"
+        android:text=" Create \n New Account"
+        android:textSize="55dp"
+        android:textStyle="bold"
+        tools:textColor="@color/white" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
@@ -68,16 +71,16 @@
             android:background="@color/white"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/registerSubmitBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
         android:layout_marginHorizontal="85dp"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/btn_login_ripple"
         android:text="Submit"
-        android:textSize="24dp"
         android:textColor="@color/white"
-        android:backgroundTint="@color/deepBlue"/>
+        android:textSize="24dp" />
 
 
 </LinearLayout>

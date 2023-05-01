@@ -117,8 +117,7 @@ class LoginActivity : AppCompatActivity() {
                 ContextCompat.getColorStateList(this, R.color.gray)
         }
         else{
-            binding.loginBtn.backgroundTintList =
-                ContextCompat.getColorStateList(this, R.color.deepBlue)
+            binding.loginBtn.setBackgroundResource(R.drawable.btn_login_ripple)
         }
 
         //레지스터 버튼 -> RegisterActivity
@@ -137,8 +136,7 @@ class LoginActivity : AppCompatActivity() {
         invalidFieldsStream.subscribe { isValid ->
             if (isValid) {
                 binding.loginBtn.isEnabled = true
-                binding.loginBtn.backgroundTintList =
-                    ContextCompat.getColorStateList(this, R.color.deepBlue)
+                binding.loginBtn.setBackgroundResource(R.drawable.btn_login_ripple)
             }
         }
 
