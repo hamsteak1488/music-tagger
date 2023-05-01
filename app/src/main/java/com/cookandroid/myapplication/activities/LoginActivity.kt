@@ -114,7 +114,7 @@ class LoginActivity : AppCompatActivity() {
         if (!OX){
             binding.loginBtn.isEnabled = false
             binding.loginBtn.backgroundTintList =
-                ContextCompat.getColorStateList(this, R.color.gray)
+                ContextCompat.getColorStateList(this, R.color.grey)
         }
         else{
             binding.loginBtn.setBackgroundResource(R.drawable.btn_login_ripple)

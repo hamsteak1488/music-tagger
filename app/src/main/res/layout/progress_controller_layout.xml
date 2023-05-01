@@ -11,7 +11,7 @@
         android:id="@id/exo_progress"
         android:layout_width="0dp"
         android:layout_height="36dp"
-        android:background="@color/gray"
+        android:background="@color/grey"
         app:layout_constraintEnd_toStartOf="@id/exo_duration"
         app:layout_constraintStart_toEndOf="@id/exo_position"
         app:layout_constraintTop_toTopOf="parent" />
