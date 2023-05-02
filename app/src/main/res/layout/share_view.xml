@@ -44,7 +44,7 @@
         app:layout_constraintTop_toBottomOf="@+id/playlistNameSV" />
 
     <TextView
-        android:id="@+id/downloadNumberSV"
+        android:id="@+id/downloadCountSV"
         android:layout_width="70dp"
         android:layout_height="24dp"
         android:layout_margin="5dp"
@@ -93,9 +93,7 @@
         android:src="@drawable/baseline_download_24"
         app:layout_constraintBottom_toBottomOf="@id/imageSV"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
-        app:layout_constraintTop_toTopOf="@+id/imageSV" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/likeCountSV"
@@ -105,27 +103,6 @@
         android:text="Like : ?"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/downloadSV" />
-
-    <TextView
-        android:id="@+id/downloadCountSV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Downloaded : ?"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toEndOf="@+id/imageSV"
-        app:layout_constraintTop_toBottomOf="@+id/uploaderNameSV" />
-
-    <TextView
-        android:id="@+id/descriptionSV"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="description"
-        android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageSV" />
+        app:layout_constraintTop_toBottomOf="@+id/downloadBtnSV" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
