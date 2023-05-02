@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    android:padding="2dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imageMV"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginVertical="5dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/ic_baseline_music_video_24"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/songNameMV"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:text="Song Name"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@+id/imageMV"
+        app:layout_constraintTop_toTopOf="@+id/imageMV" />
+
+    <TextView
+        android:id="@+id/songArtistMV"
+        android:layout_width="wrap_content"
+        android:layout_height="24dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:singleLine="true"
+        android:text="Song Artist"
+        app:layout_constraintEnd_toEndOf="@+id/songNameMV"
+        app:layout_constraintStart_toStartOf="@+id/songNameMV"
+        app:layout_constraintTop_toBottomOf="@+id/songNameMV" />
+
+    <TextView
+        android:id="@+id/songDuration"
+        android:layout_width="48dp"
+        android:layout_height="64dp"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:text="@string/start_tv"
+        android:textColor="?colorOnPrimary"
+        app:layout_constraintEnd_toStartOf="@+id/optionMV"
+        app:layout_constraintTop_toTopOf="@+id/imageMV" />
+
+    <ImageButton
+        android:id="@+id/optionMV"
+        android:layout_width="wrap_content"
+        android:layout_height="64dp"
+        android:layout_marginEnd="8dp"
+        android:background="@color/white"
+        android:contentDescription="More Options"
+        android:src="@drawable/baseline_more_vert_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageMV" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/musicTagRV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintEnd_toEndOf="@+id/optionMV"
+        app:layout_constraintStart_toStartOf="@+id/imageMV"
+        app:layout_constraintTop_toBottomOf="@+id/imageMV" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

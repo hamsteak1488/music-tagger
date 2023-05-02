@@ -108,16 +108,17 @@
 
 
             <TextView
+                android:id="@+id/topRankTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="이번 달 TOP 20"
+                android:text="이번 달 TOP"
                 android:textColor="@color/black"
                 android:textSize="30dp"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/mainRV"
+                android:id="@+id/topRankRV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
