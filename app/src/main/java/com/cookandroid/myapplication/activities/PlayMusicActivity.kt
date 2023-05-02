@@ -23,10 +23,10 @@ class PlayMusicActivity : AppCompatActivity() {
 
         binding.backBtnPA.setOnClickListener { finish() }
         // 이모지사진 변경
-        timeEmoji()
-        weatherEmoji()
-        seasonEmoji()
-        weekdayEmoji()
+//        timeEmoji()
+//        weatherEmoji()
+//        seasonEmoji()
+//        weekdayEmoji()
         mService.setViewPlayer(binding.exoControlView)
 
         if (mService.currentListPos != -1 && mService.currentMusicPos != -1) {
@@ -65,6 +65,7 @@ class PlayMusicActivity : AppCompatActivity() {
             binding.songImg.invalidate()
         }
     }
+    /*
 // todo("data 변경")
     private fun timeEmoji(){
     when(data){
@@ -105,5 +106,5 @@ class PlayMusicActivity : AppCompatActivity() {
             "일"->binding.weekdayEmoji.text="Sun"
         }
     }
-
+*/
 }
