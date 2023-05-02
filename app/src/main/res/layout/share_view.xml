@@ -20,7 +20,7 @@
 
     <TextView
         android:id="@+id/playlistNameSV"
-        android:layout_width="220dp"
+        android:layout_width="200dp"
         android:layout_height="36dp"
         android:layout_margin="5dp"
         android:gravity="center_vertical"
@@ -34,7 +34,7 @@
 
     <TextView
         android:id="@+id/uploaderNameSV"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="24dp"
         android:layout_margin="5dp"
         android:singleLine="true"
@@ -44,27 +44,55 @@
         app:layout_constraintTop_toBottomOf="@+id/playlistNameSV" />
 
     <TextView
-        android:id="@+id/artistsSV"
-        android:layout_width="wrap_content"
+        android:id="@+id/downloadNumberSV"
+        android:layout_width="70dp"
         android:layout_height="24dp"
         android:layout_margin="5dp"
         android:singleLine="true"
-        android:text="#Artists"
+        android:text="downloads"
+        android:textColor="@color/lightGrey"
+        app:layout_constraintStart_toEndOf="@+id/uploaderNameSV"
+        app:layout_constraintTop_toBottomOf="@+id/playlistNameSV" />
+
+    <TextView
+        android:id="@+id/descriptionSV"
+        android:layout_width="200dp"
+        android:layout_height="24dp"
+        android:layout_margin="5dp"
+        android:singleLine="true"
+        android:text="Share Your Playlists"
         android:textColor="@color/lightGrey"
         app:layout_constraintStart_toEndOf="@+id/imageSV"
-        app:layout_constraintTop_toBottomOf="@+id/uploaderNameSV"
         app:layout_constraintBottom_toBottomOf="@+id/imageSV" />
+<!--    -->
+<!--    <include-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="100dp"-->
+<!--        layout="@layout/border_left"-->
+<!--        app:layout_constraintEnd_toStartOf="@id/likeBtnSV"/>-->
 
     <ImageButton
-        android:id="@+id/downloadSV"
-        android:layout_width="70dp"
+        android:id="@+id/likeBtnSV"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="5dp"
+        android:background="@color/black"
+        android:contentDescription="Like"
+        app:tint="@color/lightGrey"
+        android:src="@drawable/heart_filled"
+        app:layout_constraintEnd_toStartOf="@id/downloadBtnSV"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <ImageButton
+        android:id="@+id/downloadBtnSV"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
         android:background="@color/black"
         android:contentDescription="Download Playlist"
         android:src="@drawable/baseline_download_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageSV"
-        app:layout_constraintBottom_toBottomOf="@id/imageSV"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

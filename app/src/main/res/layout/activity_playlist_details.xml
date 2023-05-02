@@ -65,6 +65,7 @@
         android:layout_height="0dp"
         android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
         android:scrollbars="vertical"
+        android:padding="3dp"
         app:layout_constraintBottom_toBottomOf="@+id/exoControlView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -83,7 +84,7 @@
         app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        constraintVertical_bias="0.9"
+        app:layout_constraintVertical_bias="0.8"
         app:strokeWidth="2dp"
         app:strokeColor="@color/customBlue"/>
 

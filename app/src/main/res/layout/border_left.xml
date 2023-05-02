@@ -6,17 +6,18 @@
     android:background="@color/black">
 
     <ImageView
-        android:id="@+id/gradientLeft"
-        android:layout_width="208dp"
-        android:layout_height="4dp"
+        android:id="@+id/gradientTop"
+        android:layout_width="4dp"
+        android:layout_height="370dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/gradient_left" />
+        android:src="@drawable/gradient_top" />
     <ImageView
-        android:layout_width="208dp"
-        android:layout_height="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/gradient_right"/>
+        android:layout_width="4dp"
+        android:layout_height="370dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="gradientTop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:src="@drawable/gradient_bottom"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
