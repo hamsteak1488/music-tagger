@@ -3,39 +3,61 @@ package com.cookandroid.myapplication.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.cookandroid.myapplication.MusicServiceConnection
 import com.cookandroid.myapplication.PlaylistManager
 import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityShareDetailsBinding
+import com.cookandroid.myapplication.PlaylistManager.exploringListPos
+import com.tftf.util.PlaylistForShare
 
 class ShareDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityShareDetailsBinding
-    private var sharingPlaylistPos: Int = -1
+    private val mService = MusicServiceConnection.musicService!!
+    private val exploringList = PlaylistManager.playlists[exploringListPos]
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityShareDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        sharingPlaylistPos = intent.extras!!.getInt("index",-1)
-
-        binding.titleSD.text = PlaylistManager.playlists[sharingPlaylistPos].name
+        binding.titleSD.text = PlaylistManager.playlists[exploringListPos].name
         binding.uploadBtnSD.setOnClickListener{
 //            TODO(공유 리스트 서버에 전송, ShareActivity로 이동)
+
+            val playlistForShare = PlaylistForShare(
+                binding.titleSD.text.toString(),
+                PlaylistManager.playlists[exploringListPos].musicList,
+                mService.email,
+                binding.editDescriptionSD.text.toString(),
+                0,
+                0
+            )
+
+            mService.uploadShareList(playlistForShare) { uploadSuccessed ->
+                if (uploadSuccessed)
+                    Toast.makeText(this@ShareDetailsActivity, "upload completed!", Toast.LENGTH_SHORT).show()
+                else {
+                    Toast.makeText(this@ShareDetailsActivity, "upload failed!", Toast.LENGTH_SHORT).show()
+                }
+            }
+
             val description = binding.editDescriptionSD.text.toString()
-            startActivity(Intent(this@ShareDetailsActivity, ShareActivity::class.java))
+            finish()
         }
         binding.cancelBtnSD.setOnClickListener { finish() }
+
+        Glide.with(this)
+            .load("http://10.0.2.2:8080/img?id=" + (PlaylistManager.playlists[exploringListPos].musicList[0]))
+            .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_video_24).centerCrop())
+            .into(binding.playlistImgSD)
 
     }
 
     override fun onResume() {
         super.onResume()
-        Glide.with(this)
-            .load("http://10.0.2.2:8080/img?id=" + (PlaylistManager.playlists[sharingPlaylistPos].musicList[0]))
-            .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_video_24).centerCrop())
-            .into(binding.playlistImgSD)
     }
 }

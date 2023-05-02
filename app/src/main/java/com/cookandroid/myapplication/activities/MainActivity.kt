@@ -70,6 +70,11 @@ class MainActivity : AppCompatActivity() {
                 putExtra("operation", ActivityOperation.SEARCH_EXPLORE.ordinal)
             }))
         }
+        binding.shareBtn.setOnClickListener {
+            startActivity(Intent(this@MainActivity, ListOfPlaylistActivity::class.java).apply {
+                putExtra("operation", ActivityOperation.LIST_OF_PLAYLIST_SHARE.ordinal)
+            })
+        }
 
         //로그아웃 버튼
         auth = FirebaseAuth.getInstance()

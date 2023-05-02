@@ -31,6 +31,16 @@ class ListOfPlaylistActivity : AppCompatActivity() {
 
 //        binding.addPlaylistBtn.attachToRecyclerView(binding.playlistRV)
         operationOrdinal = intent.getIntExtra("operation", -1)
+        binding.ListOfPlaylistTitleTV.text = when (operationOrdinal) {
+            ActivityOperation.LIST_OF_PLAYLIST_EXPLORE.ordinal -> "Playlist"
+            ActivityOperation.LIST_OF_PLAYLIST_MOVE.ordinal -> "Move Playlist"
+            ActivityOperation.LIST_OF_PLAYLIST_SHARE.ordinal -> "Share Playlist"
+            else -> "Playlist"
+        }
+        if (operationOrdinal != ActivityOperation.LIST_OF_PLAYLIST_EXPLORE.ordinal) {
+            binding.instructionPA.visibility = View.GONE
+            binding.addPlaylistBtn.visibility = View.GONE
+        }
 
         binding.playlistRV.setHasFixedSize(true)
         binding.playlistRV.setItemViewCacheSize(13)
@@ -118,6 +128,11 @@ class ListOfPlaylistActivity : AppCompatActivity() {
                                 }
                                 MusicServiceConnection.musicService!!.savePlaylistManager {  }
                                 finish()
+                            }
+                            ActivityOperation.LIST_OF_PLAYLIST_SHARE.ordinal -> {
+                                if (PlaylistManager.playlists[pos].musicList.isEmpty()) return
+                                exploringListPos = pos
+                                startActivity(Intent(this@ListOfPlaylistActivity, ShareDetailsActivity::class.java))
                             }
                         }
                     }

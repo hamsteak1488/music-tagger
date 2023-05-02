@@ -57,8 +57,9 @@
         android:layout_height="70dp"
         android:layout_marginTop="5dp"
         android:background="@drawable/border_gray"
-        app:layout_constraintTop_toBottomOf="@id/descriptionSD"
-        app:layout_constraintStart_toStartOf="@id/playlistImgSD"/>
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@id/playlistImgSD"
+        app:layout_constraintTop_toBottomOf="@id/descriptionSD" />
 
     <!--for buttons-->
     <LinearLayout
