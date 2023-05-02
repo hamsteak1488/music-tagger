@@ -29,6 +29,7 @@ class ListOfPlaylistActivity : AppCompatActivity() {
         binding = ActivityListOfPlaylistBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+//        binding.addPlaylistBtn.attachToRecyclerView(binding.playlistRV)
         operationOrdinal = intent.getIntExtra("operation", -1)
 
         binding.playlistRV.setHasFixedSize(true)
@@ -138,3 +139,5 @@ class ListOfPlaylistActivity : AppCompatActivity() {
         ControlViewManager.displayControlView(binding.exoControlView)
     }
 }
+
+

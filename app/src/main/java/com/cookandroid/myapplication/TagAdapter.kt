@@ -13,11 +13,13 @@ class TagAdapter(private val tag: MusicTag)
 
     ///뮤직 뷰 binding
     class TagHolder(binding: TagViewBinding) : RecyclerView.ViewHolder(binding.root) {
-        val tagTV = binding.tagTextView
+//        val tagTV = binding.tagTextView
+        val tagTV = binding.tagEmojiView
     }
 
     override fun getItemCount(): Int {
-        return tag.size
+//        return tag.size
+        return 2
     }
 
     //뷰 홀더 생성
@@ -27,6 +29,7 @@ class TagAdapter(private val tag: MusicTag)
 
     ///뷰 홀더에 내용 입력
     override fun onBindViewHolder(holder: TagHolder, pos: Int) {
-        holder.tagTV.text = tagList[pos]
+//        TODO(날씨, 시간 태그만 반영하여 이모지 적용)
+//        holder.tagTV.text = tagList[pos]
     }
 }

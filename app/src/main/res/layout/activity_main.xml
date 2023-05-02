@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".activities.MainActivity">
+    tools:context=".activities.MainActivity"
+    android:background="@color/black">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refreshLayout"
@@ -22,63 +23,54 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <!--셔플 버튼-->
-                <Button
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:background="@color/black">
+                <!--추천 재생 버튼-->
+                <ImageButton
                     android:id="@+id/recommend_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_baseline_shuffle_24"
-                    android:text="Recommend"
-                    android:textAllCaps="false"
-                    android:textColor="@color/black" />
+                    android:background="@color/black"
+                    android:src="@drawable/ic_baseline_shuffle_24"/>
                 <!--플레이리스트 버튼-->
-                <Button
+                <ImageButton
                     android:id="@+id/playlistBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/ic_baseline_view_playlist_24"
-                    android:text="Playlist"
-                    android:textAllCaps="false"
-                    android:textColor="@color/black" />
-
-                <Button
+                    android:background="@color/black"
+                    android:src="@drawable/ic_baseline_view_playlist_24"/>
+                <!--검색 버튼-->
+                <ImageButton
                     android:id="@+id/searchSongBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/baseline_search_24"
-                    android:text="Search"
-                    android:textAllCaps="false"
-                    android:textColor="@color/black" />
-                <!--공유-->
-                <Button
+                    android:background="@color/black"
+                    android:src="@drawable/baseline_search_24"/>
+                <!--공유 버튼-->
+                <ImageButton
                     android:id="@+id/shareBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/baseline_people_alt_24"
-                    android:text="Share"
-                    android:textColor="@color/black"
-                    android:textAllCaps="false"/>
-
-                <Button
+                    android:background="@color/black"
+                    android:src="@drawable/baseline_people_alt_24"/>
+                <!--로그아웃 버튼-->
+                <ImageButton
                     android:id="@+id/logoutBtn"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:drawableTop="@drawable/baseline_logout_24"
-                    android:text="Logout"
-                    android:textColor="@color/black"
-                    android:textAllCaps="false"/>
+                    android:background="@color/black"
+                    android:src="@drawable/baseline_logout_24"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="260dp"
+                android:layout_height="250dp"
                 android:orientation="vertical">
 
                 <TextView
@@ -86,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:text="당신이 찾던 음악"
-                    android:textColor="@color/black"
+                    android:textColor="@color/white"
                     android:textSize="30dp"
                     android:textStyle="bold" />
 
@@ -113,7 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:text="이번 달 TOP"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:textSize="30dp"
                 android:textStyle="bold" />
 
@@ -139,7 +131,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
-        android:padding="10dp"
+        android:background="@drawable/border_top"
+        android:padding="20dp"
         app:controller_layout_id="@layout/controller_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

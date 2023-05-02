@@ -5,9 +5,9 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:gravity="center"
     android:animateLayoutChanges="true"
-    tools:context=".activities.PlayMusicActivity">
+    tools:context=".activities.PlayMusicActivity"
+    android:background="@color/black">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,25 +17,34 @@
 
         <ImageButton
             android:id="@+id/backBtnPA"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:background="?attr/selectableItemBackground"
+            android:background="@color/black"
             android:padding="10dp"
             android:src="@drawable/ic_baseline_arrow_back_ios_new_24"
-            app:tint="@color/black"
             android:contentDescription="Back"/>
+
+        <TextView
+            android:layout_width="220dp"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:gravity="center"
+            android:layout_marginStart="40dp"
+            android:text="Now Playing"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/songImg"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         android:src="@drawable/ic_baseline_music_note_24"
-        android:layout_marginVertical="12dp"
-        app:strokeColor="@color/customBlue"
-        app:strokeWidth="5dp"/>
+        android:layout_gravity="center"
+        android:layout_marginVertical="12dp"/>
 
     <TextView
         android:id="@+id/songNamePA"
@@ -44,74 +53,47 @@
         android:layout_marginHorizontal="20dp"
         android:gravity="center"
         android:text="Song Name"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textIsSelectable="true"
         android:textSize="18sp" />
 
-    <!--태그-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_margin="16dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_margin="16dp"
-            android:layout_weight="1"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-            <AutoCompleteTextView
-                android:id="@+id/autoTag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Auto"
-                android:textSize="12dp"
-                android:padding="3dp"
-                android:textColor="@color/black"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_margin="16dp"
-            android:layout_weight="1"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
-            <AutoCompleteTextView
-                android:id="@+id/selectTag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Select"
-                android:textSize="12dp"
-                android:padding="3dp"
-                android:textColor="@color/black"
-                android:singleLine="true"/>
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_margin="16dp"
-            android:layout_weight="1"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/selfTag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Self"
-                android:textSize="12dp"
-                android:textColor="@color/black"
-                android:gravity="center"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
+        android:orientation="horizontal"
+        android:layout_marginVertical="20dp"
+        android:padding="3dp">
+        <ImageView
+            android:id="@+id/timeEmoji"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/baseline_people_alt_24"
+            android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/weatherEmoji"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/baseline_people_alt_24"
+            android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/weekdayEmoji"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/baseline_people_alt_24"
+            android:layout_weight="1"/>
+        <ImageView
+            android:id="@+id/seasonEmoji"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/baseline_people_alt_24"
+            android:layout_weight="1"/>
     </LinearLayout>
-
 
     <com.google.android.exoplayer2.ui.PlayerControlView
         android:id="@+id/exoControlView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="bottom"
         android:padding="10dp"
         app:controller_layout_id="@layout/progress_controller_layout"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -120,4 +102,6 @@
         app:layout_constraintTop_toBottomOf="@+id/singerText"
         app:show_timeout="0"
         app:use_controller="true" />
+
+
 </LinearLayout>

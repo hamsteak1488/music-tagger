@@ -1,9 +1,12 @@
 package com.cookandroid.myapplication
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView.OnItemLongClickListener
+import androidx.core.util.TimeUtils.formatDuration
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -61,8 +64,8 @@ class MusicAdapter(private val context: Context,
 
         holder.title.text = musicList[pos].title
         holder.artist.text = musicList[pos].artist
-        //holder.duration.text = formatDuration(musicList[pos].duration)
-        holder.duration.text = "holder.duration.text"
+//        holder.duration.text = formatDuration(musicList[pos].duration)
+        holder.duration.text = "12:34"
 
         //glide = uri로 이미지 적용
         Glide.with(context)

@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
     android:padding="2dp"
-    android:background="@drawable/border_gray">
+    android:background="@color/black">
 
     <ImageView
         android:id="@+id/imageSV"
@@ -20,14 +20,15 @@
 
     <TextView
         android:id="@+id/playlistNameSV"
-        android:layout_width="wrap_content"
+        android:layout_width="220dp"
         android:layout_height="36dp"
         android:layout_margin="5dp"
         android:gravity="center_vertical"
         android:singleLine="true"
-        android:hint="Playlist Name"
+        android:text="Playlist Name"
         android:textSize="24dp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
+        android:layout_marginStart="3dp"
         app:layout_constraintStart_toEndOf="@+id/imageSV"
         app:layout_constraintTop_toTopOf="@+id/imageSV"/>
 
@@ -37,7 +38,8 @@
         android:layout_height="24dp"
         android:layout_margin="5dp"
         android:singleLine="true"
-        android:hint="User Name"
+        android:text="User Name"
+        android:textColor="@color/lightGrey"
         app:layout_constraintStart_toEndOf="@+id/imageSV"
         app:layout_constraintTop_toBottomOf="@+id/playlistNameSV" />
 
@@ -47,18 +49,18 @@
         android:layout_height="24dp"
         android:layout_margin="5dp"
         android:singleLine="true"
-        android:hint="artists"
+        android:text="#Artists"
+        android:textColor="@color/lightGrey"
         app:layout_constraintStart_toEndOf="@+id/imageSV"
         app:layout_constraintTop_toBottomOf="@+id/uploaderNameSV"
         app:layout_constraintBottom_toBottomOf="@+id/imageSV" />
 
-
     <ImageButton
         android:id="@+id/downloadSV"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="70dp"
+        android:layout_height="match_parent"
         android:layout_marginEnd="8dp"
-        android:background="@color/white"
+        android:background="@color/black"
         android:contentDescription="Download Playlist"
         android:src="@drawable/baseline_download_24"
         app:layout_constraintEnd_toEndOf="parent"

@@ -104,12 +104,10 @@ class LoginActivity : AppCompatActivity() {
         // email, pw 저장설정이 켜져있을 경우 버튼 초기 상태 사용 가능, 파랑색
         if (!OX){
             binding.loginBtn.isEnabled = false
-            binding.loginBtn.backgroundTintList =
-                ContextCompat.getColorStateList(this, R.color.gray)
+            binding.loginBtn.setBackgroundResource(R.drawable.btn_login_ripple)
         }
         else{
-            binding.loginBtn.backgroundTintList =
-                ContextCompat.getColorStateList(this, R.color.deepBlue)
+            binding.loginBtn.setBackgroundResource(R.drawable.btn_login_ripple)
         }
 
         //레지스터 버튼 -> RegisterActivity
@@ -128,8 +126,7 @@ class LoginActivity : AppCompatActivity() {
         invalidFieldsStream.subscribe { isValid ->
             if (isValid) {
                 binding.loginBtn.isEnabled = true
-                binding.loginBtn.backgroundTintList =
-                    ContextCompat.getColorStateList(this, R.color.deepBlue)
+                binding.loginBtn.setBackgroundResource(R.drawable.btn_login_ripple)
             }
         }
 

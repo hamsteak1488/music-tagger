@@ -38,7 +38,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         operationOrdinal = intent.getIntExtra("operation", -1)
 
 
-        binding.playlistNamePD.text = PlaylistManager.playlists[exploringListPos].name
+//        binding.playlistNamePD.text = PlaylistManager.playlists[exploringListPos].name
 
         binding.playlistDetailsRV.setItemViewCacheSize(10)
         binding.playlistDetailsRV.setHasFixedSize(true)
@@ -101,7 +101,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         binding.movePlaylistBtn.visibility = View.INVISIBLE
         binding.removeBtn.visibility = View.INVISIBLE
 
-        binding.moreInfoPD.text = "Total ${PlaylistManager.playlists[exploringListPos].musicList.size} Songs.\n\n"
+        //binding.moreInfoPD.text = "Total ${PlaylistManager.playlists[exploringListPos].musicList.size} Songs.\n\n"
         if(PlaylistManager.playlists[exploringListPos].musicList.size > 0){
             mService.getMusicMetadataList(PlaylistManager.playlists[exploringListPos].musicList) { musicList ->
                 if (musicList == null) return@getMusicMetadataList

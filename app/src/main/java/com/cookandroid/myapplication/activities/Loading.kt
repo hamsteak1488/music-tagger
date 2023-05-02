@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.cookandroid.myapplication.MusicService
 import com.cookandroid.myapplication.MusicServiceConnection
+import android.view.animation.AnimationUtils
+import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityLoadingBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -20,6 +22,12 @@ class Loading : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoadingBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        //ImageView에 animation 적용하기
+        val ROTATION_ANIM = AnimationUtils.loadAnimation(this, R.anim.loading_anim)
+        binding.Logo.startAnimation(ROTATION_ANIM)
+
 
         val serviceIntent = Intent(this, MusicService::class.java)
         MusicServiceConnection.setCallbackFunc() { startLoading() }
