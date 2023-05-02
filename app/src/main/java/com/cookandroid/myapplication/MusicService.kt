@@ -310,7 +310,7 @@ class MusicService : Service() {
         fun getTopRankList(@Query("listSize") listSize:Int) : Call<Playlist>
 
         @POST("/share/download")
-        fun downloadSharedLists(@Query("listSize") listSize:Int) : Call<List<PlaylistForShareDTO>>
+        fun downloadSharedLists() : Call<List<PlaylistForShareDTO>>
 
         @POST("/share/upload")
         fun uploadShareList(@Body playlistForShareDTO:PlaylistForShareDTO) : Call<Unit>
@@ -604,7 +604,7 @@ class MusicService : Service() {
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
 
-        val callGetMetadata = api.downloadSharedLists(listSize)
+        val callGetMetadata = api.downloadSharedLists()
         callGetMetadata.enqueue(object:Callback<List<PlaylistForShareDTO>> {
             override fun onResponse(call: Call<List<PlaylistForShareDTO>>, response: Response<List<PlaylistForShareDTO>>) {
                 Log.d("myTag", "success : ${response.raw()}")

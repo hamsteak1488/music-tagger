@@ -26,8 +26,6 @@ class ShareDetailsActivity : AppCompatActivity() {
 
         binding.titleSD.text = PlaylistManager.playlists[exploringListPos].name
         binding.uploadBtnSD.setOnClickListener{
-//            TODO(공유 리스트 서버에 전송, ShareActivity로 이동)
-
             val playlistForShare = PlaylistForShare(
                 binding.titleSD.text.toString(),
                 PlaylistManager.playlists[exploringListPos].musicList,

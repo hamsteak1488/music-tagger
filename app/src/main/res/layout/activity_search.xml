@@ -27,35 +27,36 @@
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/searchViewSA"
+            closeIcon="@null"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            app:queryHint="Search Song"
-            app:searchIcon="@drawable/baseline_search_24"
+            android:layout_margin="5dp"
             android:focusable="false"
             app:iconifiedByDefault="false"
-            android:layout_margin="5dp"
 
-            closeIcon="@null"/>
+            app:queryHint="Search Song"
+            app:searchIcon="@drawable/baseline_search_24" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchRV"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linearLayout"
+        android:layout_height="0dp"
+        android:background="@drawable/btn_grey"
+        android:paddingBottom="50dp"
         android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
         android:scrollbars="vertical"
-        android:paddingBottom="50dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/btn_grey"/>
+        app:layout_constraintBottom_toBottomOf="@+id/include"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout" />
 
     <include
+        android:id="@+id/include"
+        layout="@layout/border_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        layout="@layout/border_top"
-        app:layout_constraintBottom_toTopOf="@id/exoControlView"/>/
+        app:layout_constraintBottom_toTopOf="@id/exoControlView" />/
 
     <com.google.android.exoplayer2.ui.PlayerControlView
         android:id="@+id/exoControlView"

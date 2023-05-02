@@ -48,9 +48,9 @@ class ShareAdapter(private val context: Context,
         holder.downloadCount.text = "Downloaded : " + sharedLists[pos].copyCount
         holder.description.text = sharedLists[pos].description
 
-        if(PlaylistManager.playlists[pos].musicList.isNotEmpty()){
+        if(sharedLists[pos].musicList.isNotEmpty()){
             Glide.with(context)
-                .load("http://10.0.2.2:8080/img?id=" + (PlaylistManager.playlists[pos].musicList[0]))
+                .load("http://10.0.2.2:8080/img?id=" + sharedLists[pos].musicList[0])
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
                 .into(holder.image)
         }
