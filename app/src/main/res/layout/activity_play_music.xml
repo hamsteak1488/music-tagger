@@ -37,10 +37,18 @@
             android:textStyle="bold" />
 
     </LinearLayout>
-
+    <TextView
+        android:id="@+id/weekdayEmoji"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="요일"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:layout_gravity="right"
+        android:layout_marginRight="30dp"/>
     <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/songImg"
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="300dp"
         android:src="@drawable/ic_baseline_music_note_24"
         android:layout_gravity="center"
@@ -75,12 +83,7 @@
             android:layout_height="match_parent"
             android:src="@drawable/baseline_people_alt_24"
             android:layout_weight="1"/>
-        <ImageView
-            android:id="@+id/weekdayEmoji"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/baseline_people_alt_24"
-            android:layout_weight="1"/>
+
         <ImageView
             android:id="@+id/seasonEmoji"
             android:layout_width="wrap_content"
