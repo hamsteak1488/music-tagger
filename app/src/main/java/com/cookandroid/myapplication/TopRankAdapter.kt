@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.cookandroid.myapplication.PlaylistManager.formatDuration
 import com.cookandroid.myapplication.databinding.RankMusicViewBinding
 import com.tftf.util.Music
 import com.tftf.util.MusicTag
@@ -47,8 +48,7 @@ class TopRankAdapter(private val context: Context,
 
         holder.title.text = musicList[pos].title
         holder.artist.text = musicList[pos].artist
-        //holder.duration.text = formatDuration(musicList[pos].duration)
-        holder.duration.text = "holder.duration.text"
+        holder.duration.text = formatDuration(musicList[pos].duration)
 
         //glide = uri로 이미지 적용
         Glide.with(context)

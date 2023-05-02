@@ -64,8 +64,7 @@ class MusicAdapter(private val context: Context,
 
         holder.title.text = musicList[pos].title
         holder.artist.text = musicList[pos].artist
-//        holder.duration.text = formatDuration(musicList[pos].duration)
-        holder.duration.text = "12:34"
+        holder.duration.text = PlaylistManager.formatDuration(musicList[pos].duration)
 
         //glide = uri로 이미지 적용
         Glide.with(context)
