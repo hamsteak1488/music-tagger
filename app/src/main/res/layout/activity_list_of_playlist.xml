@@ -29,11 +29,12 @@
             android:contentDescription="Back"/>
 
         <TextView
+            android:id="@+id/ListOfPlaylistTitleTV"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:gravity="center"
             android:layout_marginStart="75dp"
+            android:gravity="center"
+            android:padding="10dp"
             android:text="Playlist"
             android:textColor="@color/white"
             android:textSize="30sp"

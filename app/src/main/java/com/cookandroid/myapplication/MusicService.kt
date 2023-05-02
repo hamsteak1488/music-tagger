@@ -16,11 +16,7 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
 import com.google.gson.JsonObject
-import com.tftf.util.Music
-import com.tftf.util.Playlist
-import com.tftf.util.PlaylistManagerDTO
-import com.tftf.util.PlaytimeHistoryDTO
-import com.tftf.util.Surroundings
+import com.tftf.util.*
 import okhttp3.ResponseBody
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
@@ -312,6 +308,12 @@ class MusicService : Service() {
 
         @POST("/recommend/toprank")
         fun getTopRankList(@Query("listSize") listSize:Int) : Call<Playlist>
+
+        @POST("/share/download")
+        fun downloadSharedLists(@Query("listSize") listSize:Int) : Call<List<PlaylistForShareDTO>>
+
+        @POST("/share/upload")
+        fun uploadShareList(@Body playlistForShareDTO:PlaylistForShareDTO) : Call<Unit>
     }
 
     /** 호출 시 id를 통해 메타데이터를 서버에 요청, response가 오면 호출될 함수 operation을 인자로 넘겨주어야 함 */
@@ -570,6 +572,56 @@ class MusicService : Service() {
         })
     }
 
+
+
+    fun uploadShareList(playlist : PlaylistForShare, operation:(Boolean)->Unit) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrlStr)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(RetrofitAPI::class.java)
+
+        val callGetMetadata = api.uploadShareList(PlaylistManager.createPlaylistForShareToDto(playlist))
+        callGetMetadata.enqueue(object : Callback<Unit> {
+            override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
+                Log.d("myTag", "success : ${response.raw()}")
+                val result = response.body()
+                Log.d("myTag", result.toString())
+                operation(true)
+            }
+
+            override fun onFailure(call: Call<Unit>, t: Throwable) {
+                Log.d("myTag", "failure : $t")
+                operation(false)
+            }
+        })
+    }
+
+    fun downloadSharedLists(listSize:Int = 20, operation:(List<PlaylistForShare>)->Unit) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrlStr)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(RetrofitAPI::class.java)
+
+        val callGetMetadata = api.downloadSharedLists(listSize)
+        callGetMetadata.enqueue(object:Callback<List<PlaylistForShareDTO>> {
+            override fun onResponse(call: Call<List<PlaylistForShareDTO>>, response: Response<List<PlaylistForShareDTO>>) {
+                Log.d("myTag", "success : ${response.raw()}")
+                val result = response.body()
+                Log.d("myTag", result.toString())
+
+                val listOfPlaylistForShare = ArrayList<PlaylistForShare>()
+                result?.forEach { dto ->
+                    listOfPlaylistForShare.add(PlaylistManager.getPlaylistForShareFromDto(dto))
+                }
+                operation(listOfPlaylistForShare)
+            }
+            override fun onFailure(call: Call<List<PlaylistForShareDTO>>, t: Throwable) {
+                Log.d("myTag", "failure : $t")
+            }
+        })
+    }
 
 
     // 알림창을 띄우기 위해 채널 생성

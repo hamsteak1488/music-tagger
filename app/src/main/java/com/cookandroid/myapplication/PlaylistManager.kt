@@ -3,6 +3,8 @@ package com.cookandroid.myapplication
 import com.google.gson.Gson
 import com.google.gson.JsonArray
 import com.tftf.util.Playlist
+import com.tftf.util.PlaylistForShare
+import com.tftf.util.PlaylistForShareDTO
 import com.tftf.util.PlaylistManagerDTO
 import java.util.concurrent.TimeUnit
 
@@ -11,7 +13,6 @@ object PlaylistManager {
     var exploringListPos:Int = -1
 
     var playlists: ArrayList<Playlist> = ArrayList() //플레이리스트의 리스트
-
 
 
     init {
@@ -36,6 +37,29 @@ object PlaylistManager {
 
     fun set(dto: PlaylistManagerDTO) {
         playlists = Gson().fromJson(dto.musicIdList, Array<Playlist>::class.java).toCollection(ArrayList())
+    }
+
+
+    fun createPlaylistForShareToDto(playlistForShare: PlaylistForShare): PlaylistForShareDTO {
+        return PlaylistForShareDTO(
+            playlistForShare.name,
+            Gson().toJsonTree(playlistForShare.musicList) as JsonArray,
+            playlistForShare.email,
+            playlistForShare.description,
+            playlistForShare.likeCount,
+            playlistForShare.copyCount
+        )
+    }
+
+    fun getPlaylistForShareFromDto(dto: PlaylistForShareDTO) : PlaylistForShare {
+        return PlaylistForShare(
+            dto.name,
+            Gson().fromJson(dto.musicListJson, Array<Int>::class.java).toCollection(ArrayList()),
+            dto.email,
+            dto.description,
+            dto.likeCount,
+            dto.copyCount
+        )
     }
 
     fun formatDuration(duration: Long):String{
