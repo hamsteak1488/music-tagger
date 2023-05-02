@@ -35,22 +35,6 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/linearLayoutDetails"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="180dp"-->
-<!--        android:background="@color/customBlue"-->
-<!--        android:orientation="horizontal"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/backBtnPD">-->
-
-<!--        <com.google.android.material.imageview.ShapeableImageView-->
-<!--            android:id="@+id/playlistImgPD"-->
-<!--            android:layout_width="250dp"-->
-<!--            android:layout_height="match_parent" />-->
-
-<!--    </LinearLayout>-->
     <FrameLayout
         android:id="@+id/frameLayoutPD"
         android:layout_width="match_parent"
@@ -70,7 +54,6 @@
 <!--                android:layout_height="match_parent"-->
 <!--                android:background="@drawable/gradient_shape"/>-->
         </FrameLayout>
-
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/playlistDetailsRV"
@@ -103,12 +86,17 @@
         app:strokeWidth="2dp"
         app:strokeColor="@color/customBlue"/>
 
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/border_top"
+        app:layout_constraintBottom_toTopOf="@id/exoControlView"/>/
+
     <com.google.android.exoplayer2.ui.PlayerControlView
         android:id="@+id/exoControlView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:background="@drawable/border_top"
         android:padding="20dp"
         app:controller_layout_id="@layout/controller_layout"
         app:layout_constraintBottom_toBottomOf="parent"

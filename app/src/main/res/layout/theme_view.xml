@@ -1,28 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_margin="10dp"
-    app:cardBackgroundColor="@color/white">
+    android:padding="5dp"
+    android:background="@color/black">
 
-    <com.google.android.material.imageview.ShapeableImageView
+    <ImageView
         android:id="@+id/themeImg"
-        android:layout_width="170dp"
-        android:layout_height="130dp"
-        android:src="@drawable/spring"/>
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/ic_baseline_music_video_24"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/themeName"
         android:layout_width="170dp"
         android:layout_height="30dp"
-        android:layout_marginTop="130dp"
+        android:layout_marginTop="5dp"
         android:ellipsize="marquee"
         android:gravity="center_horizontal"
         android:marqueeRepeatLimit="marquee_forever"
         android:singleLine="true"
         android:text="themeName"
-        android:textColor="@color/black"
-        android:textSize="18sp" />
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@id/themeImg"
+        app:layout_constraintEnd_toEndOf="@id/themeImg"
+        app:layout_constraintTop_toBottomOf="@id/themeImg"/>
 
-</com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

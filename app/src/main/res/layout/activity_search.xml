@@ -34,6 +34,7 @@
             android:focusable="false"
             app:iconifiedByDefault="false"
             android:layout_margin="5dp"
+
             closeIcon="@null"/>
     </LinearLayout>
 
@@ -49,6 +50,12 @@
         android:paddingBottom="50dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/btn_grey"/>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/border_top"
+        app:layout_constraintBottom_toTopOf="@id/exoControlView"/>/
 
     <com.google.android.exoplayer2.ui.PlayerControlView
         android:id="@+id/exoControlView"

@@ -38,7 +38,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         operationOrdinal = intent.getIntExtra("operation", -1)
 
 
-        binding.playlistNamePD.text = PlaylistManager.playlists[exploringListPos].name
+//        binding.playlistNamePD.text = PlaylistManager.playlists[exploringListPos].name
 
         binding.playlistDetailsRV.setItemViewCacheSize(10)
         binding.playlistDetailsRV.setHasFixedSize(true)

@@ -28,7 +28,8 @@ class ListOfPlaylistActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityListOfPlaylistBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.addPlaylistBtn.attachToRecyclerView(binding.playlistRV)
+
+//        binding.addPlaylistBtn.attachToRecyclerView(binding.playlistRV)
         operationOrdinal = intent.getIntExtra("operation", -1)
 
         binding.playlistRV.setHasFixedSize(true)

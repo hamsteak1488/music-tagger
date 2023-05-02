@@ -22,7 +22,7 @@
             android:name=".activities.ShareDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".ShareActivity"
+            android:name=".activities.ShareActivity"
             android:exported="false" />
         <activity
             android:name=".activities.Loading"

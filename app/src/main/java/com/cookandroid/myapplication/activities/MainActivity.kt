@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var auth: FirebaseAuth
 
-    private lateinit var themeAdapter: ThemeViewAdapter
+    private var themeAdapter: ThemeViewAdapter? = null
     private lateinit var topRankAdapter: MusicAdapter
 
     private val mService = MusicServiceConnection.musicService!!
@@ -108,6 +108,9 @@ class MainActivity : AppCompatActivity() {
                 binding.themeListRV.setItemViewCacheSize(5)
                 binding.themeListRV.setHasFixedSize(true)
                 binding.themeListRV.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+
+
+                if (themeAdapter == null) return@getThemeList
 
                 themeAdapter = ThemeViewAdapter(this, themeLists!!.toCollection(ArrayList()),
                     object : ThemeViewAdapter.OnItemClickListener {

@@ -37,7 +37,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/play_pause_layout" />
 
     <TextView
         android:id="@+id/exo_duration"
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/play_pause_layout" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/play_pause_layout"
@@ -61,11 +61,11 @@
             android:layout_height="50dp"
             android:backgroundTint="@color/black"
             android:src="@drawable/baseline_play_circle_24"
-            app:tint="@color/customPink"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/customPink" />
 
         <ImageButton
             android:id="@+id/exo_pause"
@@ -79,6 +79,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
