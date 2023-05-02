@@ -24,6 +24,11 @@ object PlayHistoryManager {
         Log.d("myTag", "추가된 결과 : " + musicPlayHistory[id]!!.totalPlaytime)
     }
 
+    fun getPlaytime(id:Int) :Long {
+        if (!musicPlayHistory.containsKey(id)) return 0
+
+        return musicPlayHistory[id]!!.totalPlaytime
+    }
 
     fun getMusicTag(id:Int) : MusicTag? {
         return when (musicPlayHistory.containsKey(id)) {

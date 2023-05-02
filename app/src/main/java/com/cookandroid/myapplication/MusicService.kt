@@ -174,7 +174,7 @@ class MusicService : Service() {
                 if (musicStartTime != (-1).toLong()) {
                     val playedTime = System.currentTimeMillis() - musicStartTime
                     PlayHistoryManager.addPlaytime(curMusicId, playedTime) {
-                        savePlaytimeHistory(PlaytimeHistoryDTO(email, curMusicId, PlayHistoryManager.exportToJson(curMusicId))) { }
+                        savePlaytimeHistory(PlaytimeHistoryDTO(email, curMusicId, PlayHistoryManager.getPlaytime(curMusicId), PlayHistoryManager.exportToJson(curMusicId))) { }
                     }
                     musicStartTime = -1
                 }
@@ -309,6 +309,9 @@ class MusicService : Service() {
 
         @POST("/recommend/theme")
         fun getThemeList(@Body surroundings: Surroundings, @Query("listSize") listSize:Int) : Call<List<Playlist>>
+
+        @POST("/recommend/toprank")
+        fun getTopRankList(@Query("listSize") listSize:Int) : Call<Playlist>
     }
 
     /** 호출 시 id를 통해 메타데이터를 서버에 요청, response가 오면 호출될 함수 operation을 인자로 넘겨주어야 함 */
@@ -542,6 +545,26 @@ class MusicService : Service() {
                 operation(response.body())
             }
             override fun onFailure(call: Call<List<Playlist>>, t: Throwable) {
+                Log.d("myTag", "failure : $t")
+            }
+        })
+    }
+
+    fun getTopRankList(listSize: Int = 20, operation:(Playlist?)->Unit) {
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrlStr)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+        val api = retrofit.create(RetrofitAPI::class.java)
+        val callGetMetadata = api.getTopRankList(listSize)
+        callGetMetadata.enqueue(object:Callback<Playlist> {
+            override fun onResponse(call: Call<Playlist>, response: Response<Playlist>) {
+                Log.d("myTag", "success : ${response.raw()}")
+                val result = response.body()
+                Log.d("myTag", result.toString())
+                operation(response.body())
+            }
+            override fun onFailure(call: Call<Playlist>, t: Throwable) {
                 Log.d("myTag", "failure : $t")
             }
         })
