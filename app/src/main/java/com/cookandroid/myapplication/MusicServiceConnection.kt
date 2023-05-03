@@ -8,6 +8,10 @@ import com.cookandroid.myapplication.activities.Loading
 
 object MusicServiceConnection : ServiceConnection {
 
+    // ipconfig
+    // val serverUrl = "http://192.168.43.158:8080/"
+    val serverUrl = "http://10.0.2.2:8080/"
+
     var musicService:MusicService? = null
 
     private var callbackFunc: (() -> Unit)? = null

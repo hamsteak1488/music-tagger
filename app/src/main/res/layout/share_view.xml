@@ -61,7 +61,8 @@
         android:layout_marginTop="8dp"
         android:text="Like : ?"
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/downloadSV"
+        app:layout_constraintStart_toStartOf="@+id/downloadSV"
         app:layout_constraintTop_toBottomOf="@+id/downloadSV" />
 
     <TextView

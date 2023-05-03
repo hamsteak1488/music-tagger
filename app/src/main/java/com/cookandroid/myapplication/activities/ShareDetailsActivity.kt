@@ -7,6 +7,7 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.MusicServiceConnection
+import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
 import com.cookandroid.myapplication.PlaylistManager
 import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityShareDetailsBinding
@@ -49,7 +50,7 @@ class ShareDetailsActivity : AppCompatActivity() {
         binding.cancelBtnSD.setOnClickListener { finish() }
 
         Glide.with(this)
-            .load("http://10.0.2.2:8080/img?id=" + (PlaylistManager.playlists[exploringListPos].musicList[0]))
+            .load(serverUrl + "img?id=" + (PlaylistManager.playlists[exploringListPos].musicList[0]))
             .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_video_24).centerCrop())
             .into(binding.playlistImgSD)
 

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
 import com.cookandroid.myapplication.databinding.ShareViewBinding
 import com.tftf.util.PlaylistForShare
 
@@ -41,7 +42,6 @@ class ShareAdapter(private val context: Context,
     }
 
     override fun onBindViewHolder(holder: SharedListHolder, pos: Int) {
-        //TODO SharedPlaylist 클래스를 새로 만들지? 아니면 기존 Playlist에 UserName, PlaylistName, Description을 추가할지?
         holder.sharedListName.text = sharedLists[pos].name
         holder.userName.text = sharedLists[pos].email
         holder.likeCount.text = "Like : " + sharedLists[pos].likeCount
@@ -50,7 +50,7 @@ class ShareAdapter(private val context: Context,
 
         if(sharedLists[pos].musicList.isNotEmpty()){
             Glide.with(context)
-                .load("http://10.0.2.2:8080/img?id=" + sharedLists[pos].musicList[0])
+                .load(serverUrl + "img?id=" + sharedLists[pos].musicList[0])
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
                 .into(holder.image)
         }
