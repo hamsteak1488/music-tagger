@@ -145,14 +145,11 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/border_top"
         android:padding="20dp"
         app:controller_layout_id="@layout/controller_layout"
         app:layout_constraintBottom_toTopOf="@id/bottomLinearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:show_timeout="0"
-        app:use_controller="true" />
-
-
+        app:use_controller="true"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

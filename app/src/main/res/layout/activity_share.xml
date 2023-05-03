@@ -7,7 +7,6 @@
     tools:context=".activities.ShareActivity"
     android:background="@color/black">
 
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
@@ -35,7 +34,6 @@
             android:textSize="30dp"
             android:textStyle="bold" />
     </LinearLayout>
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/sharelistRV"
@@ -65,10 +63,11 @@
         app:layout_constraintVertical_bias="0.8"/>
 
     <include
+        android:id="@+id/controller_border"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         layout="@layout/border_top"
-        app:layout_constraintBottom_toTopOf="@id/exoControlView"/>/
+        app:layout_constraintBottom_toTopOf="@id/exoControlView"/>
 
     <com.google.android.exoplayer2.ui.PlayerControlView
         android:id="@+id/exoControlView"
