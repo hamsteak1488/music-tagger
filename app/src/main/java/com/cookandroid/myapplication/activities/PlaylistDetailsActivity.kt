@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
+import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
 import com.cookandroid.myapplication.PlaylistManager.exploringListPos
 import com.cookandroid.myapplication.databinding.ActivityPlaylistDetailsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -108,7 +109,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
                 else initMusicAdapter(musicList)
             }
             Glide.with(this)
-                .load("http://10.0.2.2:8080/img?id=" + (PlaylistManager.playlists[exploringListPos].musicList[0]))
+                .load(serverUrl + "img?id=" + (PlaylistManager.playlists[exploringListPos].musicList[0]))
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_video_24).centerCrop())
                 .into(binding.playlistImgPD)
             binding.playlistImgPD.visibility = View.VISIBLE

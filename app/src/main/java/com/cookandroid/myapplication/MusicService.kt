@@ -8,14 +8,13 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
 import com.cookandroid.myapplication.activities.MainActivity
 import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.MediaItem.fromUri
 import com.google.android.exoplayer2.ui.PlayerControlView
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.BitmapCallback
 import com.google.android.exoplayer2.ui.PlayerNotificationManager.MediaDescriptionAdapter
-import com.google.gson.JsonObject
 import com.tftf.util.*
 import okhttp3.ResponseBody
 import retrofit2.*
@@ -60,10 +59,7 @@ class MusicService : Service() {
 
     var email:String = ""
 
-    /** MusicTagger의 서버 baseUrl */
-    private val baseUrlStr = "http://10.0.2.2:8080/"
-
-    val testAudioUriStr = baseUrlStr + "media?title=test_audio1.mp3"
+    val testAudioUriStr = serverUrl + "media?title=test_audio1.mp3"
     val testVideoUriStr = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
 
     inner class MyBinder: Binder(){
@@ -208,7 +204,7 @@ class MusicService : Service() {
     fun setMediaList(idList:List<Int>) {
         playListMediaItem = ArrayList<MediaItem>().apply {
             idList.forEach { id ->
-                this.add(MediaItem.fromUri(baseUrlStr + "media?id=" + id))
+                this.add(MediaItem.fromUri(serverUrl + "media?id=" + id))
             }
         }
         exoPlayer!!.setMediaItems(playListMediaItem!!)
@@ -224,7 +220,7 @@ class MusicService : Service() {
         playListMediaItem = ArrayList<MediaItem>().apply {
             PlaylistManager.playlists[currentListPos].musicList.forEachIndexed { pos, musicId ->
                 this.add(MediaItem.Builder()
-                    .setUri(baseUrlStr + "media?id=" + musicId)
+                    .setUri(serverUrl + "media?id=" + musicId)
                     .setMediaId(pos.toString())
                     .build())
             }
@@ -310,7 +306,7 @@ class MusicService : Service() {
         fun getTopRankList(@Query("listSize") listSize:Int) : Call<Playlist>
 
         @POST("/share/download")
-        fun downloadSharedLists(@Query("listSize") listSize:Int) : Call<List<PlaylistForShareDTO>>
+        fun downloadSharedLists() : Call<List<PlaylistForShareDTO>>
 
         @POST("/share/upload")
         fun uploadShareList(@Body playlistForShareDTO:PlaylistForShareDTO) : Call<Unit>
@@ -320,7 +316,7 @@ class MusicService : Service() {
     fun getMusicMetadata(id:Int, operation:(Music?)->Unit) {
         /** retrofit 객체 초기화 */
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrlStr)
+            .baseUrl(serverUrl)
             .addConverterFactory(NullOnEmptyConverterFactory())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -344,7 +340,7 @@ class MusicService : Service() {
 
     fun getMusicMetadataList(ids:List<Int>, operation: (List<Music>?) -> Unit) {
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrlStr)
+            .baseUrl(serverUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
@@ -365,7 +361,7 @@ class MusicService : Service() {
     /** 호출 시 항목이름과 항목내용을 통해 메타데이터를 서버에 요청, 호출될 함수 operation의 인자가 리스트형태 */
     fun getMusicMetadataList(items:List<String>, name:String, operation:(List<Music>?)->Unit) {
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrlStr)
+            .baseUrl(serverUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
@@ -386,7 +382,7 @@ class MusicService : Service() {
     /** 호출 시 항목이름과 항목내용을 통해 메타데이터를 서버에 요청, 호출될 함수 operation의 인자가 리스트형태 */
     fun getMusicArtImg(id:Int, operation:(Array<Byte>?)->Unit) {
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrlStr)
+            .baseUrl(serverUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
@@ -406,7 +402,7 @@ class MusicService : Service() {
 
     fun loadPlaytimeHistory(musicId: Int, operation:(PlaytimeHistoryDTO?)->Unit) {
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrlStr)
+            .baseUrl(serverUrl)
             .addConverterFactory(NullOnEmptyConverterFactory())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -427,7 +423,7 @@ class MusicService : Service() {
 
     fun loadPlaytimeHistoryList(operation:(List<PlaytimeHistoryDTO>?)->Unit) {
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrlStr)
+            .baseUrl(serverUrl)
             .addConverterFactory(NullOnEmptyConverterFactory())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -448,7 +444,7 @@ class MusicService : Service() {
 
     fun savePlaytimeHistory(dto:PlaytimeHistoryDTO, operation:(Boolean?)->Unit) {
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrlStr)
+            .baseUrl(serverUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
@@ -471,7 +467,7 @@ class MusicService : Service() {
 
     fun loadPlaylistManager(operation:(PlaylistManagerDTO?)->Unit) {
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrlStr)
+            .baseUrl(serverUrl)
             .addConverterFactory(NullOnEmptyConverterFactory())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
@@ -492,7 +488,7 @@ class MusicService : Service() {
 
     fun savePlaylistManager(operation:(Boolean?)->Unit) {
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrlStr)
+            .baseUrl(serverUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
@@ -514,7 +510,7 @@ class MusicService : Service() {
 
     fun getPersonalizedList(surroundings: Surroundings, listSize: Int = 20, operation:(List<Int>?)->Unit) {
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrlStr)
+            .baseUrl(serverUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
@@ -534,7 +530,7 @@ class MusicService : Service() {
 
     fun getThemeList(surroundings: Surroundings, listSize: Int = 20, operation:(List<Playlist>?)->Unit) {
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrlStr)
+            .baseUrl(serverUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
@@ -554,7 +550,7 @@ class MusicService : Service() {
 
     fun getTopRankList(listSize: Int = 20, operation:(Playlist?)->Unit) {
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrlStr)
+            .baseUrl(serverUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
@@ -576,7 +572,7 @@ class MusicService : Service() {
 
     fun uploadShareList(playlist : PlaylistForShare, operation:(Boolean)->Unit) {
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrlStr)
+            .baseUrl(serverUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
@@ -599,12 +595,13 @@ class MusicService : Service() {
 
     fun downloadSharedLists(listSize:Int = 20, operation:(List<PlaylistForShare>)->Unit) {
         val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrlStr)
+            .baseUrl(serverUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+
         val api = retrofit.create(RetrofitAPI::class.java)
 
-        val callGetMetadata = api.downloadSharedLists(listSize)
+        val callGetMetadata = api.downloadSharedLists()
         callGetMetadata.enqueue(object:Callback<List<PlaylistForShareDTO>> {
             override fun onResponse(call: Call<List<PlaylistForShareDTO>>, response: Response<List<PlaylistForShareDTO>>) {
                 Log.d("myTag", "success : ${response.raw()}")

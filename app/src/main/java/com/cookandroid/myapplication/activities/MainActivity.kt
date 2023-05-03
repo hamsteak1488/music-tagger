@@ -71,9 +71,7 @@ class MainActivity : AppCompatActivity() {
             }))
         }
         binding.shareBtn.setOnClickListener {
-            startActivity(Intent(this@MainActivity, ListOfPlaylistActivity::class.java).apply {
-                putExtra("operation", ActivityOperation.LIST_OF_PLAYLIST_SHARE.ordinal)
-            })
+            startActivity(Intent(this@MainActivity, ShareActivity::class.java))
         }
 
         //로그아웃 버튼

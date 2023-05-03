@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
 import com.cookandroid.myapplication.databinding.PlaylistViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tftf.util.Playlist
@@ -69,7 +70,7 @@ class PlaylistViewAdapter(
         }
         if(PlaylistManager.playlists[position].musicList.isNotEmpty()){
             Glide.with(context)
-                .load("http://10.0.2.2:8080/img?id=" + (PlaylistManager.playlists[position].musicList[0]))
+                .load(serverUrl + "img?id=" + (PlaylistManager.playlists[position].musicList[0]))
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
                 .into(holder.image)
         }

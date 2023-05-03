@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.MusicAdapter.MusicHolder
+import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
 import com.cookandroid.myapplication.databinding.MusicViewBinding
 import com.tftf.util.Music
 import com.tftf.util.MusicTag
@@ -68,7 +69,7 @@ class MusicAdapter(private val context: Context,
 
         //glide = uri로 이미지 적용
         Glide.with(context)
-            .load("http://10.0.2.2:8080/img?id=" + (musicList[pos].id))
+            .load(serverUrl + "img?id=" + (musicList[pos].id))
             .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
             .into(holder.image)
 

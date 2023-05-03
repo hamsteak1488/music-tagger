@@ -29,7 +29,6 @@ class ListOfPlaylistActivity : AppCompatActivity() {
         binding = ActivityListOfPlaylistBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        binding.addPlaylistBtn.attachToRecyclerView(binding.playlistRV)
         operationOrdinal = intent.getIntExtra("operation", -1)
         binding.ListOfPlaylistTitleTV.text = when (operationOrdinal) {
             ActivityOperation.LIST_OF_PLAYLIST_EXPLORE.ordinal -> "Playlist"

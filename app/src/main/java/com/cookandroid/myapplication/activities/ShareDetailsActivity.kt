@@ -7,6 +7,7 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.MusicServiceConnection
+import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
 import com.cookandroid.myapplication.PlaylistManager
 import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityShareDetailsBinding
@@ -26,8 +27,6 @@ class ShareDetailsActivity : AppCompatActivity() {
 
         binding.titleSD.text = PlaylistManager.playlists[exploringListPos].name
         binding.uploadBtnSD.setOnClickListener{
-//            TODO(공유 리스트 서버에 전송, ShareActivity로 이동)
-
             val playlistForShare = PlaylistForShare(
                 binding.titleSD.text.toString(),
                 PlaylistManager.playlists[exploringListPos].musicList,
@@ -51,7 +50,7 @@ class ShareDetailsActivity : AppCompatActivity() {
         binding.cancelBtnSD.setOnClickListener { finish() }
 
         Glide.with(this)
-            .load("http://10.0.2.2:8080/img?id=" + (PlaylistManager.playlists[exploringListPos].musicList[0]))
+            .load(serverUrl + "img?id=" + (PlaylistManager.playlists[exploringListPos].musicList[0]))
             .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_video_24).centerCrop())
             .into(binding.playlistImgSD)
 

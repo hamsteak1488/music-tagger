@@ -6,6 +6,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.MusicService
 import com.cookandroid.myapplication.MusicServiceConnection
+import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
 import com.cookandroid.myapplication.PlaylistManager
 import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityPlayMusicBinding
@@ -59,7 +60,7 @@ class PlayMusicActivity : AppCompatActivity() {
             binding.songNamePA.invalidate()
 
             Glide.with(this@PlayMusicActivity)
-                .load("http://10.0.2.2:8080/img?id=" + (it.id))
+                .load(serverUrl + "img?id=" + (it.id))
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
                 .into(binding.songImg)
             binding.songImg.invalidate()
