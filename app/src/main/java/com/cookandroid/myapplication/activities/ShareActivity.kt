@@ -1,9 +1,13 @@
 package com.cookandroid.myapplication.activities
 
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.graphics.ColorFilter
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.*
@@ -39,6 +43,8 @@ class ShareActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
+        ControlViewManager.displayControlView(binding.exoControlView)
+
         mService.downloadSharedLists (sharedListsSize) { sharedLists ->
 
             if (sharedLists.isEmpty()) return@downloadSharedLists
@@ -51,9 +57,19 @@ class ShareActivity : AppCompatActivity() {
                 object : ShareAdapter.OnItemClickListener {
                     override fun onItemClick(view: View, pos: Int) {
                         PlaylistManager.playlists.add(sharedLists[pos])
-                        Toast.makeText(this@ShareActivity, "download completed!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@ShareActivity, "copy completed!", Toast.LENGTH_SHORT).show()
                     }
-                })
+                },
+                object : ShareAdapter.OnLikeClickListener {
+                    override fun onItemClick(view: View, pos: Int, checked: Boolean) {
+                        view as ImageView
+                        if (checked)
+                            view.imageTintList = ColorStateList.valueOf(Color.RED)
+                        else
+                            view.imageTintList = ColorStateList.valueOf(Color.GRAY)
+                    }
+                }
+            )
             binding.sharelistRV.adapter = shareAdapter
         }
 

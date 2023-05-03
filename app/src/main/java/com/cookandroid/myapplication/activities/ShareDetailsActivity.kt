@@ -36,16 +36,14 @@ class ShareDetailsActivity : AppCompatActivity() {
                 0
             )
 
-            mService.uploadShareList(playlistForShare) { uploadSuccessed ->
-                if (uploadSuccessed)
+            mService.uploadShareList(playlistForShare) { uploadSucceed ->
+                if (uploadSucceed)
                     Toast.makeText(this@ShareDetailsActivity, "upload completed!", Toast.LENGTH_SHORT).show()
                 else {
                     Toast.makeText(this@ShareDetailsActivity, "upload failed!", Toast.LENGTH_SHORT).show()
                 }
+                finish()
             }
-
-            val description = binding.editDescriptionSD.text.toString()
-            finish()
         }
         binding.cancelBtnSD.setOnClickListener { finish() }
 

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView.OnItemLongClickListener
 import androidx.core.util.TimeUtils.formatDuration
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -74,6 +75,7 @@ class MusicAdapter(private val context: Context,
             .into(holder.image)
 
         if (tagList != null) {
+            holder.rv.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             holder.rv.adapter = TagAdapter(tagList[pos])
         }
 

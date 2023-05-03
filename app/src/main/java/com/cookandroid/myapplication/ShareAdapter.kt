@@ -14,6 +14,7 @@ import com.tftf.util.PlaylistForShare
 class ShareAdapter(private val context: Context,
                    private var sharedLists: ArrayList<PlaylistForShare>,
                    private val downloadClickListener: OnItemClickListener? = null,
+                   private val likeClickListener: OnLikeClickListener? = null
                    )
 
     : RecyclerView.Adapter<ShareAdapter.SharedListHolder>() {
@@ -22,6 +23,12 @@ class ShareAdapter(private val context: Context,
         fun onItemClick(view: View, pos:Int)
     }
 
+    interface OnLikeClickListener {
+        fun onItemClick(view:View, pos:Int, checked:Boolean)
+    }
+
+    var likeChecked:Boolean = false
+
     class SharedListHolder(binding: ShareViewBinding): RecyclerView.ViewHolder(binding.root){
         val image = binding.imageSV
         val sharedListName = binding.playlistNameSV
@@ -29,6 +36,7 @@ class ShareAdapter(private val context: Context,
         val likeCount = binding.likeCountSV
         val downloadCount = binding.downloadCountSV
         val description = binding.descriptionSV
+        val likeBtn = binding.likeBtnSV
         val downloadBtn = binding.downloadBtnSV
         val root = binding.root
     }
@@ -57,6 +65,11 @@ class ShareAdapter(private val context: Context,
 
         holder.downloadBtn.setOnClickListener {
             downloadClickListener?.onItemClick(it, pos)
+        }
+
+        holder.likeBtn.setOnClickListener {
+            likeChecked = likeChecked.xor(true)
+            likeClickListener?.onItemClick(it, pos, likeChecked)
         }
     }
 }

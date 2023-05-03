@@ -132,6 +132,7 @@ class ListOfPlaylistActivity : AppCompatActivity() {
                                 if (PlaylistManager.playlists[pos].musicList.isEmpty()) return
                                 exploringListPos = pos
                                 startActivity(Intent(this@ListOfPlaylistActivity, ShareDetailsActivity::class.java))
+                                finish()
                             }
                         }
                     }

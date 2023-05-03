@@ -41,7 +41,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="270dp"
             android:orientation="vertical">
 
             <TextView
@@ -58,8 +58,6 @@
                 android:id="@+id/themeListRV"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="20dp"
                 android:orientation="horizontal"
                 android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
                 android:scrollbars="horizontal"
@@ -116,13 +114,23 @@
         app:layout_constraintBottom_toBottomOf="parent">
         <!--추천 재생 버튼-->
         <ImageButton
-            android:id="@+id/recommendBtn"
+            android:id="@+id/personalRecommendBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/black"
-            android:src="@drawable/ic_baseline_shuffle_24" />
+            android:src="@drawable/ic_baseline_person_24"
+            app:tint="@color/tempMint" />
         <!--플레이리스트 버튼-->
+
+        <ImageButton
+            android:id="@+id/generalRecommendBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/black"
+            android:src="@drawable/baseline_people_alt_24" />
+
         <ImageButton
             android:id="@+id/playlistBtn"
             android:layout_width="wrap_content"

@@ -19,4 +19,5 @@
     <color name ="tempMint">#83E3FB</color>
     <color name ="tempHotPink">#E91E63</color>
     <color name="lightGrey">#7C7C7C</color>
+    <color name="red">#FF0000</color>
 </resources>
