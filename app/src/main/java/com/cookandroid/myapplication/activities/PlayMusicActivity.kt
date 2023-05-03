@@ -1,14 +1,15 @@
 package com.cookandroid.myapplication.activities
 
 import android.os.*
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.text.set
+import androidx.core.text.toSpannable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.cookandroid.myapplication.MusicService
-import com.cookandroid.myapplication.MusicServiceConnection
+import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
-import com.cookandroid.myapplication.PlaylistManager
-import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityPlayMusicBinding
 
 class PlayMusicActivity : AppCompatActivity() {
@@ -39,6 +40,14 @@ class PlayMusicActivity : AppCompatActivity() {
             })
             mService.prepareAndPlay()
         }
+
+        val weekday: TextView = findViewById(R.id.weekdayEmoji)
+        val text = "Wed."
+        val colorStart = ContextCompat.getColor(this,R.color.start)
+        val colorEnd = ContextCompat.getColor(this, R.color.end)
+        val spannable = text.toSpannable()
+        spannable[0..text.length]   = LinearGradientSpan(text,text,colorStart,colorEnd)
+        weekday.text = spannable
     }
 
     override fun onResume() {
