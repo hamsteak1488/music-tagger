@@ -34,14 +34,14 @@ class PlayMusicActivity : AppCompatActivity() {
             })
             mService.prepareAndPlay()
         }
-
-        val weekday: TextView = findViewById(R.id.weekdayEmoji)
-        val text = "Wed."
-        val colorStart = ContextCompat.getColor(this,R.color.start)
-        val colorEnd = ContextCompat.getColor(this, R.color.end)
-        val spannable = text.toSpannable()
-        spannable[0..text.length]   = LinearGradientSpan(text,text,colorStart,colorEnd)
-        weekday.text = spannable
+//
+//        val weekday: TextView = findViewById(R.id.weekdayEmoji)
+//        val text = "Wed."
+//        val colorStart = ContextCompat.getColor(this,R.color.start)
+//        val colorEnd = ContextCompat.getColor(this, R.color.end)
+//        val spannable = text.toSpannable()
+//        spannable[0..text.length]   = LinearGradientSpan(text,text,colorStart,colorEnd)
+//        weekday.text = spannable
     }
 
     override fun onDestroy() {
