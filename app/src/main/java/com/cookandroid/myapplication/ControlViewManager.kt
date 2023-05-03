@@ -13,7 +13,7 @@ object ControlViewManager {
             mService.setViewPlayer(view)
         }
         else {
-            view.visibility = View.INVISIBLE
+            view.visibility = View.GONE
         }
     }
 }
