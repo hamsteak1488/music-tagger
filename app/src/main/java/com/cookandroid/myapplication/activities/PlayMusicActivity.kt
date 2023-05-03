@@ -2,14 +2,13 @@ package com.cookandroid.myapplication.activities
 
 import android.os.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.cookandroid.myapplication.MusicService
-import com.cookandroid.myapplication.MusicServiceConnection
+import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
-import com.cookandroid.myapplication.PlaylistManager
-import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityPlayMusicBinding
+import com.tftf.util.MusicTag
 
 class PlayMusicActivity : AppCompatActivity() {
 
@@ -23,11 +22,7 @@ class PlayMusicActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.backBtnPA.setOnClickListener { finish() }
-        // 이모지사진 변경
-//        timeEmoji()
-//        weatherEmoji()
-//        seasonEmoji()
-//        weekdayEmoji()
+
         mService.setViewPlayer(binding.exoControlView)
 
         if (mService.currentListPos != -1 && mService.currentMusicPos != -1) {
@@ -41,12 +36,6 @@ class PlayMusicActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-
-
-    }
-
     override fun onDestroy() {
         super.onDestroy()
 
@@ -54,7 +43,9 @@ class PlayMusicActivity : AppCompatActivity() {
     }
 
     private fun setLayout() {
-        mService.getMusicMetadata(PlaylistManager.playlists[mService.currentListPos].musicList[mService.currentMusicPos]) {
+        val currentMusicID = PlaylistManager.playlists[mService.currentListPos].musicList[mService.currentMusicPos]
+
+        mService.getMusicMetadata(currentMusicID) {
             if (it == null) return@getMusicMetadata
             binding.songNamePA.text = it.title
             binding.songNamePA.invalidate()
@@ -65,7 +56,15 @@ class PlayMusicActivity : AppCompatActivity() {
                 .into(binding.songImg)
             binding.songImg.invalidate()
         }
+
+
+        val tag = PlayHistoryManager.getMusicTag(currentMusicID)
+        if (tag != null) {
+            binding.tagRV.layoutManager = LinearLayoutManager(this@PlayMusicActivity, LinearLayoutManager.HORIZONTAL, false)
+            binding.tagRV.adapter = TagAdapter(tag)
+        }
     }
+
     /*
 // todo("data 변경")
     private fun timeEmoji(){

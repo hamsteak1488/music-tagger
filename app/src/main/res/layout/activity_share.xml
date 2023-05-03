@@ -77,6 +77,7 @@
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
         android:padding="10dp"
+        android:visibility="visible"
         app:controller_layout_id="@layout/controller_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

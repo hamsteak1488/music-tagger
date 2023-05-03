@@ -48,12 +48,25 @@ class MainActivity : AppCompatActivity() {
         binding.topRankTV.text = "이번 달 TOP " + topRankSize
 
         ///랜덤, 플레이리스트, 검색 버튼
-        binding.recommendBtn.setOnClickListener{
+        binding.personalRecommendBtn.setOnClickListener{
             SurroundingsManager.getCurrentSurroundings { surroundings ->
                 val mService = MusicServiceConnection.musicService!!
                 mService.getPersonalizedList(surroundings, 20) { musicList ->
                     if (musicList.isNullOrEmpty()) return@getPersonalizedList
-                    PlaylistManager.playlists[0] = Playlist("tempPlaylist",
+                    PlaylistManager.playlists[0] = Playlist("개인 맞춤 추천 리스트",
+                        musicList as ArrayList<Int>
+                    )
+                    mService.reloadPlayer(0, 0)
+                    startActivity(Intent(this@MainActivity, PlayMusicActivity::class.java))
+                }
+            }
+        }
+        binding.generalRecommendBtn.setOnClickListener{
+            SurroundingsManager.getCurrentSurroundings { surroundings ->
+                val mService = MusicServiceConnection.musicService!!
+                mService.getGeneralizedList(surroundings, 20) { musicList ->
+                    if (musicList.isNullOrEmpty()) return@getGeneralizedList
+                    PlaylistManager.playlists[0] = Playlist("일반 맞춤 추천 리스트",
                         musicList as ArrayList<Int>
                     )
                     mService.reloadPlayer(0, 0)
@@ -127,6 +140,7 @@ class MainActivity : AppCompatActivity() {
             if (topRankList == null || topRankList.musicList.isEmpty()) return@getTopRankList
 
             mService.getMusicMetadataList(topRankList.musicList) { musicList ->
+
                 binding.topRankRV.setItemViewCacheSize(5)
                 binding.topRankRV.setHasFixedSize(true)
                 binding.topRankRV.layoutManager = LinearLayoutManager(this@MainActivity)

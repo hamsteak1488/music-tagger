@@ -125,7 +125,6 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         val tagList = when (operationOrdinal) {
             ActivityOperation.PLAYLIST_DETAILS_PERSONAL_TAG.ordinal -> {
                 ArrayList<MusicTag>().apply {
-
                     musicList.forEach { music ->
                         val tag = PlayHistoryManager.getMusicTag(music.id)
                         if (tag == null) add(MusicTag())
