@@ -115,11 +115,12 @@
         <!--추천 재생 버튼-->
         <ImageButton
             android:id="@+id/personalRecommendBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
             android:layout_weight="1"
             android:background="@color/black"
-            android:src="@drawable/ic_baseline_person_24"
+            android:src="@drawable/ic_baseline_play_arrow_24"
             app:tint="@color/tempMint" />
         <!--플레이리스트 버튼-->
 
@@ -129,7 +130,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/black"
-            android:src="@drawable/baseline_people_alt_24" />
+            android:src="@drawable/baseline_cloud_24" />
 
         <ImageButton
             android:id="@+id/playlistBtn"
