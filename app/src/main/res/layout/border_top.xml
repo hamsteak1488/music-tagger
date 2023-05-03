@@ -11,12 +11,12 @@
         android:layout_height="4dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/gradient_black_white" />
+        android:src="@drawable/gradient_left" />
     <ImageView
         android:layout_width="208dp"
         android:layout_height="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/gradient_white_black"/>
+        android:src="@drawable/gradient_right"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

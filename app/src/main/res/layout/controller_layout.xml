@@ -73,6 +73,7 @@
             android:layout_height="50dp"
             android:backgroundTint="@color/black"
             android:src="@drawable/ic_baseline_pause_circle_outline_24"
+            app:tint="@color/customPink"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

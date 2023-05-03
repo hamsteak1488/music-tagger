@@ -54,7 +54,7 @@
         android:id="@+id/uploadShareBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:icon="@drawable/ic_baseline_add_24"
+        app:icon="@drawable/baseline_file_upload_24"
         app:iconSize="35dp"
         app:iconTint="@color/customBlue"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,9 +62,7 @@
         app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        constraintVertical_bias="0.9"
-        app:strokeWidth="2dp"
-        app:strokeColor="@color/customBlue"/>
+        app:layout_constraintVertical_bias="0.8"/>
 
     <include
         android:layout_width="match_parent"

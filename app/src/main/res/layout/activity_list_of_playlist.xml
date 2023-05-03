@@ -46,11 +46,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:paddingBottom="40dp"
         android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/linearLayout" />
 
@@ -66,7 +64,7 @@
         app:layout_constraintHorizontal_bias="0.9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        constraintVertical_bias="0.9"
+        app:layout_constraintVertical_bias="0.8"
         app:strokeWidth="2dp"
         app:strokeColor="@color/customBlue"/>
 
@@ -88,8 +86,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         layout="@layout/border_top"
-        app:layout_constraintBottom_toTopOf="@id/exoControlView"/>/
-    >
+        app:layout_constraintBottom_toTopOf="@id/exoControlView"/>
+
     <com.google.android.exoplayer2.ui.PlayerControlView
         android:id="@+id/exoControlView"
         android:layout_width="0dp"

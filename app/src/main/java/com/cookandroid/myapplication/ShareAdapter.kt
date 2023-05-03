@@ -26,10 +26,10 @@ class ShareAdapter(private val context: Context,
         val image = binding.imageSV
         val sharedListName = binding.playlistNameSV
         val userName = binding.uploaderNameSV
-        val downloadBtn = binding.downloadSV
         val likeCount = binding.likeCountSV
         val downloadCount = binding.downloadCountSV
         val description = binding.descriptionSV
+        val downloadBtn = binding.downloadBtnSV
         val root = binding.root
     }
 
