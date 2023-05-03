@@ -62,13 +62,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.8"/>
 
-    <include
-        android:id="@+id/controller_border"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/border_top"
-        app:layout_constraintBottom_toTopOf="@id/exoControlView"/>
-
     <com.google.android.exoplayer2.ui.PlayerControlView
         android:id="@+id/exoControlView"
         android:layout_width="0dp"
@@ -76,7 +69,7 @@
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
         android:padding="10dp"
-        app:controller_layout_id="@layout/controller_layout"
+        app:controller_layout_id="@layout/border_controller_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

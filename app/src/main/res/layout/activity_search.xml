@@ -41,22 +41,13 @@
         android:id="@+id/searchRV"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/btn_grey"
         android:paddingBottom="50dp"
         android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
         android:scrollbars="vertical"
-        app:layout_constraintBottom_toBottomOf="@+id/include"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/linearLayout"
         android:layout_marginTop="10dp"/>
-
-    <include
-        android:id="@+id/include"
-        layout="@layout/border_top"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/exoControlView" />/
 
     <com.google.android.exoplayer2.ui.PlayerControlView
         android:id="@+id/exoControlView"
@@ -65,7 +56,7 @@
         android:layout_gravity="center"
         android:layout_marginBottom="10dp"
         android:padding="10dp"
-        app:controller_layout_id="@layout/controller_layout"
+        app:controller_layout_id="@layout/border_controller_layout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

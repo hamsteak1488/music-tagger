@@ -47,6 +47,7 @@
             android:id="@+id/playlistImgPD"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:src="@drawable/ic_baseline_music_video_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/backBtnPD" />
@@ -66,7 +67,7 @@
         android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
         android:scrollbars="vertical"
         android:padding="3dp"
-        app:layout_constraintBottom_toBottomOf="@+id/exoControlView"
+        app:layout_constraintBottom_toTopOf="@+id/exoControlView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -88,22 +89,16 @@
         app:strokeWidth="2dp"
         app:strokeColor="@color/customBlue"/>
 
-    <include
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/border_top"
-        app:layout_constraintBottom_toTopOf="@id/exoControlView"/>/
-
     <com.google.android.exoplayer2.ui.PlayerControlView
         android:id="@+id/exoControlView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="20dp"
-        app:controller_layout_id="@layout/controller_layout"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        app:controller_layout_id="@layout/border_controller_layout"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:show_timeout="0"
         app:use_controller="true" />
 

@@ -24,9 +24,9 @@ class Loading : AppCompatActivity() {
         setContentView(binding.root)
 
 
-        //ImageView에 animation 적용하기
-        val ROTATION_ANIM = AnimationUtils.loadAnimation(this, R.anim.loading_anim)
-        binding.Logo.startAnimation(ROTATION_ANIM)
+//        //ImageView에 animation 적용하기
+//        val ROTATION_ANIM = AnimationUtils.loadAnimation(this, R.anim.loading_anim)
+//        binding.Logo.startAnimation(ROTATION_ANIM)
 
 
         val serviceIntent = Intent(this, MusicService::class.java)

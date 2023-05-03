@@ -25,10 +25,10 @@ class ShareDetailsActivity : AppCompatActivity() {
         binding = ActivityShareDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.titleSD.text = PlaylistManager.playlists[exploringListPos].name
+        binding.playlistTitleSD.text = PlaylistManager.playlists[exploringListPos].name
         binding.uploadBtnSD.setOnClickListener{
             val playlistForShare = PlaylistForShare(
-                binding.titleSD.text.toString(),
+                binding.playlistTitleSD.text.toString(),
                 PlaylistManager.playlists[exploringListPos].musicList,
                 mService.email,
                 binding.editDescriptionSD.text.toString(),
@@ -53,7 +53,6 @@ class ShareDetailsActivity : AppCompatActivity() {
             .load(serverUrl + "img?id=" + (PlaylistManager.playlists[exploringListPos].musicList[0]))
             .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_video_24).centerCrop())
             .into(binding.playlistImgSD)
-
     }
 
     override fun onResume() {

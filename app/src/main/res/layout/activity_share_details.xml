@@ -7,6 +7,22 @@
     tools:context=".activities.ShareDetailsActivity"
     android:background="@color/black">
 
+
+    <TextView
+        android:id="@+id/sharePlaylistSD"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:text="Share a Playlist"
+        android:textSize="26dp"
+        android:singleLine="true"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:layout_marginStart="3dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintBottom_toTopOf="@id/playlistImgSD"
+        app:layout_constraintStart_toStartOf="@id/playlistImgSD"
+        app:layout_constraintEnd_toEndOf="@id/playlistImgSD"/>
+
     <ImageView
         android:id="@+id/playlistImgSD"
         android:layout_width="300dp"
@@ -18,7 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
-        android:id="@+id/titleSD"
+        android:id="@+id/titleViewSD"
         android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:text="Title"
@@ -39,7 +55,7 @@
         android:gravity="center"
         android:layout_marginStart="3dp"
         android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@id/titleSD"
+        app:layout_constraintTop_toBottomOf="@id/titleViewSD"
         app:layout_constraintStart_toStartOf="@id/playlistImgSD"
         app:layout_constraintEnd_toEndOf="@id/playlistImgSD"/>
 

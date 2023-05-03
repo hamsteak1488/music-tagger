@@ -23,6 +23,8 @@ class ShareActivity : AppCompatActivity() {
         binding = ActivityShareBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.backBtnSA.setOnClickListener{finish()}
+
         binding.sharelistRV.setHasFixedSize(true)
         binding.sharelistRV.setItemViewCacheSize(13)
         binding.sharelistRV.layoutManager = LinearLayoutManager(this)
@@ -54,5 +56,7 @@ class ShareActivity : AppCompatActivity() {
                 })
             binding.sharelistRV.adapter = shareAdapter
         }
+
+        ControlViewManager.displayControlView(binding.exoControlView)
     }
 }
