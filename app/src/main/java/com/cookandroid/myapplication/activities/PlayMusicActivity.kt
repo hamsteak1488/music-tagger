@@ -75,50 +75,8 @@ class PlayMusicActivity : AppCompatActivity() {
         if (tag != null) {
             binding.tagRV.layoutManager = LinearLayoutManager(this@PlayMusicActivity, LinearLayoutManager.HORIZONTAL, false)
             binding.tagRV.adapter = TagAdapter(tag)
-            binding.weekdayEmoji.text = tag.toList()[currentMusicID].first().toString()
+            binding.weekdayEmoji.text = tag.tagMap["요일"]
         }
     }
 
-    /*
-// todo("data 변경")
-    private fun timeEmoji(){
-    when(data){
-        "새벽", "이른 아침", "늦은 아침" -> binding.timeEmoji.setImageResource(R.drawable.morining)
-        "이른 오후", "늦은 오후" -> binding.timeEmoji.setImageResource(R.drawable.afternoon)
-        "저녁"->binding.timeEmoji.setImageResource(R.drawable.evening)
-        "밤"->binding.timeEmoji.setImageResource(R.drawable.night)
-    }
-    }
-    private fun weatherEmoji(){
-        when(data){
-            "맑음" -> binding.weatherEmoji.setImageResource(R.drawable.sun)
-            "구름", "구름 흩뿌려짐", "구름 많이 낌","안개" ->binding.weatherEmoji.setImageResource(R.drawable.cloudy)
-            "소나기", "비"-> binding.weatherEmoji.setImageResource(R.drawable.rain)
-            "천둥" -> binding.weatherEmoji.setImageResource(R.drawable.thunder)
-            "눈"->binding.weatherEmoji.setImageResource(R.drawable.snow)
-            "예외 날씨" ->binding.weatherEmoji.setImageResource(R.drawable.exept)
-        }
-
-    }
-    private fun seasonEmoji(){
-        when(data){
-            "봄" -> binding.weatherEmoji.setImageResource(R.drawable.springtag)
-            "여름"->binding.weatherEmoji.setImageResource(R.drawable.summer)
-            "가을" ->binding.weatherEmoji.setImageResource(R.drawable.fall)
-            "겨울" ->binding.weatherEmoji.setImageResource(R.drawable.winter)
-
-        }
-    }
-    private fun weekdayEmoji(){
-        when(data){
-            "월"->binding.weekdayEmoji.text="Mon"
-            "화"->binding.weekdayEmoji.text="Tue"
-            "수"->binding.weekdayEmoji.text="wed"
-            "목"->binding.weekdayEmoji.text="Thu"
-            "금"->binding.weekdayEmoji.text="Fri"
-            "토"->binding.weekdayEmoji.text="Sat"
-            "일"->binding.weekdayEmoji.text="Sun"
-        }
-    }
-*/
 }

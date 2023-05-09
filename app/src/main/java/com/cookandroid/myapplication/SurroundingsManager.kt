@@ -61,10 +61,11 @@ object SurroundingsManager {
             currentWeather = when (it) {
                 "clear sky" -> "맑음"
                 "few clouds" -> "구름"
-                "scattered clouds" -> "구름 흩뿌려짐"
-                "broken clouds" -> "구름 많이 낌"
+                "scattered clouds" -> "구름"
+                "broken clouds" -> "구름"
                 "shower rain" -> "소나기"
                 "rain" -> "비"
+                "light rain" -> "비"
                 "thunderstorm" -> "천둥"
                 "snow" -> "눈"
                 "mist" -> "안개"
