@@ -7,8 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.cookandroid.myapplication.MusicService
 import com.cookandroid.myapplication.MusicServiceConnection
-import android.view.animation.AnimationUtils
-import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityLoadingBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -51,7 +49,7 @@ class Loading : AppCompatActivity() {
                     .addOnCompleteListener(this) { login ->
                         if (login.isSuccessful) {
                             val mainIntent = Intent(this, MainActivity::class.java)
-                            MusicServiceConnection.musicService!!.email = ID
+                            MusicServiceConnection.musicService!!.userID = ID
                             mainIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                             startActivity(mainIntent)
                         }

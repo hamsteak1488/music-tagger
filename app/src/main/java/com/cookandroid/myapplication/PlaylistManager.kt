@@ -31,6 +31,7 @@ object PlaylistManager {
         }
     }
 
+    /*
     fun toDto(email:String) : PlaylistManagerDTO {
         return PlaylistManagerDTO(email, Gson().toJsonTree(playlists) as JsonArray)
     }
@@ -61,6 +62,7 @@ object PlaylistManager {
             dto.copyCount
         )
     }
+    */
 
     fun formatDuration(duration: Long):String{
         val minutes = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)

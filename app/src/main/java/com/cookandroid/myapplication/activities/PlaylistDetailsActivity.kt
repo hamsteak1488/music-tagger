@@ -11,6 +11,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
 import com.cookandroid.myapplication.PlaylistManager.exploringListPos
+import com.cookandroid.myapplication.adapters.MusicAdapter
 import com.cookandroid.myapplication.databinding.ActivityPlaylistDetailsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tftf.util.Music
@@ -145,7 +146,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
                     startActivity(Intent(this@PlaylistDetailsActivity, PlayMusicActivity::class.java))
                 }
             },
-            object:MusicAdapter.OnItemClickListener {
+            object: MusicAdapter.OnItemClickListener {
                 override fun onItemClick(view: View, pos: Int) {
                     val customDialog = MaterialAlertDialogBuilder(this@PlaylistDetailsActivity)
                         .setTitle("option")
@@ -168,7 +169,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
                     customDialog.show()
                 }
             },
-            object:MusicAdapter.OnItemLongClickListener {
+            object: MusicAdapter.OnItemLongClickListener {
                 override fun onItemLongClick(view: View, pos: Int) {
                     selectionMode = selectionMode.xor(true)
                     if (selectionMode) {
@@ -187,7 +188,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
                     initMusicAdapter(musicList)
                 }
             },
-            object:MusicAdapter.OnItemCheckedChangeListener {
+            object: MusicAdapter.OnItemCheckedChangeListener {
                 override fun onItemCheckedChange(isChecked: Boolean, pos: Int) {
                     if (isChecked) {
                         selectedItemList.add(pos)

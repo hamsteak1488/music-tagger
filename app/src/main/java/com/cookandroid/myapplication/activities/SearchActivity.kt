@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.*
+import com.cookandroid.myapplication.adapters.MusicAdapter
 import com.cookandroid.myapplication.databinding.ActivitySearchBinding
 import com.tftf.util.Music
 

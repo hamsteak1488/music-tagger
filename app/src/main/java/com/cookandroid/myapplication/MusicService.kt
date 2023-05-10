@@ -57,7 +57,7 @@ class MusicService : Service() {
     }
     private var mediaItemChangeListenerForPlayMusicActivity : OnMediaItemChangeListener? = null
 
-    var email:String = ""
+    var userID:String = ""
 
     val testAudioUriStr = serverUrl + "media?title=test_audio1.mp3"
     val testVideoUriStr = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
@@ -166,7 +166,7 @@ class MusicService : Service() {
                 if (musicStartTime != (-1).toLong()) {
                     val playedTime = System.currentTimeMillis() - musicStartTime
                     PlayHistoryManager.addPlaytime(curMusicId, playedTime) {
-                        savePlaytimeHistory(PlaytimeHistoryDTO(email, curMusicId, PlayHistoryManager.getPlaytime(curMusicId), PlayHistoryManager.exportToJson(curMusicId))) { }
+                        savePlaytimeHistory(PlaytimeHistoryDTO(userID, curMusicId, PlayHistoryManager.getPlaytime(curMusicId), PlayHistoryManager.exportToJson(curMusicId))) { }
                     }
                     musicStartTime = -1
                 }
@@ -415,7 +415,7 @@ class MusicService : Service() {
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
 
-        val callGetMetadata = api.selectPlaytimeHistory(email, musicId)
+        val callGetMetadata = api.selectPlaytimeHistory(userID, musicId)
         callGetMetadata.enqueue(object:Callback<PlaytimeHistoryDTO> {
             override fun onResponse(call: Call<PlaytimeHistoryDTO>, response: Response<PlaytimeHistoryDTO>) {
                 Log.d("myTag", "success : ${response.raw()}")
@@ -436,7 +436,7 @@ class MusicService : Service() {
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
 
-        val callGetMetadata = api.selectPlaytimeHistoryList(email)
+        val callGetMetadata = api.selectPlaytimeHistoryList(userID)
         callGetMetadata.enqueue(object:Callback<List<PlaytimeHistoryDTO>> {
             override fun onResponse(call: Call<List<PlaytimeHistoryDTO>>, response: Response<List<PlaytimeHistoryDTO>>) {
                 Log.d("myTag", "success : ${response.raw()}")
@@ -480,7 +480,7 @@ class MusicService : Service() {
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
 
-        val callGetMetadata = api.selectPlaylistManager(email)
+        val callGetMetadata = api.selectPlaylistManager(userID)
         callGetMetadata.enqueue(object:Callback<PlaylistManagerDTO> {
             override fun onResponse(call: Call<PlaylistManagerDTO>, response: Response<PlaylistManagerDTO>) {
                 Log.d("myTag", "success : ${response.raw()}")
@@ -500,7 +500,7 @@ class MusicService : Service() {
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
 
-        val callGetMetadata = api.savePlaylistManager(PlaylistManager.toDto(email))
+        val callGetMetadata = api.savePlaylistManager(PlaylistManager.toDto(userID))
         callGetMetadata.enqueue(object:Callback<String> {
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 Log.d("myTag", "success : ${response.raw()}")
@@ -521,7 +521,7 @@ class MusicService : Service() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
-        val callGetMetadata = api.getPersonalizedList(email, surroundings, listSize)
+        val callGetMetadata = api.getPersonalizedList(userID, surroundings, listSize)
         callGetMetadata.enqueue(object:Callback<List<Int>> {
             override fun onResponse(call: Call<List<Int>>, response: Response<List<Int>>) {
                 Log.d("myTag", "success : ${response.raw()}")

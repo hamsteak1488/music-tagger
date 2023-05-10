@@ -1,6 +1,5 @@
 package com.cookandroid.myapplication.activities
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -30,7 +29,7 @@ class ShareDetailsActivity : AppCompatActivity() {
             val playlistForShare = PlaylistForShare(
                 binding.playlistTitleSD.text.toString(),
                 PlaylistManager.playlists[exploringListPos].musicList,
-                mService.email,
+                mService.userID,
                 binding.editDescriptionSD.text.toString(),
                 0,
                 0

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.PlaylistManager.exploringListPos
+import com.cookandroid.myapplication.adapters.PlaylistViewAdapter
 import com.cookandroid.myapplication.databinding.ActivityListOfPlaylistBinding
 import com.cookandroid.myapplication.databinding.AddPlaylistBinding
 import com.google.android.material.color.MaterialColors

@@ -1,4 +1,4 @@
-package com.cookandroid.myapplication
+package com.cookandroid.myapplication.adapters
 
 import android.app.AlertDialog
 import android.content.Context
@@ -9,7 +9,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.cookandroid.myapplication.MusicServiceConnection
 import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
+import com.cookandroid.myapplication.PlaylistManager
+import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.PlaylistViewBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tftf.util.Playlist

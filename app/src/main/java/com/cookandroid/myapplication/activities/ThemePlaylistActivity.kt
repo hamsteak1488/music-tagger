@@ -3,10 +3,7 @@ package com.cookandroid.myapplication.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
-import com.cookandroid.myapplication.MusicAdapter
-import com.cookandroid.myapplication.R
+import com.cookandroid.myapplication.adapters.MusicAdapter
 import com.cookandroid.myapplication.databinding.ActivityThemePlaylistBinding
 
 class ThemePlaylistActivity : AppCompatActivity() {

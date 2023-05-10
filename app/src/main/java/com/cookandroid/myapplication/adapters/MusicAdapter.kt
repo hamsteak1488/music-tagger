@@ -1,18 +1,17 @@
-package com.cookandroid.myapplication
+package com.cookandroid.myapplication.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView.OnItemLongClickListener
-import androidx.core.util.TimeUtils.formatDuration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.cookandroid.myapplication.MusicAdapter.MusicHolder
+import com.cookandroid.myapplication.adapters.MusicAdapter.MusicHolder
 import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
+import com.cookandroid.myapplication.PlaylistManager
+import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.MusicViewBinding
 import com.tftf.util.Music
 import com.tftf.util.MusicTag

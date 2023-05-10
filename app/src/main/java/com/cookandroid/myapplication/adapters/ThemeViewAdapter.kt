@@ -1,4 +1,4 @@
-package com.cookandroid.myapplication
+package com.cookandroid.myapplication.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
+import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ThemeViewBinding
 import com.tftf.util.Playlist
 

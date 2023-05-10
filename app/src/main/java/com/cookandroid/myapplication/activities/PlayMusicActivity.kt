@@ -1,18 +1,14 @@
 package com.cookandroid.myapplication.activities
 
 import android.os.*
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.core.text.set
-import androidx.core.text.toSpannable
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
+import com.cookandroid.myapplication.adapters.TagAdapter
 import com.cookandroid.myapplication.databinding.ActivityPlayMusicBinding
-import com.tftf.util.MusicTag
 
 class PlayMusicActivity : AppCompatActivity() {
 

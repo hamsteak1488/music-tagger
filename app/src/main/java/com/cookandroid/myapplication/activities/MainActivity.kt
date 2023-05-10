@@ -8,13 +8,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.ControlViewManager.displayControlView
+import com.cookandroid.myapplication.adapters.ThemeViewAdapter
+import com.cookandroid.myapplication.adapters.TopRankAdapter
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.tftf.util.Music
 import com.tftf.util.Playlist
 
 class MainActivity : AppCompatActivity() {

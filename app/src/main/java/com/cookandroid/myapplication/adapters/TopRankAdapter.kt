@@ -1,4 +1,4 @@
-package com.cookandroid.myapplication
+package com.cookandroid.myapplication.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,10 +9,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
 import com.cookandroid.myapplication.PlaylistManager.formatDuration
+import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.RankMusicViewBinding
 import com.tftf.util.Music
 import com.tftf.util.MusicTag
-import com.cookandroid.myapplication.TopRankAdapter.MusicHolder
+import com.cookandroid.myapplication.adapters.TopRankAdapter.MusicHolder
 
 class TopRankAdapter(private val context: Context,
                      private val musicList: ArrayList<Music>,

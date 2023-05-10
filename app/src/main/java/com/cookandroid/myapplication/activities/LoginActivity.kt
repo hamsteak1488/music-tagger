@@ -7,7 +7,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.cookandroid.myapplication.MusicServiceConnection
 import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.ActivityLoginBinding
@@ -145,7 +144,7 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, pw)
             .addOnCompleteListener(this) { login ->
                 if (login.isSuccessful) {
-                    MusicServiceConnection.musicService!!.email =binding.userEmail.text.toString()
+                    MusicServiceConnection.musicService!!.userID =binding.userEmail.text.toString()
                     Intent(this, MainActivity::class.java).also {
                         it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(it)

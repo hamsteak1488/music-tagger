@@ -1,10 +1,10 @@
-package com.cookandroid.myapplication
+package com.cookandroid.myapplication.adapters
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.databinding.TagViewBinding
 import com.tftf.util.MusicTag
 
@@ -39,7 +39,7 @@ class TagAdapter(private val tag: MusicTag)
                     "이른 오후", "늦은 오후" -> R.drawable.afternoon
                     "저녁" -> R.drawable.evening
                     "밤" -> R.drawable.night
-                    else ->R.drawable.logo_white
+                    else -> R.drawable.logo_white
                 }
             }
             "날씨" -> {
