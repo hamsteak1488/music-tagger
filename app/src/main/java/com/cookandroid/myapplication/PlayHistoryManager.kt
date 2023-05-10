@@ -8,22 +8,18 @@ import com.tftf.util.PlayHistory
 
 object PlayHistoryManager {
 
-    private var musicPlayHistory = HashMap<Int, PlayHistory>()
 
+    fun cumulateHistory(musicID:Int, playedTime:Long, callbackOperation:()->Unit) {
 
-    fun addPlaytime(id:Int, playtime:Long, callbackOperation:()->Unit) {
-        if (!musicPlayHistory.containsKey(id)) {
-            musicPlayHistory[id] = PlayHistory()
-        }
-
-        SurroundingsManager.getCurrentSurroundings { s ->
-            musicPlayHistory[id]!!.addPlaytime(s, playtime)
+        SurroundingsManager.getCurrentSurroundings { surroundings ->
+            musicPlayHistory[id]!!.addPlaytime(surroundings, playtime)
             callbackOperation()
         }
 
         Log.d("myTag", "추가된 결과 : " + musicPlayHistory[id]!!.totalPlaytime)
     }
 
+/*
     fun getPlaytime(id:Int) :Long {
         if (!musicPlayHistory.containsKey(id)) return 0
 
@@ -48,4 +44,5 @@ object PlayHistoryManager {
     fun exportToJson(musicId: Int) : JsonObject {
         return musicPlayHistory[musicId]!!.exportToJson()
     }
+    */
 }

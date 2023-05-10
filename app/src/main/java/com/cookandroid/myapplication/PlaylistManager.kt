@@ -1,18 +1,15 @@
 package com.cookandroid.myapplication
 
-import com.google.gson.Gson
-import com.google.gson.JsonArray
 import com.tftf.util.Playlist
-import com.tftf.util.PlaylistForShare
-import com.tftf.util.PlaylistForShareDTO
-import com.tftf.util.PlaylistManagerDTO
 import java.util.concurrent.TimeUnit
 
 object PlaylistManager {
 
     var exploringListPos:Int = -1
 
-    var playlists: ArrayList<Playlist> = ArrayList() //플레이리스트의 리스트
+    // var playlists: ArrayList<Playlist> = ArrayList() //플레이리스트의 리스트
+
+    lateinit var playlistInUse:Playlist;
 
 
     init {
@@ -20,8 +17,11 @@ object PlaylistManager {
     }
 
     fun initTempPlaylist() {
+        playlistInUse = Playlist("user1", "playlist1", "no playlists are in use", ArrayList());
+
+        /*
         if (playlists.size == 0) {
-            playlists.add(Playlist("tempPlaylist", ArrayList()))
+            playlists.add(Playlist("no playlists are in use", ArrayList()))
         }
         else if (playlists[0].name.compareTo("tempPlaylist") != 0) {
             playlists.add(0, Playlist("tempPlaylist", ArrayList()))
@@ -29,6 +29,7 @@ object PlaylistManager {
         else {
             playlists[0].musicList.clear()
         }
+        */
     }
 
     /*
