@@ -51,12 +51,10 @@ class MainActivity : AppCompatActivity() {
         binding.personalRecommendBtn.setOnClickListener{
             SurroundingsManager.getCurrentSurroundings { surroundings ->
                 val mService = MusicServiceConnection.musicService!!
-                mService.getPersonalizedList(surroundings, 20) { musicList ->
-                    if (musicList.isNullOrEmpty()) return@getPersonalizedList
-                    PlaylistManager.playlists[0] = Playlist("개인 맞춤 추천 리스트",
-                        musicList as ArrayList<Int>
-                    )
-                    mService.reloadPlayer(0, 0)
+                RetrofitManager.getPersonalizedList(UserManager.userID, surroundings, 20) { playlist ->
+                    if (playlist == null) return@getPersonalizedList
+                    PlaylistManager.playlistInUse = playlist
+                    mService.reloadPlayer(0)
                     startActivity(Intent(this@MainActivity, PlayMusicActivity::class.java))
                 }
             }
@@ -64,12 +62,10 @@ class MainActivity : AppCompatActivity() {
         binding.generalRecommendBtn.setOnClickListener{
             SurroundingsManager.getCurrentSurroundings { surroundings ->
                 val mService = MusicServiceConnection.musicService!!
-                mService.getGeneralizedList(surroundings, 20) { musicList ->
-                    if (musicList.isNullOrEmpty()) return@getGeneralizedList
-                    PlaylistManager.playlists[0] = Playlist("일반 맞춤 추천 리스트",
-                        musicList as ArrayList<Int>
-                    )
-                    mService.reloadPlayer(0, 0)
+                RetrofitManager.getGeneralizedList(surroundings, 20) { playlist ->
+                    if (playlist == null) return@getGeneralizedList
+                    PlaylistManager.playlistInUse = playlist
+                    mService.reloadPlayer(0)
                     startActivity(Intent(this@MainActivity, PlayMusicActivity::class.java))
                 }
             }
@@ -113,7 +109,7 @@ class MainActivity : AppCompatActivity() {
 
         //테마 RV 구현
         SurroundingsManager.getCurrentSurroundings { surroundings ->
-            mService.getThemeList(surroundings, 10) { themeLists ->
+            RetrofitManager.getThemeList(surroundings, 10) { themeLists ->
 
                 if (themeLists == null || themeLists.isEmpty()) return@getThemeList
 
@@ -124,7 +120,7 @@ class MainActivity : AppCompatActivity() {
                 themeAdapter = ThemeViewAdapter(this, themeLists.toCollection(ArrayList()),
                     object : ThemeViewAdapter.OnItemClickListener {
                         override fun onItemClick(view: View, pos: Int) {
-                            PlaylistManager.playlists[0] = themeLists[pos]
+                            PlaylistManager.playlistInUse = themeLists[pos]
                             PlaylistManager.exploringListPos = 0
 
                             startActivity(Intent(this@MainActivity, PlaylistDetailsActivity::class.java))
@@ -135,11 +131,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        mService.getTopRankList(topRankSize) { topRankList ->
+        RetrofitManager.getTopRankList(topRankSize) { topRankList ->
 
             if (topRankList == null || topRankList.musicList.isEmpty()) return@getTopRankList
 
-            mService.getMusicMetadataList(topRankList.musicList) { musicList ->
+            RetrofitManager.getMusicMetadataList(topRankList.musicList) { musicList ->
 
                 binding.topRankRV.setItemViewCacheSize(5)
                 binding.topRankRV.setHasFixedSize(true)
@@ -148,7 +144,7 @@ class MainActivity : AppCompatActivity() {
                 topRankAdapter = TopRankAdapter(this@MainActivity, musicList!!.toCollection(ArrayList()), null,
                     object : TopRankAdapter.OnItemClickListener {
                         override fun onItemClick(view: View, pos: Int) {
-                            PlaylistManager.playlists[0] = topRankList
+                            PlaylistManager.playlistInUse = topRankList
                             PlaylistManager.exploringListPos = 0
 
                             startActivity(Intent(this@MainActivity, PlaylistDetailsActivity::class.java))

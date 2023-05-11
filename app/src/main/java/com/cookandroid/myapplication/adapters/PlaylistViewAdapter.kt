@@ -18,11 +18,15 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tftf.util.Playlist
 
 class PlaylistViewAdapter(
-    private val context: Context, private var playlists: ArrayList<Playlist>,
-    private val listener: OnItemClickListener? = null,
-    param: OnItemClickListener
+    private val context: Context, private var playlists: List<Playlist>,
+    private val itemClickListener: OnItemClickListener,
+    private val deleteClickListener: OnItemClickListener? = null
 )
     : RecyclerView.Adapter<PlaylistViewAdapter.PlaylistHolder>() {
+
+    interface OnItemClickListener {
+        fun onItemClick(view: View, pos:Int)
+    }
 
     class PlaylistHolder(binding: PlaylistViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val image = binding.playlistImg
@@ -36,44 +40,20 @@ class PlaylistViewAdapter(
         return PlaylistHolder(PlaylistViewBinding.inflate(LayoutInflater.from(context), parent, false))
     }
 
-    override fun onBindViewHolder(holder: PlaylistHolder, position: Int) {
-        holder.name.text = playlists[position].name
+    override fun onBindViewHolder(holder: PlaylistHolder, pos: Int) {
+        holder.name.text = playlists[pos].name
         holder.name.isSelected = true
-        holder.songCnt.text = playlists[position].musicList.size.toString() + " songs"
+        holder.songCnt.text = playlists[pos].musicIDList.size.toString() + " songs"
         holder.delete.setOnClickListener {
-            val builder = MaterialAlertDialogBuilder(context)
-            builder.setTitle(playlists[position].name)
-                .setMessage("delete playlist?")
-                .setPositiveButton("Yes") { dialog, _ ->
-                    if (position == 0) {
-                        PlaylistManager.playlists[position].musicList.clear()
-                    }
-                    else {
-                        PlaylistManager.playlists.removeAt(position)
-                    }
-                    if (MusicServiceConnection.musicService!!.currentListPos == position) {
-                        MusicServiceConnection.musicService!!.currentListPos = -1
-                        MusicServiceConnection.musicService!!.currentMusicPos = -1
-                    }
-                    MusicServiceConnection.musicService!!.savePlaylistManager() { }
-                    refreshPlaylist()
-                    dialog.dismiss()
-                }
-                .setNegativeButton("No"){dialog,_ ->
-                    dialog.dismiss()
-                }
-            val customDialog = builder.create()
-            customDialog.show()
-            customDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
-            customDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
+            deleteClickListener?.onItemClick(it, pos)
         }
         holder.root.setOnClickListener{
-            listener?.onItemClick(it, position)
+            itemClickListener?.onItemClick(it, pos)
 
         }
-        if(PlaylistManager.playlists[position].musicList.isNotEmpty()){
+        if(PlaylistManager.playlists[pos].musicList.isNotEmpty()){
             Glide.with(context)
-                .load(serverUrl + "img?id=" + (PlaylistManager.playlists[position].musicList[0]))
+                .load(serverUrl + "img?id=" + (PlaylistManager.playlists[pos].musicList[0]))
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
                 .into(holder.image)
         }
@@ -86,9 +66,5 @@ class PlaylistViewAdapter(
         playlists = ArrayList()
         playlists.addAll(PlaylistManager.playlists)
         notifyDataSetChanged()
-    }
-
-    interface OnItemClickListener {
-        fun onItemClick(view: View, pos:Int)
     }
 }

@@ -41,12 +41,11 @@ class MusicService : Service() {
     /** ExoPlayer의 상단 알림창 매니저 */
     private var playerNotificationManager : PlayerNotificationManager? = null
 
+
     /** id를 통해 만들어진 Uri로 Mediaitem으로 변경 후 저장할 리스트 */
     private var playListMediaItem:ArrayList<MediaItem>? = null
 
-    /** 현재 재생중인 음악 플레이리스트 인덱스 */
-    var currentListPos:Int = -1
-
+    /** 현재 재생중인 음악의 플레이리스트 내 인덱스 */
     var currentMusicPos:Int = -1
 
     /** 음악 청취 기록을 위한 음악 재생시작 시간 정보 */
@@ -169,9 +168,7 @@ class MusicService : Service() {
                 /** 재생시작시간 정보를 통해 재생된시간 계산 후 기록 */
                 if (musicStartTime != (-1).toLong()) {
                     val playedTime = System.currentTimeMillis() - musicStartTime
-                    PlayHistoryManage.addPlaytime(curMusicId, playedTime) {
-                        savePlaytimeHistory(PlaytimeHistoryDTO(userID, curMusicId, PlayHistoryManager.getPlaytime(curMusicId), PlayHistoryManager.exportToJson(curMusicId))) { }
-                    }
+                    PlayHistoryManager.cumulateHistory(curMusicId, playedTime)
                     musicStartTime = -1
                 }
             }
@@ -222,7 +219,7 @@ class MusicService : Service() {
     fun reloadPlaylist() {
         /** 음악 id를 통해 MediaItem 리스트를 생성한 후, exoPlayer의 리스트로 설정 */
         playListMediaItem = ArrayList<MediaItem>().apply {
-            PlaylistManager.playlists[currentListPos].musicList.forEachIndexed { pos, musicId ->
+            PlaylistManager.playlistInUse.musicList.forEachIndexed { pos, musicId ->
                 this.add(MediaItem.Builder()
                     .setUri(serverUrl + "media?id=" + musicId)
                     .setMediaId(pos.toString())
@@ -231,8 +228,7 @@ class MusicService : Service() {
         }
     }
 
-    fun reloadPlayer(listPos:Int, musicPos:Int) {
-        currentListPos = listPos
+    fun reloadPlayer(musicPos:Int) {
         reloadPlaylist()
         exoPlayer!!.setMediaItems(playListMediaItem!!)
 
@@ -282,6 +278,8 @@ class MusicService : Service() {
             super.onNotificationPosted(notificationId, notification, ongoing)
         }
     }
+
+    //todo : reloadPlayer 할 때, playlistInUse 내 음악들의 메타데이터를 불러온 후에 재생을 진행시킨다면 알림창에 메타데이터 표시하는 과정이 원활해질듯함
 
     // 알림창 정보 표시 관리
     private inner class MyMediaDescriptionAdapter : MediaDescriptionAdapter {

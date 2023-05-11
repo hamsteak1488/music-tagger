@@ -56,6 +56,9 @@ interface RetrofitAPI {
     @POST("/playlist/select_by_userid")
     fun loadUserPlaylist(@Query("userID") userID: String) : Call<List<Playlist>>
 
+    @POST("/playlist/delete")
+    fun deleteUserPlaylist(@Query("userID") userID: String, @Query("name") name:String) : Call<Boolean>
+
 
 
     @POST("/share/upload")
@@ -69,11 +72,11 @@ interface RetrofitAPI {
     @POST("/recommend/personalized")
     fun getPersonalizedList(@Query("userID") userID: String,
                             @Body surroundings: Surroundings,
-                            @Query("listSize") listSize: Int) : Call<List<Int>>
+                            @Query("listSize") listSize: Int) : Call<Playlist>
 
     @POST("/recommend/generalized")
     fun getGeneralizedList(@Body surroundings: Surroundings,
-                           @Query("listSize") listSize: Int) : Call<List<Int>>
+                           @Query("listSize") listSize: Int) : Call<Playlist>
 
     @POST("/recommend/theme")
     fun getThemeList(@Body surroundings: Surroundings,

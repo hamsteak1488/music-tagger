@@ -5,18 +5,27 @@ import com.google.gson.JsonObject
 import com.tftf.util.MusicTag
 import com.tftf.util.MusicTagger
 import com.tftf.util.PlayHistory
+import com.tftf.util.PlayInform
 
 object PlayHistoryManager {
 
 
-    fun cumulateHistory(musicID:Int, playedTime:Long, callbackOperation:()->Unit) {
-
+    fun cumulateHistory(musicID:Int, playedTime:Long) {
         SurroundingsManager.getCurrentSurroundings { surroundings ->
-            musicPlayHistory[id]!!.addPlaytime(surroundings, playtime)
-            callbackOperation()
+            RetrofitManager.cumulateHistory(PlayInform(
+                UserManager.userID,
+                musicID,
+                playedTime,
+                surroundings
+            )) { success ->
+                if (success == true) {
+                    Log.d("tftf-PlayHistoryManager", "playtime cumulation success")
+                }
+                else {
+                    Log.d("tftf-PlayHistoryManager", "playtime cumulation failure")
+                }
+            }
         }
-
-        Log.d("myTag", "추가된 결과 : " + musicPlayHistory[id]!!.totalPlaytime)
     }
 
 /*

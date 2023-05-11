@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.ServiceConnection
 import android.os.IBinder
-import com.cookandroid.myapplication.activities.Loading
 
 object MusicServiceConnection : ServiceConnection {
 

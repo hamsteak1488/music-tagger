@@ -1,5 +1,6 @@
 package com.cookandroid.myapplication.activities
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -17,6 +18,7 @@ import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tftf.util.Playlist
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ListOfPlaylistActivity : AppCompatActivity() {
 
@@ -24,6 +26,8 @@ class ListOfPlaylistActivity : AppCompatActivity() {
     private lateinit var adapter: PlaylistViewAdapter
 
     private var operationOrdinal:Int = -1
+
+    private lateinit var listOfPlaylist: ArrayList<Playlist>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,15 +49,18 @@ class ListOfPlaylistActivity : AppCompatActivity() {
         binding.playlistRV.setHasFixedSize(true)
         binding.playlistRV.setItemViewCacheSize(13)
         binding.playlistRV.layoutManager = LinearLayoutManager(this@ListOfPlaylistActivity)
-        binding.backBtnPLA.setOnClickListener { finish() }
-        binding.addPlaylistBtn.setOnClickListener { customAlertDialog() }
 
-        //생성된 플레이리스트가 존재하면 (플레이리스트 생성 문구) 노출 x
-        if(PlaylistManager.playlists.isNotEmpty()) binding.instructionPA.visibility = View.GONE
+
+        binding.backBtnPLA.setOnClickListener {
+            finish()
+        }
+        binding.addPlaylistBtn.setOnClickListener {
+            displayAddPlaylistDialog()
+        }
     }
 
     //플레이리스트 추가 창
-    private fun customAlertDialog(){
+    private fun displayAddPlaylistDialog(){
         val customDialog = LayoutInflater.from(this@ListOfPlaylistActivity).inflate(R.layout.add_playlist, binding.root, false)
         val binder = AddPlaylistBinding.bind(customDialog)
         val builder = MaterialAlertDialogBuilder(this)
@@ -75,37 +82,57 @@ class ListOfPlaylistActivity : AppCompatActivity() {
 
         dialog.show()
         
-        dialog.getButton(android.app.AlertDialog.BUTTON_POSITIVE)?.setBackgroundColor(
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setBackgroundColor(
             MaterialColors.getColor(this@ListOfPlaylistActivity, R.attr.dialogBtnBackground, Color.RED)
         )
-        dialog.getButton(android.app.AlertDialog.BUTTON_NEGATIVE)?.setBackgroundColor(
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setBackgroundColor(
             MaterialColors.getColor(this@ListOfPlaylistActivity, R.attr.dialogBtnBackground, Color.RED)
         )
     }
     //플레이리스트 추가 수행
     private fun addPlaylist(name: String){
-        var playlistExists = false
-        for(i in PlaylistManager.playlists) {
-            if (name == i.name){
-                playlistExists = true
-                break
+        for(playlist in listOfPlaylist) {
+            if (name == playlist.name){
+                //동일명의 플레이리스트 존재 시 추가 x, Toast 메시지 출력
+                Toast.makeText(this, "Playlist Exist!!", Toast.LENGTH_SHORT).show()
+                return
             }
         }
-        //동일명의 플레이리스트 존재 시 추가 x, Toast 메시지 출력
-        if(playlistExists) Toast.makeText(this, "Playlist Exist!!", Toast.LENGTH_SHORT).show()
-        else {
-            PlaylistManager.playlists.add(Playlist(name, ArrayList()))
-            val mService = MusicServiceConnection.musicService!!
-            mService.savePlaylistManager() { }
-            adapter.refreshPlaylist()
-        }
+
+        val newPlaylist = Playlist(UserManager.userID, name, "playlist description", ArrayList())
+        listOfPlaylist.add(newPlaylist)
+        PlaylistManager.savePlaylist(newPlaylist)
+
+        adapter.refreshPlaylist()
     }
 
     override fun onResume() {
         super.onResume()
 
-        if(PlaylistManager.playlists.size > 0){
-            adapter = PlaylistViewAdapter(this@ListOfPlaylistActivity, PlaylistManager.playlists,
+        RetrofitManager.loadUserPlaylist(UserManager.userID) { loadedListOfPlaylist ->
+            listOfPlaylist =
+                if (loadedListOfPlaylist == null) ArrayList()
+                else ArrayList(loadedListOfPlaylist)
+
+            initLayout()
+        }
+    }
+
+    private fun initLayout() {
+        if (listOfPlaylist.isNotEmpty() && operationOrdinal == ActivityOperation.LIST_OF_PLAYLIST_EXPLORE.ordinal) {
+            initRecyclerView()
+            binding.instructionPA.visibility = View.VISIBLE
+        }
+        else {
+            //생성된 플레이리스트가 존재하면 (플레이리스트 생성 문구) 노출 x
+            binding.instructionPA.visibility = View.GONE
+        }
+
+        ControlViewManager.displayControlView(binding.exoControlView)
+    }
+
+    private fun initRecyclerView() {
+            adapter = PlaylistViewAdapter(this@ListOfPlaylistActivity, listOfPlaylist,
                 object: PlaylistViewAdapter.OnItemClickListener {
                     override fun onItemClick(view: View, pos: Int) {
                         when(operationOrdinal) {
@@ -116,21 +143,23 @@ class ListOfPlaylistActivity : AppCompatActivity() {
                                 })
                             }
                             ActivityOperation.LIST_OF_PLAYLIST_MOVE.ordinal -> {
-                                val exploringMusicList = PlaylistManager.playlists[exploringListPos].musicList
+                                val exploringMusicList = listOfPlaylist[exploringListPos].musicIDList
                                 val selectedMusicId = ArrayList<Int>().apply {
                                     intent.getIntegerArrayListExtra("selectedItemList")?.forEach {
                                         add(exploringMusicList[it])
                                     }
                                 }
                                 selectedMusicId.forEach {
-                                    PlaylistManager.playlists[pos].musicList.add(it)
+                                    listOfPlaylist[pos].musicIDList.add(it)
                                     exploringMusicList.remove(it)
                                 }
-                                MusicServiceConnection.musicService!!.savePlaylistManager {  }
+                                PlaylistManager.savePlaylist(listOfPlaylist[pos])
+                                PlaylistManager.savePlaylist(listOfPlaylist[exploringListPos])
+
                                 finish()
                             }
                             ActivityOperation.LIST_OF_PLAYLIST_SHARE.ordinal -> {
-                                if (PlaylistManager.playlists[pos].musicList.isEmpty()) return
+                                if (listOfPlaylist[pos].musicIDList.isEmpty()) return
                                 exploringListPos = pos
                                 startActivity(Intent(this@ListOfPlaylistActivity, ShareDetailsActivity::class.java))
                                 finish()
@@ -138,6 +167,35 @@ class ListOfPlaylistActivity : AppCompatActivity() {
                         }
                     }
                 },
+                object: PlaylistViewAdapter.OnItemClickListener {
+                    override fun onItemClick(view: View, pos: Int) {
+                        val builder = MaterialAlertDialogBuilder(this@ListOfPlaylistActivity)
+                        builder.setTitle(listOfPlaylist[pos].name)
+                            .setMessage("delete playlist?")
+                            .setPositiveButton("Yes") { dialog, _ ->
+
+                                if (listOfPlaylist[pos].name == PlaylistManager.playlistInUse.name) {
+                                    MusicServiceConnection.musicService!!.currentMusicPos = -1
+                                }
+
+                                PlaylistManager.removePlaylist(listOfPlaylist[pos].name)
+
+                                listOfPlaylist.removeAt(pos)
+
+                                refreshPlaylist()
+                                dialog.dismiss()
+                            }
+                            .setNegativeButton("No"){dialog,_ ->
+                                dialog.dismiss()
+                            }
+                        val customDialog = builder.create()
+                        customDialog.show()
+                        customDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.RED)
+                        customDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.RED)
+                    }
+                }
+
+                /*
                 object: PlaylistViewAdapter.OnItemClickListener{
                     override fun onItemClick(view: View, pos: Int) {
 //                        TODO ShareActivity에서 넘어왔을 경우 pos를 넘기고 SharedDetailsActivity로 이동
@@ -146,13 +204,10 @@ class ListOfPlaylistActivity : AppCompatActivity() {
                         startActivity(intent)
                     }
                 }
-
+                */
             )
 
             binding.playlistRV.adapter = adapter
-        }
-
-        ControlViewManager.displayControlView(binding.exoControlView)
     }
 }
 

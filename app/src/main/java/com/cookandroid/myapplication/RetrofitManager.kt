@@ -19,7 +19,7 @@ object RetrofitManager {
     private val api = retrofit.create(RetrofitAPI::class.java)
 
 
-    fun <T> enqueueCall(callApi: Call<T>, callbackOperation:(T?)->Unit) {
+    private fun <T> enqueueCall(callApi: Call<T>, callbackOperation:(T?)->Unit) {
         val api = retrofit.create(RetrofitAPI::class.java)
 
         /** api를 통해 서버에 request를 보냄 */
@@ -72,6 +72,10 @@ object RetrofitManager {
         enqueueCall(api.loadUserPlaylist(userID), callbackOperation)
     }
 
+    fun deleteUserPlaylist(userID:String, name:String, callbackOperation: (Boolean?) -> Unit) {
+        enqueueCall(api.deleteUserPlaylist(userID, name), callbackOperation)
+    }
+
     fun uploadSharedList(playlist : PlaylistForShare, callbackOperation:(Boolean?)->Unit) {
         enqueueCall(api.uploadSharedList(playlist), callbackOperation)
     }
@@ -82,11 +86,11 @@ object RetrofitManager {
 
 
 
-    fun getPersonalizedList(userID: String, surroundings: Surroundings, listSize: Int, callbackOperation:(List<Int>?)->Unit) {
+    fun getPersonalizedList(userID: String, surroundings: Surroundings, listSize: Int, callbackOperation:(Playlist?)->Unit) {
         enqueueCall(api.getPersonalizedList(userID, surroundings, listSize), callbackOperation)
     }
 
-    fun getGeneralizedList(surroundings: Surroundings, listSize: Int, callbackOperation:(List<Int>?)->Unit) {
+    fun getGeneralizedList(surroundings: Surroundings, listSize: Int, callbackOperation:(Playlist?)->Unit) {
         enqueueCall(api.getGeneralizedList(surroundings, listSize), callbackOperation)
     }
 
