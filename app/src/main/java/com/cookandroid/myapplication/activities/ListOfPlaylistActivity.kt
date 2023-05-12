@@ -148,18 +148,17 @@ class ListOfPlaylistActivity : AppCompatActivity() {
                                         add(exploringMusicList[it])
                                     }
                                 }
-                                selectedMusicId.forEach {
-                                    listOfPlaylist[pos].musicIDList.add(it)
-                                    exploringMusicList.remove(it)
-                                }
 
-                                PlaylistManager.savePlaylist(listOfPlaylist[pos])
-                                PlaylistManager.savePlaylist(PlaylistManager.exploringPlaylist!!)
+                                PlaylistManager.addPlaylistItem(listOfPlaylist[pos], selectedMusicId)
+                                PlaylistManager.removePlaylistItem(PlaylistManager.exploringPlaylist!!, selectedMusicId)
 
                                 finish()
                             }
                             ActivityOperation.LIST_OF_PLAYLIST_SHARE.ordinal -> {
-                                if (listOfPlaylist[pos].musicIDList.isEmpty()) return
+                                if (listOfPlaylist[pos].musicIDList.isEmpty()) {
+                                    Toast.makeText(this@ListOfPlaylistActivity, "빈 리스트를 공유할 수 없습니다!", Toast.LENGTH_SHORT).show()
+                                    return
+                                }
                                 PlaylistManager.exploringPlaylist = listOfPlaylist[pos]
                                 startActivity(Intent(this@ListOfPlaylistActivity, ShareDetailsActivity::class.java))
                                 finish()

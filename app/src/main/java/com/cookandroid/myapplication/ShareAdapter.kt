@@ -51,14 +51,14 @@ class ShareAdapter(private val context: Context,
 
     override fun onBindViewHolder(holder: SharedListHolder, pos: Int) {
         holder.sharedListName.text = sharedLists[pos].name
-        holder.userName.text = sharedLists[pos].email
+        holder.userName.text = sharedLists[pos].userID
         holder.likeCount.text = "Like : " + sharedLists[pos].likeCount
-        holder.downloadCount.text = "Downloaded : " + sharedLists[pos].copyCount
+        holder.downloadCount.text = "Downloaded : " + sharedLists[pos].downloadCount
         holder.description.text = sharedLists[pos].description
 
-        if(sharedLists[pos].musicList.isNotEmpty()){
+        if(sharedLists[pos].musicIDList.isNotEmpty()){
             Glide.with(context)
-                .load(serverUrl + "img?id=" + sharedLists[pos].musicList[0])
+                .load(serverUrl + "img?id=" + sharedLists[pos].musicIDList[0])
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
                 .into(holder.image)
         }

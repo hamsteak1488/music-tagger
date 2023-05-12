@@ -147,7 +147,7 @@ class MusicService : Service() {
         override fun onIsPlayingChanged(isPlaying: Boolean) {
             super.onIsPlayingChanged(isPlaying)
 
-            if (currentListPos == -1 || currentMusicPos == -1) return
+            if (currentMusicPos == -1) return
 
             /** 재생이 시작될 때 */
             if (isPlaying) {
@@ -163,7 +163,7 @@ class MusicService : Service() {
             else {
                 Log.d("myTag", "isPlaying changed to false")
 
-                val curMusicId = PlaylistManager.playlistInUse.musicList[currentMusicPos]
+                val curMusicId = PlaylistManager.playlistInUse!!.musicIDList[currentMusicPos]
 
                 /** 재생시작시간 정보를 통해 재생된시간 계산 후 기록 */
                 if (musicStartTime != (-1).toLong()) {
@@ -219,7 +219,7 @@ class MusicService : Service() {
     fun reloadPlaylist() {
         /** 음악 id를 통해 MediaItem 리스트를 생성한 후, exoPlayer의 리스트로 설정 */
         playListMediaItem = ArrayList<MediaItem>().apply {
-            PlaylistManager.playlistInUse.musicList.forEachIndexed { pos, musicId ->
+            PlaylistManager.playlistInUse!!.musicIDList.forEachIndexed { pos, musicId ->
                 this.add(MediaItem.Builder()
                     .setUri(serverUrl + "media?id=" + musicId)
                     .setMediaId(pos.toString())

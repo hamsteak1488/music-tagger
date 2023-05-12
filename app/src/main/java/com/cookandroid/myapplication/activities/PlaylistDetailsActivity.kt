@@ -114,7 +114,6 @@ class PlaylistDetailsActivity : AppCompatActivity() {
     }
 
     private fun getTagList(callbackOperation:(ArrayList<MusicTag>)->Unit) {
-
         when (operationOrdinal) {
             ActivityOperation.PLAYLIST_DETAILS_PERSONAL_TAG.ordinal -> {
                 RetrofitManager.getPersonalMusicTagList(UserManager.userID, PlaylistManager.exploringPlaylist!!.musicIDList) { tagList ->
@@ -150,9 +149,11 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         adapter = MusicAdapter(this@PlaylistDetailsActivity, musicList, tagList,
             object: MusicAdapter.OnItemClickListener {
                 override fun onItemClick(view: View, pos: Int) {
-                    if (pos != mService.currentMusicPos) {
+                    if (!(PlaylistManager.playlistInUse == PlaylistManager.exploringPlaylist
+                        && pos == mService.currentMusicPos)) {
                         mService.reloadPlayer(pos)
                     }
+                    PlaylistManager.playlistInUse = PlaylistManager.exploringPlaylist
                     startActivity(Intent(this@PlaylistDetailsActivity, PlayMusicActivity::class.java))
                 }
             },
@@ -160,7 +161,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
                 override fun onItemClick(view: View, pos: Int) {
                     val customDialog = MaterialAlertDialogBuilder(this@PlaylistDetailsActivity)
                         .setTitle("option")
-                        .setItems(arrayOf("다른 플레이리스트로 이동", "삭제")) { dialog, action ->
+                        .setItems(arrayOf("다른 플레이리스트로 이동", "삭제")) { _, action ->
                             when(action) {
                                 0 -> {
                                     startActivity(Intent(this@PlaylistDetailsActivity, ListOfPlaylistActivity::class.java).apply {

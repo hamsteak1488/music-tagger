@@ -44,7 +44,7 @@ class PlayMusicActivity : AppCompatActivity() {
     }
 
     private fun setLayout() {
-        val currentMusicID = PlaylistManager.playlistInUse.musicList[mService.currentMusicPos]
+        val currentMusicID = PlaylistManager.playlistInUse!!.musicIDList[mService.currentMusicPos]
 
         RetrofitManager.getMusicMetadata(currentMusicID) { music ->
             if (music == null) return@getMusicMetadata
@@ -60,16 +60,18 @@ class PlayMusicActivity : AppCompatActivity() {
         }
 
 
-        RetrofitManager.getPersonalMusicTag(UserManager.userID, currentMusicID) { tag ->
-            if (tag != null) {
-                binding.tagRV.layoutManager = LinearLayoutManager(
-                    this@PlayMusicActivity,
-                    LinearLayoutManager.HORIZONTAL,
-                    false
-                )
-                binding.tagRV.adapter = TagAdapter(tag)
-                binding.weekdayEmoji.text = tag.tagMap["요일"]
-            }
+        RetrofitManager.getPersonalMusicTagList(UserManager.userID, arrayListOf(currentMusicID)) { tagList ->
+            if (tagList.isNullOrEmpty()) return@getPersonalMusicTagList
+
+            val tag = tagList[0]
+
+            binding.tagRV.layoutManager = LinearLayoutManager(
+                this@PlayMusicActivity,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            binding.tagRV.adapter = TagAdapter(tag)
+            binding.weekdayEmoji.text = tag.tagMap["요일"]
         }
     }
 

@@ -80,7 +80,7 @@ object RetrofitManager {
         enqueueCall(api.uploadSharedList(playlist), callbackOperation)
     }
 
-    fun getAllSharedPlaylist(listSize:Int = 20, callbackOperation:(List<PlaylistForShare>?)->Unit) {
+    fun getAllSharedPlaylist(listSize:Int, callbackOperation:(List<PlaylistForShare>?)->Unit) {
         enqueueCall(api.getAllSharedPlaylist(), callbackOperation)
     }
 

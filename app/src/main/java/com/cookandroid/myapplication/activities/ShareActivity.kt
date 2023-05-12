@@ -45,9 +45,9 @@ class ShareActivity : AppCompatActivity() {
 
         ControlViewManager.displayControlView(binding.exoControlView)
 
-        mService.downloadSharedLists (sharedListsSize) { sharedLists ->
+        RetrofitManager.getAllSharedPlaylist(sharedListsSize) { sharedLists ->
 
-            if (sharedLists.isEmpty()) return@downloadSharedLists
+            if (sharedLists.isNullOrEmpty()) return@getAllSharedPlaylist
 
             binding.sharelistRV.setItemViewCacheSize(5)
             binding.sharelistRV.setHasFixedSize(true)
@@ -56,8 +56,8 @@ class ShareActivity : AppCompatActivity() {
             shareAdapter = ShareAdapter(this@ShareActivity, sharedLists as ArrayList<PlaylistForShare>,
                 object : ShareAdapter.OnItemClickListener {
                     override fun onItemClick(view: View, pos: Int) {
-                        PlaylistManager.playlists.add(sharedLists[pos])
-                        Toast.makeText(this@ShareActivity, "copy completed!", Toast.LENGTH_SHORT).show()
+                        PlaylistManager.addPlaylist(sharedLists[pos])
+                        Toast.makeText(this@ShareActivity, "공유리스트 내려받기 완료!", Toast.LENGTH_SHORT).show()
                     }
                 },
                 object : ShareAdapter.OnLikeClickListener {

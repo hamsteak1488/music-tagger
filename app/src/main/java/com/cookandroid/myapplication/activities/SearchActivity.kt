@@ -12,6 +12,7 @@ import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.adapters.MusicAdapter
 import com.cookandroid.myapplication.databinding.ActivitySearchBinding
 import com.tftf.util.Music
+import com.tftf.util.Playlist
 
 
 class SearchActivity : AppCompatActivity() {
@@ -46,20 +47,27 @@ class SearchActivity : AppCompatActivity() {
             // 검색버튼 이벤트
             override fun onQueryTextSubmit(query: String?): Boolean {
                 // MusicService에서 검색 후 결과를 adapter로 연결
-                mService.getMusicMetadataList(listOf("title", "artist"), query!!) {
-                    adapter = MusicAdapter(this@SearchActivity, it as ArrayList<Music>, null, object:
+                RetrofitManager.getMusicMetadataList(listOf("title", "artist"), query!!) { resultMusicList ->
+                    if (resultMusicList == null) return@getMusicMetadataList
+
+                    adapter = MusicAdapter(this@SearchActivity, ArrayList(resultMusicList), null, object:
                         MusicAdapter.OnItemClickListener {
                         override fun onItemClick(view: View, pos: Int) {
                             when(operationOrdinal) {
                                 ActivityOperation.SEARCH_ADD.ordinal -> {
-                                    PlaylistManager.playlists[PlaylistManager.exploringListPos].musicList.add(it[pos].id)
+                                    PlaylistManager.addPlaylistItem(PlaylistManager.exploringPlaylist!!, arrayListOf(resultMusicList[pos].id))
                                     finish()
-                                    mService.savePlaylistManager() { }
                                 }
                                 ActivityOperation.SEARCH_EXPLORE.ordinal -> {
                                     val playMusicIntent = Intent(this@SearchActivity, PlayMusicActivity::class.java)
-                                    PlaylistManager.playlists[0].musicList = arrayListOf(it[pos].id)
-                                    mService.reloadPlayer(0, 0)
+                                    PlaylistManager.playlistInUse =
+                                        Playlist(
+                                            UserManager.userID,
+                                            "exploring music",
+                                            "exploring music with search",
+                                            arrayListOf(resultMusicList[pos].id)
+                                        )
+                                    mService.reloadPlayer(0)
                                     startActivity(playMusicIntent)
                                 }
                             }

@@ -34,7 +34,7 @@ class ThemeViewAdapter (private val context: Context,
     override fun onBindViewHolder(holder: MyHolder, pos: Int) {
         holder.name.text = themelists[pos].name
 
-        if (themelists[pos].musicList.isEmpty()) {
+        if (themelists[pos].musicIDList.isEmpty()) {
             return
         }
 
@@ -43,7 +43,7 @@ class ThemeViewAdapter (private val context: Context,
             itemClickListener?.onItemClick(it, pos)
         }
         Glide.with(context)
-            .load(serverUrl + "img?id=" + (themelists[pos].musicList[0]))
+            .load(serverUrl + "img?id=" + (themelists[pos].musicIDList[0]))
             .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_video_24).centerCrop())
             .into(holder.image)
     }
