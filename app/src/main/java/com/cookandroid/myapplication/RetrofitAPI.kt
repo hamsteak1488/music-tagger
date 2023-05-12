@@ -4,7 +4,7 @@ import com.tftf.util.Music
 import com.tftf.util.MusicTag
 import com.tftf.util.PlayInform
 import com.tftf.util.Playlist
-import com.tftf.util.PlaylistForShare
+import com.tftf.util.SharedPlaylist
 import com.tftf.util.Surroundings
 import retrofit2.Call
 import retrofit2.http.Body
@@ -62,10 +62,10 @@ interface RetrofitAPI {
 
 
     @POST("/share/upload")
-    fun uploadSharedList(@Body playlist:PlaylistForShare) : Call<Boolean>
+    fun uploadSharedList(@Body playlist:SharedPlaylist) : Call<Boolean>
 
     @POST("/share/selectAll")
-    fun getAllSharedPlaylist() : Call<List<PlaylistForShare>>
+    fun getAllSharedPlaylist() : Call<List<SharedPlaylist>>
 
 
 

@@ -1,6 +1,7 @@
 package com.cookandroid.myapplication
 
 import com.tftf.util.Playlist
+import com.tftf.util.SharedPlaylist
 import java.util.concurrent.TimeUnit
 
 object PlaylistManager {
@@ -65,6 +66,16 @@ object PlaylistManager {
         RetrofitManager.saveUserPlaylist(playlist) { }
     }
 
+    fun AlterSharedPlaylistLikeCount(playlist:SharedPlaylist, likeCount:Int) {
+        playlist.likeCount += likeCount
+        RetrofitManager.uploadSharedList(playlist) { }
+    }
+
+    fun AlterSharedPlaylistDownloadCount(playlist:SharedPlaylist, downloadCount:Int) {
+        playlist.downloadCount += downloadCount
+        RetrofitManager.uploadSharedList(playlist) { }
+    }
+
     fun formatDuration(duration: Long):String{
         val minutes = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)
         val seconds = (TimeUnit.SECONDS.convert(duration, TimeUnit.MILLISECONDS) -
@@ -82,8 +93,8 @@ object PlaylistManager {
     }
 
 
-    fun createPlaylistForShareToDto(playlistForShare: PlaylistForShare): PlaylistForShareDTO {
-        return PlaylistForShareDTO(
+    fun createSharedPlaylistToDto(playlistForShare: SharedPlaylist): SharedPlaylistDTO {
+        return SharedPlaylistDTO(
             playlistForShare.name,
             Gson().toJsonTree(playlistForShare.musicList) as JsonArray,
             playlistForShare.email,
@@ -93,8 +104,8 @@ object PlaylistManager {
         )
     }
 
-    fun getPlaylistForShareFromDto(dto: PlaylistForShareDTO) : PlaylistForShare {
-        return PlaylistForShare(
+    fun getSharedPlaylistFromDto(dto: SharedPlaylistDTO) : SharedPlaylist {
+        return SharedPlaylist(
             dto.name,
             Gson().fromJson(dto.musicListJson, Array<Int>::class.java).toCollection(ArrayList()),
             dto.email,

@@ -107,6 +107,7 @@ class ListOfPlaylistActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
+        // todo : 플레이리스트 저장하고 불러올 때, 생성순으로 나열되지 않음, DB에서 임의로 정렬순서를 지정해놔야 할 듯함
         RetrofitManager.loadUserPlaylist(SettingsManager.userID) { loadedListOfPlaylist ->
             listOfPlaylist =
                 if (loadedListOfPlaylist == null) ArrayList()

@@ -1,35 +1,38 @@
-package com.cookandroid.myapplication
+package com.cookandroid.myapplication.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.cookandroid.myapplication.R
 import com.cookandroid.myapplication.SettingsManager.serverUrl
 import com.cookandroid.myapplication.databinding.ShareViewBinding
-import com.tftf.util.PlaylistForShare
+import com.tftf.util.SharedPlaylist
 
 class ShareAdapter(private val context: Context,
-                   private var sharedLists: ArrayList<PlaylistForShare>,
-                   private val downloadClickListener: OnItemClickListener? = null,
+                   private var sharedLists: ArrayList<SharedPlaylist>,
+                   private val downloadClickListener: OnDownloadClickListener? = null,
                    private val likeClickListener: OnLikeClickListener? = null
                    )
 
     : RecyclerView.Adapter<ShareAdapter.SharedListHolder>() {
 
-    interface OnItemClickListener {
-        fun onItemClick(view: View, pos:Int)
+    interface OnDownloadClickListener {
+        fun onItemClick(textView: TextView, pos:Int)
     }
 
     interface OnLikeClickListener {
-        fun onItemClick(view:View, pos:Int, checked:Boolean)
+        fun onItemClick(imageView:ImageView, textView:TextView, pos:Int, checked:Boolean)
     }
 
     var likeChecked:Boolean = false
 
-    class SharedListHolder(binding: ShareViewBinding): RecyclerView.ViewHolder(binding.root){
+    class SharedListHolder(binding: ShareViewBinding): RecyclerView.ViewHolder(binding.root) {
         val image = binding.imageSV
         val sharedListName = binding.playlistNameSV
         val userName = binding.uploaderNameSV
@@ -64,12 +67,12 @@ class ShareAdapter(private val context: Context,
         }
 
         holder.downloadBtn.setOnClickListener {
-            downloadClickListener?.onItemClick(it, pos)
+            downloadClickListener?.onItemClick(holder.downloadCount, pos)
         }
 
         holder.likeBtn.setOnClickListener {
             likeChecked = likeChecked.xor(true)
-            likeClickListener?.onItemClick(it, pos, likeChecked)
+            likeClickListener?.onItemClick(it as ImageView, holder.likeCount, pos, likeChecked)
         }
     }
 }

@@ -76,11 +76,11 @@ object RetrofitManager {
         enqueueCall(api.deleteUserPlaylist(userID, name), callbackOperation)
     }
 
-    fun uploadSharedList(playlist : PlaylistForShare, callbackOperation:(Boolean?)->Unit) {
+    fun uploadSharedList(playlist : SharedPlaylist, callbackOperation:(Boolean?)->Unit) {
         enqueueCall(api.uploadSharedList(playlist), callbackOperation)
     }
 
-    fun getAllSharedPlaylist(listSize:Int, callbackOperation:(List<PlaylistForShare>?)->Unit) {
+    fun getAllSharedPlaylist(listSize:Int, callbackOperation:(List<SharedPlaylist>?)->Unit) {
         enqueueCall(api.getAllSharedPlaylist(), callbackOperation)
     }
 
@@ -394,14 +394,14 @@ object RetrofitManager {
 
 
 
-    fun uploadShareList(playlist : PlaylistForShare, operation:(Boolean)->Unit) {
+    fun uploadShareList(playlist : SharedPlaylist, operation:(Boolean)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(MusicServiceConnection.serverUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val api = retrofit.create(RetrofitAPI::class.java)
 
-        val callGetMetadata = api.uploadShareList(PlaylistManager.createPlaylistForShareToDto(playlist))
+        val callGetMetadata = api.uploadShareList(PlaylistManager.createSharedPlaylistToDto(playlist))
         callGetMetadata.enqueue(object : Callback<Unit> {
             override fun onResponse(call: Call<Unit>, response: Response<Unit>) {
                 Log.d("myTag", "success : ${response.raw()}")
@@ -417,7 +417,7 @@ object RetrofitManager {
         })
     }
 
-    fun downloadSharedLists(listSize:Int = 20, operation:(List<PlaylistForShare>)->Unit) {
+    fun downloadSharedLists(listSize:Int = 20, operation:(List<SharedPlaylist>)->Unit) {
         val retrofit = Retrofit.Builder()
             .baseUrl(MusicServiceConnection.serverUrl)
             .addConverterFactory(GsonConverterFactory.create())
@@ -426,19 +426,19 @@ object RetrofitManager {
         val api = retrofit.create(RetrofitAPI::class.java)
 
         val callGetMetadata = api.downloadSharedLists()
-        callGetMetadata.enqueue(object: Callback<List<PlaylistForShareDTO>> {
-            override fun onResponse(call: Call<List<PlaylistForShareDTO>>, response: Response<List<PlaylistForShareDTO>>) {
+        callGetMetadata.enqueue(object: Callback<List<SharedPlaylistDTO>> {
+            override fun onResponse(call: Call<List<SharedPlaylistDTO>>, response: Response<List<SharedPlaylistDTO>>) {
                 Log.d("myTag", "success : ${response.raw()}")
                 val result = response.body()
                 Log.d("myTag", result.toString())
 
-                val listOfPlaylistForShare = ArrayList<PlaylistForShare>()
+                val listOfSharedPlaylist = ArrayList<SharedPlaylist>()
                 result?.forEach { dto ->
-                    listOfPlaylistForShare.add(PlaylistManager.getPlaylistForShareFromDto(dto))
+                    listOfSharedPlaylist.add(PlaylistManager.getSharedPlaylistFromDto(dto))
                 }
-                operation(listOfPlaylistForShare)
+                operation(listOfSharedPlaylist)
             }
-            override fun onFailure(call: Call<List<PlaylistForShareDTO>>, t: Throwable) {
+            override fun onFailure(call: Call<List<SharedPlaylistDTO>>, t: Throwable) {
                 Log.d("myTag", "failure : $t")
             }
         })

@@ -8,7 +8,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.SettingsManager.serverUrl
 import com.cookandroid.myapplication.databinding.ActivityShareDetailsBinding
-import com.tftf.util.PlaylistForShare
+import com.tftf.util.SharedPlaylist
 
 class ShareDetailsActivity : AppCompatActivity() {
 
@@ -21,7 +21,7 @@ class ShareDetailsActivity : AppCompatActivity() {
 
         binding.playlistTitleSD.text = PlaylistManager.exploringPlaylist!!.name
         binding.uploadBtnSD.setOnClickListener{
-            val playlistForShare = PlaylistForShare(
+            val playlistForShare = SharedPlaylist(
                 SettingsManager.userID,
                 binding.playlistTitleSD.text.toString(),
                 binding.editDescriptionSD.toString(),
