@@ -116,7 +116,9 @@ class MainActivity : AppCompatActivity() {
                     object : ThemeViewAdapter.OnItemClickListener {
                         override fun onItemClick(view: View, pos: Int) {
                             PlaylistManager.exploringPlaylist = themeLists[pos]
-                            startActivity(Intent(this@MainActivity, PlaylistDetailsActivity::class.java))
+                            startActivity(Intent(this@MainActivity, PlaylistDetailsActivity::class.java).apply {
+                                putExtra("operation", ActivityOperation.PLAYLIST_DETAILS_GENERAL_TAG.ordinal)
+                            })
                         }
 
                     })
@@ -138,7 +140,9 @@ class MainActivity : AppCompatActivity() {
                     object : TopRankAdapter.OnItemClickListener {
                         override fun onItemClick(view: View, pos: Int) {
                             PlaylistManager.exploringPlaylist = topRankList
-                            startActivity(Intent(this@MainActivity, PlaylistDetailsActivity::class.java))
+                            startActivity(Intent(this@MainActivity, PlaylistDetailsActivity::class.java).apply {
+                                putExtra("operation", ActivityOperation.PLAYLIST_DETAILS_GENERAL_TAG.ordinal)
+                            })
                         }
 
                     })

@@ -121,6 +121,12 @@ class PlaylistDetailsActivity : AppCompatActivity() {
                     else callbackOperation(ArrayList(tagList))
                 }
             }
+            ActivityOperation.PLAYLIST_DETAILS_GENERAL_TAG.ordinal -> {
+                RetrofitManager.getGeneralMusicTagList(PlaylistManager.exploringPlaylist!!.musicIDList) { tagList ->
+                    if (tagList == null) return@getGeneralMusicTagList
+                    else callbackOperation(ArrayList(tagList))
+                }
+            }
         }
     }
 
