@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
-import com.cookandroid.myapplication.PlaylistManager.exploringListPos
 import com.cookandroid.myapplication.adapters.MusicAdapter
 import com.cookandroid.myapplication.databinding.ActivityPlaylistDetailsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -30,7 +29,6 @@ class PlaylistDetailsActivity : AppCompatActivity() {
     private var rvLastScrollPos:Int = 0
 
     private var operationOrdinal:Int = -1
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,22 +64,16 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         }
 
         binding.removeBtn.setOnClickListener {
-            val exploringMusicList = PlaylistManager.playlists[exploringListPos].musicList
-            val selectedMusicIDList = java.util.ArrayList<Int>().apply {
+            val exploringMusicIDList = PlaylistManager.exploringPlaylist!!.musicIDList
+            val selectedMusicIDList = ArrayList<Int>().apply {
                 selectedItemList.forEach {
-                    add(exploringMusicList[it])
-                }
-            }
-            selectedMusicIDList.forEach {
-                exploringMusicList.remove(it)
-                if (mService.currentListPos == exploringListPos && exploringMusicList[mService.currentMusicPos] == it) {
-                    mService.currentListPos = -1
-                    mService.currentMusicPos = -1
+                    add(exploringMusicIDList[it])
                 }
             }
 
-            initView()
-            MusicServiceConnection.musicService!!.savePlaylistManager {  }
+            PlaylistManager.removePlaylistItem(PlaylistManager.exploringPlaylist!!, selectedMusicIDList)
+
+            initLayout()
         }
     }
 
@@ -90,12 +82,12 @@ class PlaylistDetailsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        initView()
+        initLayout()
 
         ControlViewManager.displayControlView(binding.exoControlView)
     }
 
-    private fun initView() {
+    private fun initLayout() {
 
         selectionMode = false
         selectedItemList.clear()
@@ -104,13 +96,13 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         binding.removeBtn.visibility = View.INVISIBLE
 
         //binding.moreInfoPD.text = "Total ${PlaylistManager.playlists[exploringListPos].musicList.size} Songs.\n\n"
-        if(PlaylistManager.playlists[exploringListPos].musicList.size > 0){
-            mService.getMusicMetadataList(PlaylistManager.playlists[exploringListPos].musicList) { musicList ->
+        if(PlaylistManager.exploringPlaylist!!.musicIDList.size > 0) {
+            RetrofitManager.getMusicMetadataList(PlaylistManager.exploringPlaylist!!.musicIDList) { musicList ->
                 if (musicList == null) return@getMusicMetadataList
-                else initMusicAdapter(musicList)
+                else initRecyclerView(ArrayList(musicList))
             }
             Glide.with(this)
-                .load(serverUrl + "img?id=" + (PlaylistManager.playlists[exploringListPos].musicList[0]))
+                .load(serverUrl + "img?id=" + (PlaylistManager.exploringPlaylist!!.musicIDList[0]))
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_video_24).centerCrop())
                 .into(binding.playlistImgPD)
             binding.playlistImgPD.visibility = View.VISIBLE
@@ -121,27 +113,45 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun initMusicAdapter(musicList:List<Music>) {
+    private fun getTagList(callbackOperation:(ArrayList<MusicTag>)->Unit) {
 
-        val tagList = when (operationOrdinal) {
+        when (operationOrdinal) {
             ActivityOperation.PLAYLIST_DETAILS_PERSONAL_TAG.ordinal -> {
-                ArrayList<MusicTag>().apply {
-                    musicList.forEach { music ->
-                        val tag = PlayHistoryManager.getMusicTag(music.id)
-                        if (tag == null) add(MusicTag())
-                        else add(tag)
-                    }
+                RetrofitManager.getPersonalMusicTagList(UserManager.userID, PlaylistManager.exploringPlaylist!!.musicIDList) { tagList ->
+                    if (tagList == null) return@getPersonalMusicTagList
+                    else callbackOperation(ArrayList(tagList))
                 }
             }
-            else -> null
+        }
+    }
+
+    private fun initRecyclerView(musicList:ArrayList<Music>) {
+
+        getTagList { tagList ->
+            initAdapter(musicList, tagList)
         }
 
+        this.onBackPressedDispatcher.addCallback(this@PlaylistDetailsActivity, object:OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (selectionMode) {
+                    selectionMode = false
+                    rvLastScrollPos = (binding.playlistDetailsRV.layoutManager!! as LinearLayoutManager).findFirstVisibleItemPosition()
+                    initRecyclerView(musicList)
+                }
+                else {
+                    finish()
+                }
+            }
+        })
+    }
 
-        adapter = MusicAdapter(this@PlaylistDetailsActivity, musicList.toCollection(ArrayList()), tagList,
+
+    private fun initAdapter(musicList:ArrayList<Music>, tagList:ArrayList<MusicTag>) {
+        adapter = MusicAdapter(this@PlaylistDetailsActivity, musicList, tagList,
             object: MusicAdapter.OnItemClickListener {
-                override fun onItemClick(view: View, musicPos: Int) {
-                    if (musicPos != mService.currentMusicPos) {
-                        mService.reloadPlayer(exploringListPos, musicPos)
+                override fun onItemClick(view: View, pos: Int) {
+                    if (pos != mService.currentMusicPos) {
+                        mService.reloadPlayer(pos)
                     }
                     startActivity(Intent(this@PlaylistDetailsActivity, PlayMusicActivity::class.java))
                 }
@@ -159,9 +169,8 @@ class PlaylistDetailsActivity : AppCompatActivity() {
                                     })
                                 }
                                 1 -> {
-                                    PlaylistManager.playlists[exploringListPos].musicList.removeAt(pos)
-                                    initView()
-                                    MusicServiceConnection.musicService!!.savePlaylistManager() { }
+                                    PlaylistManager.removePlaylistItem(PlaylistManager.exploringPlaylist!!, arrayListOf(musicList[pos].id))
+                                    initLayout()
                                 }
                             }
                         }
@@ -185,7 +194,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
 
                     rvLastScrollPos = (binding.playlistDetailsRV.layoutManager!! as LinearLayoutManager).findFirstVisibleItemPosition()
 
-                    initMusicAdapter(musicList)
+                    initRecyclerView(musicList)
                 }
             },
             object: MusicAdapter.OnItemCheckedChangeListener {
@@ -204,18 +213,5 @@ class PlaylistDetailsActivity : AppCompatActivity() {
 
         binding.playlistDetailsRV.adapter = adapter
         binding.playlistDetailsRV.scrollToPosition(rvLastScrollPos)
-
-        this.onBackPressedDispatcher.addCallback(this@PlaylistDetailsActivity, object:OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (selectionMode) {
-                    selectionMode = false
-                    rvLastScrollPos = (binding.playlistDetailsRV.layoutManager!! as LinearLayoutManager).findFirstVisibleItemPosition()
-                    initMusicAdapter(musicList)
-                }
-                else {
-                    finish()
-                }
-            }
-        })
     }
 }

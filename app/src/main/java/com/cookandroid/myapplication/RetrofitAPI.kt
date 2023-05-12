@@ -88,8 +88,8 @@ interface RetrofitAPI {
 
 
     @POST("/tag/personal")
-    fun getPersonalMusicTag(@Query("userID") userID:String, @Query("musicID") musicID:Int) : Call<MusicTag>
+    fun getPersonalMusicTagList(@Query("userID") userID:String, @Query("musicIDList") musicIDList:List<Int>) : Call<List<MusicTag>>
 
     @POST("/tag/general")
-    fun getGeneralMusicTag(@Query("musicID") musicID:Int) : Call<MusicTag>
+    fun getGeneralMusicTagList(@Query("musicIDList") musicIDList:List<Int>) : Call<List<MusicTag>>
 }

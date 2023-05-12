@@ -106,11 +106,11 @@ object RetrofitManager {
 
 
 
-    fun getPersonalMusicTag(userID:String, musicID:Int, callbackOperation:(MusicTag?)->Unit) {
-        enqueueCall(api.getPersonalMusicTag(userID, musicID), callbackOperation)
+    fun getPersonalMusicTagList(userID:String, musicIDList: List<Int>, callbackOperation:(List<MusicTag>?)->Unit) {
+        enqueueCall(api.getPersonalMusicTagList(userID, musicIDList), callbackOperation)
     }
-    fun getGeneralMusicTag(musicID:Int, callbackOperation:(MusicTag?)->Unit) {
-        enqueueCall(api.getGeneralMusicTag(musicID), callbackOperation)
+    fun getGeneralMusicTagList(musicIDList: List<Int>, callbackOperation:(List<MusicTag>?)->Unit) {
+        enqueueCall(api.getGeneralMusicTagList(musicIDList), callbackOperation)
     }
 
 

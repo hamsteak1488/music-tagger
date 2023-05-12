@@ -10,7 +10,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.*
-import com.cookandroid.myapplication.PlaylistManager.exploringListPos
 import com.cookandroid.myapplication.adapters.PlaylistViewAdapter
 import com.cookandroid.myapplication.databinding.ActivityListOfPlaylistBinding
 import com.cookandroid.myapplication.databinding.AddPlaylistBinding
@@ -103,7 +102,7 @@ class ListOfPlaylistActivity : AppCompatActivity() {
         listOfPlaylist.add(newPlaylist)
         PlaylistManager.savePlaylist(newPlaylist)
 
-        adapter.refreshPlaylist()
+        initLayout()
     }
 
     override fun onResume() {
@@ -137,13 +136,13 @@ class ListOfPlaylistActivity : AppCompatActivity() {
                     override fun onItemClick(view: View, pos: Int) {
                         when(operationOrdinal) {
                             ActivityOperation.LIST_OF_PLAYLIST_EXPLORE.ordinal -> {
-                                exploringListPos = pos
+                                PlaylistManager.exploringPlaylist = listOfPlaylist[pos]
                                 startActivity(Intent(this@ListOfPlaylistActivity, PlaylistDetailsActivity::class.java).apply {
                                     putExtra("operation", ActivityOperation.PLAYLIST_DETAILS_PERSONAL_TAG.ordinal)
                                 })
                             }
                             ActivityOperation.LIST_OF_PLAYLIST_MOVE.ordinal -> {
-                                val exploringMusicList = listOfPlaylist[exploringListPos].musicIDList
+                                val exploringMusicList = PlaylistManager.exploringPlaylist!!.musicIDList
                                 val selectedMusicId = ArrayList<Int>().apply {
                                     intent.getIntegerArrayListExtra("selectedItemList")?.forEach {
                                         add(exploringMusicList[it])
@@ -153,14 +152,15 @@ class ListOfPlaylistActivity : AppCompatActivity() {
                                     listOfPlaylist[pos].musicIDList.add(it)
                                     exploringMusicList.remove(it)
                                 }
+
                                 PlaylistManager.savePlaylist(listOfPlaylist[pos])
-                                PlaylistManager.savePlaylist(listOfPlaylist[exploringListPos])
+                                PlaylistManager.savePlaylist(PlaylistManager.exploringPlaylist!!)
 
                                 finish()
                             }
                             ActivityOperation.LIST_OF_PLAYLIST_SHARE.ordinal -> {
                                 if (listOfPlaylist[pos].musicIDList.isEmpty()) return
-                                exploringListPos = pos
+                                PlaylistManager.exploringPlaylist = listOfPlaylist[pos]
                                 startActivity(Intent(this@ListOfPlaylistActivity, ShareDetailsActivity::class.java))
                                 finish()
                             }
@@ -174,16 +174,16 @@ class ListOfPlaylistActivity : AppCompatActivity() {
                             .setMessage("delete playlist?")
                             .setPositiveButton("Yes") { dialog, _ ->
 
-                                if (listOfPlaylist[pos].name == PlaylistManager.playlistInUse.name) {
+                                if (listOfPlaylist[pos].name == PlaylistManager.playlistInUse?.name) {
                                     MusicServiceConnection.musicService!!.currentMusicPos = -1
                                 }
 
                                 PlaylistManager.removePlaylist(listOfPlaylist[pos].name)
-
                                 listOfPlaylist.removeAt(pos)
 
-                                refreshPlaylist()
                                 dialog.dismiss()
+
+                                initLayout()
                             }
                             .setNegativeButton("No"){dialog,_ ->
                                 dialog.dismiss()

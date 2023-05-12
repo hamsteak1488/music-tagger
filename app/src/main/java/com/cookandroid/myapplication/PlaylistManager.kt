@@ -5,19 +5,19 @@ import java.util.concurrent.TimeUnit
 
 object PlaylistManager {
 
-    var exploringListPos:Int = -1
+    var exploringPlaylist:Playlist? = null
 
     // var playlists: ArrayList<Playlist> = ArrayList() //플레이리스트의 리스트
 
-    lateinit var playlistInUse:Playlist;
+    var playlistInUse:Playlist? = null;
 
 
     init {
         initTempPlaylist()
     }
 
-    fun initTempPlaylist() {
-        playlistInUse = Playlist("user1", "playlist1", "no playlists are in use", ArrayList());
+    private fun initTempPlaylist() {
+        // playlistInUse = Playlist("user1", "playlist1", "no playlists are in use", ArrayList());
 
         /*
         if (playlists.size == 0) {
@@ -38,6 +38,20 @@ object PlaylistManager {
 
     fun removePlaylist(name: String) {
         RetrofitManager.deleteUserPlaylist(UserManager.userID, name) { }
+    }
+
+    fun removePlaylistItem(playlist: Playlist, musicIDList: List<Int>) {
+        musicIDList.forEach { musicID ->
+            playlist.musicIDList.remove(musicID)
+
+            if (playlistInUse != null) {
+                val mService = MusicServiceConnection.musicService!!
+                if (exploringPlaylist == playlistInUse && playlistInUse!!.musicIDList[mService.currentMusicPos] == musicID) {
+                    mService.currentMusicPos = -1
+                }
+            }
+        }
+        RetrofitManager.saveUserPlaylist(playlist) { }
     }
 
     fun formatDuration(duration: Long):String{

@@ -18,7 +18,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tftf.util.Playlist
 
 class PlaylistViewAdapter(
-    private val context: Context, private var playlists: List<Playlist>,
+    private val context: Context, private var listOfPlaylist: List<Playlist>,
     private val itemClickListener: OnItemClickListener,
     private val deleteClickListener: OnItemClickListener? = null
 )
@@ -41,30 +41,33 @@ class PlaylistViewAdapter(
     }
 
     override fun onBindViewHolder(holder: PlaylistHolder, pos: Int) {
-        holder.name.text = playlists[pos].name
+        holder.name.text = listOfPlaylist[pos].name
         holder.name.isSelected = true
-        holder.songCnt.text = playlists[pos].musicIDList.size.toString() + " songs"
+        holder.songCnt.text = listOfPlaylist[pos].musicIDList.size.toString() + " songs"
         holder.delete.setOnClickListener {
             deleteClickListener?.onItemClick(it, pos)
         }
         holder.root.setOnClickListener{
-            itemClickListener?.onItemClick(it, pos)
+            itemClickListener.onItemClick(it, pos)
 
         }
-        if(PlaylistManager.playlists[pos].musicList.isNotEmpty()){
+        if(listOfPlaylist[pos].musicIDList.isNotEmpty()){
             Glide.with(context)
-                .load(serverUrl + "img?id=" + (PlaylistManager.playlists[pos].musicList[0]))
+                .load(serverUrl + "img?id=" + (listOfPlaylist[pos].musicIDList[0]))
                 .apply(RequestOptions().placeholder(R.drawable.ic_baseline_music_note_24).centerCrop())
                 .into(holder.image)
         }
     }
     override fun getItemCount(): Int {
-        return playlists.size
+        return listOfPlaylist.size
     }
+
+    /*
     ///플레이리스트 목록 갱신
     fun refreshPlaylist(){
         playlists = ArrayList()
         playlists.addAll(PlaylistManager.playlists)
         notifyDataSetChanged()
     }
+    */
 }
