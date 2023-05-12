@@ -16,7 +16,6 @@ import com.cookandroid.myapplication.databinding.AddPlaylistBinding
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.tftf.util.Playlist
-import java.util.*
 import kotlin.collections.ArrayList
 
 class ListOfPlaylistActivity : AppCompatActivity() {
@@ -98,7 +97,7 @@ class ListOfPlaylistActivity : AppCompatActivity() {
             }
         }
 
-        val newPlaylist = Playlist(UserManager.userID, name, "playlist description", ArrayList())
+        val newPlaylist = Playlist(SettingsManager.userID, name, "playlist description", ArrayList())
         listOfPlaylist.add(newPlaylist)
         PlaylistManager.savePlaylist(newPlaylist)
 
@@ -108,7 +107,7 @@ class ListOfPlaylistActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        RetrofitManager.loadUserPlaylist(UserManager.userID) { loadedListOfPlaylist ->
+        RetrofitManager.loadUserPlaylist(SettingsManager.userID) { loadedListOfPlaylist ->
             listOfPlaylist =
                 if (loadedListOfPlaylist == null) ArrayList()
                 else ArrayList(loadedListOfPlaylist)

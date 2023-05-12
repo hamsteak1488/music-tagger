@@ -1,10 +1,6 @@
 package com.cookandroid.myapplication
 
 import android.util.Log
-import com.google.gson.JsonObject
-import com.tftf.util.MusicTag
-import com.tftf.util.MusicTagger
-import com.tftf.util.PlayHistory
 import com.tftf.util.PlayInform
 
 object PlayHistoryManager {
@@ -13,7 +9,7 @@ object PlayHistoryManager {
     fun cumulateHistory(musicID:Int, playedTime:Long) {
         SurroundingsManager.getCurrentSurroundings { surroundings ->
             RetrofitManager.cumulateHistory(PlayInform(
-                UserManager.userID,
+                SettingsManager.userID,
                 musicID,
                 playedTime,
                 surroundings

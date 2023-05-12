@@ -6,8 +6,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
-import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
-import com.cookandroid.myapplication.UserManager
+import com.cookandroid.myapplication.SettingsManager.serverUrl
+import com.cookandroid.myapplication.SettingsManager
 import com.cookandroid.myapplication.adapters.TagAdapter
 import com.cookandroid.myapplication.databinding.ActivityPlayMusicBinding
 
@@ -60,7 +60,7 @@ class PlayMusicActivity : AppCompatActivity() {
         }
 
 
-        RetrofitManager.getPersonalMusicTagList(UserManager.userID, arrayListOf(currentMusicID)) { tagList ->
+        RetrofitManager.getPersonalMusicTagList(SettingsManager.userID, arrayListOf(currentMusicID)) { tagList ->
             if (tagList.isNullOrEmpty()) return@getPersonalMusicTagList
 
             val tag = tagList[0]

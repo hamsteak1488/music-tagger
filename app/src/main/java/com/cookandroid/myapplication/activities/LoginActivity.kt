@@ -7,9 +7,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.cookandroid.myapplication.MusicServiceConnection
 import com.cookandroid.myapplication.R
-import com.cookandroid.myapplication.UserManager
+import com.cookandroid.myapplication.SettingsManager
 import com.cookandroid.myapplication.databinding.ActivityLoginBinding
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
@@ -145,7 +144,7 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, pw)
             .addOnCompleteListener(this) { login ->
                 if (login.isSuccessful) {
-                    UserManager.userID = binding.userEmail.text.toString()
+                    SettingsManager.userID = binding.userEmail.text.toString()
                     Intent(this, MainActivity::class.java).also {
                         it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(it)

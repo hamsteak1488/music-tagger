@@ -8,7 +8,7 @@ import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
+import com.cookandroid.myapplication.SettingsManager.serverUrl
 import com.cookandroid.myapplication.activities.MainActivity
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ui.PlayerControlView
@@ -55,8 +55,6 @@ class MusicService : Service() {
         fun onMediaItemChange()
     }
     private var mediaItemChangeListenerForPlayMusicActivity : OnMediaItemChangeListener? = null
-
-    var userID:String = ""
 
     val testAudioUriStr = serverUrl + "media?title=test_audio1.mp3"
     val testVideoUriStr = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"

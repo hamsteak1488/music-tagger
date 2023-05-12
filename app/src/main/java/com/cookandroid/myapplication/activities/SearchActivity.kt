@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.cookandroid.myapplication.*
 import com.cookandroid.myapplication.adapters.MusicAdapter
 import com.cookandroid.myapplication.databinding.ActivitySearchBinding
-import com.tftf.util.Music
 import com.tftf.util.Playlist
 
 
@@ -62,7 +61,7 @@ class SearchActivity : AppCompatActivity() {
                                     val playMusicIntent = Intent(this@SearchActivity, PlayMusicActivity::class.java)
                                     PlaylistManager.playlistInUse =
                                         Playlist(
-                                            UserManager.userID,
+                                            SettingsManager.userID,
                                             "exploring music",
                                             "exploring music with search",
                                             arrayListOf(resultMusicList[pos].id)

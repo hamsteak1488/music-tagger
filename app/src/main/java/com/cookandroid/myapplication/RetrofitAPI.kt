@@ -23,8 +23,8 @@ interface RetrofitAPI {
 
     /** 메타데이터 항목의 내용으로 접근, 여러 결과가 나올 수 있으므로 반환형은 List<Music> */
     @GET("/metadatalist")
-    fun getMetadataList(@Query("itemList") item:List<String>,
-                        @Query("name") name:String) : Call<List<Music>>
+    fun getMetadataList(@Query("criterion") criterion:List<String>,
+                        @Query("keyword") keyword:String) : Call<List<Music>>
 
 
 
@@ -35,7 +35,7 @@ interface RetrofitAPI {
 
 
     /** 재생기록 저장 */
-    @POST("/playtimehistory/cumulate")
+    @POST("/playtime_history/cumulate")
     fun cumulateHistory(@Body playInform: PlayInform) : Call<Boolean>
 
 

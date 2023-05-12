@@ -47,13 +47,12 @@
         android:id="@+id/topRankTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
         android:text="이번 달 TOP"
         android:textColor="@color/white"
         android:textSize="30dp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/themeListRV" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/topRankRV"
@@ -71,14 +70,12 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/themeListRV"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:orientation="horizontal"
         android:scrollbarThumbVertical="@drawable/scroll_bar_icon"
         android:scrollbars="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@+id/topRankTV"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2">
@@ -150,6 +147,18 @@
             android:background="@color/black"
             android:src="@drawable/baseline_people_alt_24" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/settingsBtn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="#000000"
+        app:icon="@drawable/ic_baseline_settings_24"
+        app:iconGravity="top"
+        app:layout_constraintBottom_toBottomOf="@+id/logoutBtn"
+        app:layout_constraintEnd_toStartOf="@+id/logoutBtn"
+        app:layout_constraintTop_toTopOf="@+id/logoutBtn" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

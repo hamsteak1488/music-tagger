@@ -1,6 +1,5 @@
 package com.cookandroid.myapplication
 
-import androidx.annotation.RestrictTo
 import com.tftf.util.Playlist
 import java.util.concurrent.TimeUnit
 
@@ -42,7 +41,7 @@ object PlaylistManager {
     }
 
     fun removePlaylist(name: String) {
-        RetrofitManager.deleteUserPlaylist(UserManager.userID, name) { }
+        RetrofitManager.deleteUserPlaylist(SettingsManager.userID, name) { }
     }
 
     fun addPlaylistItem(playlist: Playlist, musicIDList: List<Int>) {

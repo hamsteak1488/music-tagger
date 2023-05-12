@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
-import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
+import com.cookandroid.myapplication.SettingsManager.serverUrl
 import com.cookandroid.myapplication.adapters.MusicAdapter
 import com.cookandroid.myapplication.databinding.ActivityPlaylistDetailsBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -116,7 +116,7 @@ class PlaylistDetailsActivity : AppCompatActivity() {
     private fun getTagList(callbackOperation:(ArrayList<MusicTag>)->Unit) {
         when (operationOrdinal) {
             ActivityOperation.PLAYLIST_DETAILS_PERSONAL_TAG.ordinal -> {
-                RetrofitManager.getPersonalMusicTagList(UserManager.userID, PlaylistManager.exploringPlaylist!!.musicIDList) { tagList ->
+                RetrofitManager.getPersonalMusicTagList(SettingsManager.userID, PlaylistManager.exploringPlaylist!!.musicIDList) { tagList ->
                     if (tagList == null) return@getPersonalMusicTagList
                     else callbackOperation(ArrayList(tagList))
                 }
@@ -149,11 +149,11 @@ class PlaylistDetailsActivity : AppCompatActivity() {
         adapter = MusicAdapter(this@PlaylistDetailsActivity, musicList, tagList,
             object: MusicAdapter.OnItemClickListener {
                 override fun onItemClick(view: View, pos: Int) {
+                    PlaylistManager.playlistInUse = PlaylistManager.exploringPlaylist
                     if (!(PlaylistManager.playlistInUse == PlaylistManager.exploringPlaylist
                         && pos == mService.currentMusicPos)) {
                         mService.reloadPlayer(pos)
                     }
-                    PlaylistManager.playlistInUse = PlaylistManager.exploringPlaylist
                     startActivity(Intent(this@PlaylistDetailsActivity, PlayMusicActivity::class.java))
                 }
             },

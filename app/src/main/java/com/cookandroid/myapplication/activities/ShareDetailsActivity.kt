@@ -6,7 +6,7 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.cookandroid.myapplication.*
-import com.cookandroid.myapplication.MusicServiceConnection.serverUrl
+import com.cookandroid.myapplication.SettingsManager.serverUrl
 import com.cookandroid.myapplication.databinding.ActivityShareDetailsBinding
 import com.tftf.util.PlaylistForShare
 
@@ -22,7 +22,7 @@ class ShareDetailsActivity : AppCompatActivity() {
         binding.playlistTitleSD.text = PlaylistManager.exploringPlaylist!!.name
         binding.uploadBtnSD.setOnClickListener{
             val playlistForShare = PlaylistForShare(
-                UserManager.userID,
+                SettingsManager.userID,
                 binding.playlistTitleSD.text.toString(),
                 binding.editDescriptionSD.toString(),
                 PlaylistManager.exploringPlaylist!!.musicIDList,

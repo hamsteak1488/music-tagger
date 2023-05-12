@@ -15,7 +15,6 @@ import com.cookandroid.myapplication.adapters.ThemeViewAdapter
 import com.cookandroid.myapplication.adapters.TopRankAdapter
 import com.cookandroid.myapplication.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
-import com.tftf.util.Playlist
 
 class MainActivity : AppCompatActivity() {
 
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         ///랜덤, 플레이리스트, 검색 버튼
         binding.personalRecommendBtn.setOnClickListener{
             SurroundingsManager.getCurrentSurroundings { surroundings ->
-                RetrofitManager.getPersonalizedList(UserManager.userID, surroundings, 20) { playlist ->
+                RetrofitManager.getPersonalizedList(SettingsManager.userID, surroundings, 20) { playlist ->
                     if (playlist == null) return@getPersonalizedList
                     PlaylistManager.exploringPlaylist = playlist
                     startActivity(Intent(this@MainActivity, PlaylistDetailsActivity::class.java))

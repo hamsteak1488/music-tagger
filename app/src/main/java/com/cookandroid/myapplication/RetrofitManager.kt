@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 object RetrofitManager {
 
     private val retrofit = Retrofit.Builder()
-        .baseUrl(MusicServiceConnection.serverUrl)
+        .baseUrl(SettingsManager.serverUrl)
         .addConverterFactory(NullOnEmptyConverterFactory())
         .addConverterFactory(GsonConverterFactory.create())
         .build()
