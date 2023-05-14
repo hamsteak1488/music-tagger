@@ -1,2 +1,1 @@
-# MusicTagger
-# MusicTagger
+# music-tagger
